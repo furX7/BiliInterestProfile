@@ -2,7 +2,7 @@
 
 状态：**Phase 0 GLOBAL BLOCKED**；Source Qualification：**PASS 2 / FAIL 1 / NOT_VALIDATED 1**。
 两个限定来源已证明稳定获取与概念标准化；全局风险尚未完成，不允许进入 Phase 1。
-历史实验 2026-09-27；修正版回归与 Gate 决策 2026-09-28（Asia/Shanghai）。本轮仅重审已有证据，没有新 B站实验。
+历史实验 2026-09-27；修正版回归、Gate 决策与本轮 SPA 定向 Spike 2026-09-28（Asia/Shanghai）。本轮只验证一条正常跨 UID 导航路径。
 本轮唯一范围是 Phase 0。没有 package.json、WXT、正式 TypeScript/Zod Contract 或产品采集器。
 2026-09-27 历史来源实验收尾时工作区已有 Git 目录、原始文档已暂存但暂无提交；该次实验未进行 Git 写操作。
 2026-09-28 前一轮提交前整理仅修改主页、脱敏、链接与提交安全，不增加实验或改变 Gate。
@@ -56,7 +56,7 @@ PASS 不证明完整历史分页、所有匿名场景、稳定单条 permalink/�
 | logged-in | DONE | 既有 A/B/C 正常回归九读、每账号 reload | 不扩张为所有账号/时段保证 |
 | privacy-disabled | NOT_VALIDATED | 没有明确隐私关闭/拒绝样本；缺入口不算 | 取得明确不可公开证据，核对分类及适用来源范围 |
 | empty-data | NOT_VALIDATED | UID 0 无效、隐藏模板和过滤零候选均不是真空 | 有效身份、明确成功/结束、零项共同成立的真实案例 |
-| SPA UID switch | PARTIAL | 同 UID 子路由与完整跨账号/新标签导航记录 | 证明同文档跨 UID 后路由、空间身份与内容一致，旧用户内容不混入；正式取消实现后续验证 |
+| SPA UID switch | PARTIAL | 既有导航记录；本轮公开 @ 链接正常激活后新增标签，原 A 路由/头部/12 卡摘要不变，NOT PROVEN | 缺同标签、同 document 的跨 UID 路径及旧内容隔离证据；正式取消实现后续验证 |
 | minimal permissions | PARTIAL | [权限计划](permissions-plan.md)已有空间匹配/storage最小方案 | 对选定来源核对页面提取/跨域需求及更小权限可行性；生产 manifest/安装检查在后续工程 |
 | no server/API key | DONE | 需求冻结、[ADR-005](../adr/ADR-005-no-server.md)、现有概念获取/映射 | 后续工程继续遵守，不代表扩展运行时已实现 |
 | public-data boundary | DONE | 需求公开范围与实验正常访问纪律 | 继续限制正常可访问公开信息 |
@@ -68,6 +68,29 @@ PASS 不证明完整历史分页、所有匿名场景、稳定单条 permalink/�
 
 单请求/Source 总 timeout、AbortController、可恢复网络错误 retry/exponential backoff、并发限制、节流、403/429/unauthorized、network request failure、schema validation、Source 独立状态、formal ErrorCode、controlled degradation 及 mock/fixture/controlled failure tests 在正式 Adapter 阶段完成。
 分页风险在 Phase 0 先验证；分页上限、去重等正式机制仍按后续阶段实现。真实网页状态与模拟测试分开标注，历史 CAPTCHA 不冒充 HTTP 403/429，工具 timeout 不冒充 Source failure。不要求在线上撞见每种错误，也不主动制造风控。
+
+## 2026-09-28：同文档跨 UID SPA 定向 Spike
+
+起点 main 与 fetch 后 origin/main 同为 `7090135224a69108070bab5b18a820d25d351c27`，工作区 clean。重新读取指定文档/fixture 与当前三份 Notion；工程流程页 last-edited 已更新为 `2026-09-27T18:46:01.241Z`，增加 Agent 任务分类/执行协议，本轮按 Spike 执行，不更新历史快照。
+仅复用既有公开动态标签页作为 A，从其可见正文中的一个公开 @ 空间链接正常 Enter 激活到 B，不强制改 target，不扫描其他入口。下列 TEST_A/TEST_B 仅为此实验局部别名；A 复用既有 SPIKE_EXISTING_1，B 为该页可见公开链接目标，不声称是历史回归 TEST_A/TEST_B 同一账号，不落盘真实映射。
+
+### 路径与身份观察
+
+- A 基线 UTC `2026-09-27T19:06:38.757Z`：动态页、非空头部、document.readyState=complete、12 个有布局的动态主卡片。UTC 19:07:13 补读确认可见个人资料 UID 与 URL 路由一致，加载提示不可见；公开链接指向不同 UID，target=_blank。
+- A fingerprint 为主卡片 textContent 长度 `[134,244,205,287,308,182,383,273,188,299,198,337]`。包括卡片 UI/统计，仅用于此次局部稳定性比较，不是兴趣正文、稳定 ID 或无碰撞内容证明。
+- 正常 Enter 后 UTC 19:08:12 清单从 3 个标签变为 4 个，新增目标页；A URL 未变。UTC 19:09:40 B 已稳定显示主页，目标 UID 与链接一致、头部不同于 A、可见个人资料 UID 与 B 路由一致、readyState=complete、加载提示不可见。
+- B 有主页视频区块，动态主卡片选择器 `.bili-dyn-item__main` 匹配 0 个。本轮只确认页面类型变化，不验证逐视频上传者/合作角色，也不计投稿 Source 实验。
+- UTC 19:10:13 原 A URL、头部与 12 卡长度序列均不变。新增实验页随后关闭，既有用户标签页保留。没有 B→A 反向 SPA：正向根本未在原标签切 UID。
+- 工具只读 DOM scope 中 performance 未暴露，未取得 timeOrigin/navigation entry/直接 document ID。evaluate 仅允许只读，未设置 marker；新标签是独立页面上下文，不能视为原 A 的 document 生命周期延续。未主动 reload A，亦未把 B 新页加载称为 A 完整 reload。
+
+### 旧内容与判定边界
+
+原 A 内容仍可见是原页正常保留，不是 B 的 stale content。B 新页零动态主节点意味着当前动态卡片选择器不会读到 A 卡片；没有检查全部隐藏 DOM、所有提取规则或逐视频归属，不能据此宣称同文档隔离已通过。长度序列相同也不证明每个文本字符相同。
+导航过渡未连续采样，race window、更新顺序与收敛时长均 NOT_VALIDATED；不把未见 race 当作不存在 race。
+首次批量基线读取工具超时并重置，未取得该批有效结果；恢复后以小范围只读记录建立基线。该次未触发导航，不算网站 request-failed、document 重建或 SPA 读数。
+
+**SPA UID switch：Before PARTIAL → After PARTIAL；NOT PROVEN。** 两个 UID 和 B 新页身份成立，但同标签/同 document A→B 不成立于本路径，SPA 内容同步/旧内容隔离无有效验证。按任务边界停止，不继续找特殊入口。
+Source Qualification 仍 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Global 仍 BLOCKED，其他 Checklist 状态不变，不允许进入 Phase 1。脱敏记录见 [read-log.json](../fixtures/phase0/read-log.json) 的 `spaUidSwitch20260928`。本轮未分页、补收藏/投稿资格、寻找 CAPTCHA、访问内部 API 或创建正式工程。
 
 ## 历史判定说明
 
@@ -310,4 +333,4 @@ quality 为本阶段手工完整度标记，不是评分、兴趣强度或概率
 
 ## 当前最小下一步（仅建议，未执行）
 
-优先验证一次正常同文档跨 UID SPA 导航：确认 URL、空间头部、当前内容一起切换且不混入旧用户内容。新标签或完整导航不能计作同文档 SPA；不初始化扩展，也不声称旧请求取消实现已验证。本轮不执行网页实验。
+仅建议下一项最小 Global 验证：对当前两个限定资格来源的页面 DOM 读取核对 minimal permissions feasibility，明确是否需要额外跨域访问及其证据；不创建 manifest/扩展，不扩大来源范围。本轮未执行。SPA 的同标签同文档 blocker 继续保留，不以权限核对替代。

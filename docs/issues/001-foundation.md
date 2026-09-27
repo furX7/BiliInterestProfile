@@ -2,7 +2,7 @@
 
 状态：Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate 为 BLOCKED，Phase 1–2 未开始。
 这是本地 Issue 草案；目标仓库为 [furX7/BiliInterestProfile](https://github.com/furX7/BiliInterestProfile)，尚未创建 GitHub Issue。
-当前仍不允许进入 Phase 1；本轮按用户批准的 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)重审已有证据，无新实验。基础信息与动态限定 PASS，投稿归属 FAIL，收藏 NOT_VALIDATED。历史逐 Source 异常矩阵下的 FAIL 与未验证事实保留。
+当前仍不允许进入 Phase 1；此前按用户批准的 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)重审已有证据。基础信息与动态限定 PASS，投稿归属 FAIL，收藏 NOT_VALIDATED。本轮单一路径 SPA Spike 新增标签，仍 PARTIAL / NOT PROVEN；历史逐 Source 异常矩阵下的 FAIL 与未验证事实保留。
 
 ## 目标
 
@@ -45,7 +45,7 @@ Source / Normalizer / Core Contracts / Storage / Analyzer Contracts / UI shell /
 - [ ] logged-out（PARTIAL；主页可见，动态未知空态原因未决）。
 - [ ] privacy-disabled / 明确 permission-denied（NOT_VALIDATED）。
 - [ ] empty-data / 有效 available-empty（NOT_VALIDATED）。
-- [ ] full SPA UID switch（PARTIAL；完整导航/新标签不等于同文档切 UID）。
+- [ ] full SPA UID switch（PARTIAL / NOT PROVEN；本轮公开 @ 链接正常 Enter 后标签 3→4，原 A 路由/头部/12 卡长度摘要不变；B 新页身份一致不证明同文档切 UID、旧内容隔离或 race 收敛）。
 - [ ] minimal permissions feasibility（PARTIAL；已有计划，尚缺选定来源需求核对）。
 - [ ] Global Gate 完成后提交报告，并获用户明确批准进入 Phase 1。
 

@@ -3,8 +3,18 @@
 ## 当前状态（2026-09-28）
 
 **Source Qualification：PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate：BLOCKED；不允许进入 Phase 1。**
-当前轮用户批准方案 B，只落实分层 Gate 与重审已有证据，无新 B站实验。动态正式变为限定范围 PASS；投稿归属仍 FAIL，收藏仍 NOT_VALIDATED。历史实验、旧 FAIL 与未验证异常状态保留，见下方记录。
+此前用户批准方案 B，落实分层 Gate 并按已有证据将动态改为限定 PASS；本轮仅同文档跨 UID Spike，正常公开链接新增标签，SPA 继续 PARTIAL / NOT PROVEN。投稿归属仍 FAIL，收藏仍 NOT_VALIDATED；历史实验、旧 FAIL 与未验证状态保留。
 目标仓库：furX7/BiliInterestProfile；提交结果以 Git 历史及本次汇报为准。
+
+## 2026-09-28：SPA UID switch 单一路径 Spike
+
+- 基线 main / fetch 后 origin/main 均为 7090135224a69108070bab5b18a820d25d351c27，工作区 clean；读取全部指定本地文档/fixture 与当前三份 Notion。工程流程页新增协议，last-edited=2026-09-27T18:46:01.241Z；任务分类 Spike。
+- 复用既有公开动态页 SPIKE_EXISTING_1 为 A，仅激活其一个可见公开 @ 用户链接为 B。fixture 的 TEST_A/TEST_B 是本记录局部别名，不冒称历史三账号的对应关系。
+- UTC 19:06:38–19:10:13：A 有 12 卡、头部/可见 UID 与路由一致、无可见加载；链接 target=_blank。正常 Enter 后标签 3→4，原 A URL 不变；B 新主页 UID/头部一致，动态主节点 0。原 A 头部及 12 卡长度序列未变。
+- 新标签不能证明同文档跨 UID；performance 不在只读 scope 中，未取得可靠 document ID，也未注入 marker。未做 reload / B→A / 其他入口搜索；实验新增页已关闭。
+- 原 A 内容保留不当作 B stale；B 零动态主节点仅限制当前动态选择器，不宣称全 DOM 或 SPA 隔离。过渡未连续采样，race/收敛时长 NOT_VALIDATED。首次基线工具超时无有效输出，不计网站失败或 document 重建。
+- SPA PARTIAL→PARTIAL / NOT PROVEN；其他 Global 状态不变、整体 BLOCKED；Source Qualification 2 / 1 / 1 不变，Phase 1 未获准。详情见 [实验报告](phase-0-risk-experiments.md) 与 read-log 的 spaUidSwitch20260928。
+- 本轮只更新既有三份 Markdown 与一个追加 JSON 记录，未修改历史 fixture，未实现正式代码。提交前检查及推送结果以本轮实际验证和 Git 汇报为准。
 
 ## 2026-09-28：用户批准 Gate 分层（无新实验）
 

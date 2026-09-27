@@ -386,5 +386,108 @@
       "provable dynamic source request failure",
       "real unknown body structure or missing required author rejection"
     ]
+  },
+  "spaUidSwitch20260928": {
+    "kind": "observed-new-tab-navigation; same-document SPA NOT PROVEN",
+    "experimentDate": "2026-09-28",
+    "timeZone": "Asia/Shanghai",
+    "baseline": "7090135224a69108070bab5b18a820d25d351c27",
+    "aliases": ["TEST_A", "TEST_B"],
+    "aliasScope": "local to this record; A reuses SPIKE_EXISTING_1, B is one visible public mention target; no asserted mapping to historical TEST_A/B",
+    "path": "A dynamic page public mention link to B space homepage, normal Enter activation",
+    "linkTarget": "_blank",
+    "differentUidConfirmed": true,
+    "sameTab": false,
+    "sameDocument": false,
+    "sameDocumentMeaning": "new tab is not a continuation of original A document; direct lifecycle identity unavailable",
+    "directDocumentIdentity": null,
+    "performanceExposedInReadOnlyScope": false,
+    "temporaryMarkerSet": false,
+    "markerLimitation": "document mutation not supported by read-only evaluate API",
+    "explicitReloadAttempted": false,
+    "originalATabReloadObserved": false,
+    "reverseAttempted": false,
+    "before": {
+      "observedAt": "2026-09-27T19:06:38.757Z",
+      "identityObservedAt": "2026-09-27T19:07:13.091Z",
+      "alias": "TEST_A",
+      "pageType": "dynamic",
+      "urlHeaderPageUidConsistent": true,
+      "headerPresent": true,
+      "readyState": "complete",
+      "loadingVisible": false,
+      "dynamicMainCardCount": 12,
+      "allMainCardsHaveLayout": true,
+      "fingerprint": {
+        "method": "dynamic main card textContent lengths including UI and statistics",
+        "lengths": [134,244,205,287,308,182,383,273,188,299,198,337],
+        "notStableEvidenceIds": true,
+        "collisionFree": false
+      }
+    },
+    "navigation": {
+      "observedAt": "2026-09-27T19:08:12.369Z",
+      "tabCountBefore": 3,
+      "tabCountAfter": 4,
+      "originalAUrlUnchanged": true,
+      "newTabOpened": true
+    },
+    "after": {
+      "observedAt": "2026-09-27T19:09:40.987Z",
+      "alias": "TEST_B",
+      "pageType": "homepage",
+      "targetUidMatchesPublicLink": true,
+      "visiblePageUidMatchesRoute": true,
+      "headerDiffersFromA": true,
+      "readyState": "complete",
+      "loadingVisible": false,
+      "dynamicMainCardCount": 0,
+      "videoSectionPresent": true,
+      "contentContext": "B space homepage; individual video authorship not checked"
+    },
+    "originalAAfter": {
+      "observedAt": "2026-09-27T19:10:13.979Z",
+      "urlUnchanged": true,
+      "headerUnchanged": true,
+      "dynamicMainCardCount": 12,
+      "fingerprintLengthsUnchanged": true,
+      "notReverseNavigation": true
+    },
+    "staleContent": {
+      "originalAContentRemainsOnOriginalTab": true,
+      "oldADynamicMainNodesInB": 0,
+      "currentDynamicSelectorCanReadOldACardsInB": false,
+      "allHiddenDomInspected": false,
+      "sameDocumentIsolationValidated": false,
+      "raceWindow": "NOT_VALIDATED",
+      "transitionOrderingAndDuration": "NOT_VALIDATED",
+      "finalState": "A stays on original tab; B settles in separate tab"
+    },
+    "toolFailure": {
+      "step": "initial batch baseline read",
+      "kind": "tool timeout with kernel reset",
+      "validReadCount": 0,
+      "navigationAttemptedInFailedBatch": false,
+      "sourceRequestFailed": false,
+      "documentRebuildProven": false,
+      "recovery": "same existing tab observed; smaller read-only baseline completed"
+    },
+    "experimentCreatedTabClosed": true,
+    "gate": {
+      "before": "PARTIAL",
+      "after": "PARTIAL",
+      "verdict": "NOT PROVEN",
+      "global": "BLOCKED",
+      "sourceQualificationCounts": {"PASS":2,"FAIL":1,"NOT_VALIDATED":1},
+      "otherGlobalStatusesChanged": false
+    },
+    "limitations": [
+      "one normal public link path only; no claim all cross-UID paths behave this way",
+      "no same-tab same-document A to B, hence no reverse SPA test",
+      "text length equality does not establish full text identity",
+      "zero dynamic nodes on B homepage is only a selector-scope observation",
+      "no transition sampling, request cancellation or content-script lifetime validation",
+      "no source qualification, pagination, favorites or upload attribution experiment"
+    ]
   }
 }
