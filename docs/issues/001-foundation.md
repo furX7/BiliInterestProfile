@@ -2,7 +2,7 @@
 
 状态：Phase 0 继续验证已记录；PASS 1 / FAIL 2 / 未验证 1，来源门槛仍阻塞，Phase 1–2 未开始。
 这是本地 Issue 草案；目标仓库为 [furX7/BiliInterestProfile](https://github.com/furX7/BiliInterestProfile)，尚未创建 GitHub Issue。
-当前仍不允许进入 Phase 1；本轮仅动态/主页投稿区块回归、有限异常补证与既有文档/fixture 更新，Source Gate 不放宽。
+当前仍不允许进入 Phase 1；最新一轮只验证动态剩余负例，未重复正常回归。隐藏空态与合作占位正文已有拒绝边界实证；真空、权限拒绝、来源请求失败和未知结构/缺作者仍不足，Source Gate 不放宽。
 
 ## 目标
 
@@ -34,6 +34,7 @@ Source / Normalizer / Core Contracts / Storage / Analyzer Contracts / UI shell /
 - [x] 主页明确 video-section 三账号各三次，含 reload，排除合集/点赞/代表作；保留合作卡片归属缺口。
 - [ ] 逐卡上传者与合作角色充分确认；B 全部可见卡片合作，不能作为独立投稿通过。
 - [ ] 真实 available-empty / permission-denied / request-failed，以及必要字段缺失/未知正文类型拒绝负例。
+- [x] 动态定向 Spike：有数据时隐藏空态模板不算 empty；合作占位描述不补造自述，候选拒绝并保留 partial（不替代上项未验证状态）。
 - [ ] 真实同文档跨 UID SPA 验证；本轮未扩大此路径。
 - [ ] 两来源 PASS 后提交报告并获用户进入 Phase 1 的确认（本轮禁止自动初始化）。
 - [ ] 安装依赖、strict TS、WXT MV3、四入口、React shell。

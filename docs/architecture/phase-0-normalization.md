@@ -62,6 +62,15 @@ Candidate：title=null、text=翻得好！、timestamp=null、sourceUrl=匿名�
 
 上述是本次只读探针与手工 JSON 概念映射，不是生产 Normalizer。实际卡片与 Raw/Candidate 对照见 [候选](../fixtures/phase0/mapping-candidates.json) 和 [诊断](../fixtures/phase0/diagnostic-cases.json)。
 
+## 2026-09-28：动态负例定向 Spike
+
+一个既有公开目标的第 1 张动态：作者显示名与空间头部一致；dateLabel 为“10小时前 · 与他人联合创作”；视频描述仅 `-`，没有可识别的非引用自述节点，相关视频标题非空但作者归属未确认。
+只读概念映射已返回 candidate=null、text=null、title=null、status=partial；占位 `-` 不构成兴趣正文，相关合作视频标题不得补作当前用户自述。这是已知结构的部分正文拒绝实证，不是未知 schema 或缺作者实证。
+历史 C“分享动态”候选拒绝继续有效；没有为本轮伪造新的缺作者/未知类型卡片。
+
+同一动态页有 12 卡而隐藏空态节点仍存在。状态判定必须区分可见语义、已渲染卡片与隐藏模板；仅空节点存在不能返回 available-empty。没有有效真空、明确权限拒绝或来源请求失败实测，相关规则仍是提案。
+见 [候选](../fixtures/phase0/mapping-candidates.json) 与 [诊断](../fixtures/phase0/diagnostic-cases.json) 中 `dynamic-placeholder-co-creation-spike`、`hidden-empty-node-on-nonempty-dynamic-spike`。
+
 ## 拒绝与降级
 
 - UID 0、非正整数、当前目标与卡片身份不一致：拒绝候选，SRC_INVALID_CONTEXT。

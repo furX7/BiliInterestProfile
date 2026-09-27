@@ -290,5 +290,101 @@
       "sourceGate": "NOT_VALIDATED",
       "reason": "single nonempty observation; no three-account repeated validation or failure matrix"
     }
+  },
+  "dynamicNegativeSpike20260928": {
+    "experimentDate": "2026-09-28",
+    "timeZone": "Asia/Shanghai",
+    "baseline": "fda54d2efdcba457980e65dd62f4650b32e14f03",
+    "observedAt": "2026-09-27T18:13:37.158Z",
+    "scope": "one existing public tab; one rendered page boundary inspection, not independent repeated reads",
+    "method": "observed public dynamic href navigation then read-only DOM; no API replay",
+    "raw": {
+      "sample": "SPIKE_EXISTING_1",
+      "sourceUrl": "https://space.bilibili.com/SPIKE_EXISTING_1/dynamic",
+      "identity": {
+        "positiveUid": true,
+        "nicknamePresent": true,
+        "profileUidMatchesRoute": true
+      },
+      "cardCount": 12,
+      "emptyNode": {
+        "text": "好像没有东西诶",
+        "visible": false
+      },
+      "loadingNode": {
+        "text": "正在玩命加载…",
+        "visible": false
+      },
+      "explicitPermissionSignals": [],
+      "explicitRequestErrorSignals": [],
+      "cardBoundary": {
+        "index": 1,
+        "authorMatchesPageName": true,
+        "dateLabel": "10小时前 · 与他人联合创作",
+        "referencePresent": false,
+        "ownTextNodes": 0,
+        "videoDescription": "-",
+        "relatedVideoTitlePresent": true,
+        "relatedVideoTitleLength": 26
+      }
+    },
+    "conceptMapping": {
+      "candidate": null,
+      "status": "partial",
+      "text": null,
+      "title": null,
+      "reason": "placeholder-description; related co-created video authorship unconfirmed",
+      "referenceUsedAsFallback": false,
+      "relatedTitleUsedAsOwn": false
+    },
+    "browserCapabilities": [
+      "visibility",
+      "viewport"
+    ],
+    "tabCapabilities": [
+      "pageAssets",
+      "webmcp"
+    ],
+    "controlledNetworkFailureSupported": false,
+    "networkFailureAttempted": false,
+    "toolFailure": {
+      "step": "click dynamic link",
+      "observedAt": null,
+      "kind": "browser tool timeout and kernel reset",
+      "laterState": "still on homepage; subsequent observed-href normal navigation succeeded",
+      "countedAsValidDynamicRead": false,
+      "sourceRequestFailed": false
+    },
+    "reusedEvidence": {
+      "regressionKey": "regression20260928",
+      "dynamicReads": 9,
+      "cardObservations": 108,
+      "explicitReloads": 3,
+      "genericForwardLabelCase": "generic-forward-label-20260928",
+      "normalRegressionRepeated": false
+    },
+    "states": {
+      "availableEmpty": "NOT_VALIDATED",
+      "permissionDenied": "NOT_VALIDATED",
+      "requestFailed": "NOT_VALIDATED",
+      "bodyRejection": "OBSERVED partial: placeholder/co-creation and existing generic label",
+      "unknownSchemaOrMissingAuthor": "NOT_VALIDATED",
+      "dynamicRestricted": "NOT_VALIDATED; historical CAPTCHA belongs to upload/video"
+    },
+    "gate": {
+      "dynamicBefore": "FAIL",
+      "dynamicAfter": "FAIL",
+      "counts": {
+        "PASS": 1,
+        "FAIL": 2,
+        "NOT_VALIDATED": 1
+      }
+    },
+    "remainingBlockers": [
+      "valid successful zero-item dynamic source",
+      "explicit dynamic permission denial",
+      "provable dynamic source request failure",
+      "real unknown body structure or missing required author rejection"
+    ]
   }
 }

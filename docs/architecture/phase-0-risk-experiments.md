@@ -18,6 +18,45 @@
 基础信息只有身份与自述，不等同于足够的兴趣行为证据，不能用它加另一个同类主页字段凑两来源。
 即使以后满足门槛，也只提交报告等用户确认，本轮禁止自动进入 Phase 1–2。
 
+## 2026-09-28：动态剩余负例定向 Spike
+
+起点 main 与 fetch 后 origin/main 均为 `fda54d2efdcba457980e65dd62f4650b32e14f03`，工作区 clean。未重复 A/B/C × 3，不做投稿或收藏实验。
+范围限定为既有公开标签页一个目标，落盘别名 `SPIKE_EXISTING_1`；正常打开页面已有动态链接，检查一次渲染页面的边界。未扫描新账号、遍历历史或制造异常。
+UTC 18:11:45–18:13:37（北京时间 2026-09-28 02:11–02:13）的 DOM 检查属于同一次页面观察，不计新的独立重复实验。
+
+### 新实证与未取得的状态
+
+- 目标为正 UID，空间昵称非空、个人资料可见 UID 与当前动态路由一致，12 张卡片顶层作者显示名均与空间头部一致。
+- 页面有 12 张正常卡片，但 DOM 同时包含隐藏的空态“好像没有东西诶”和隐藏加载提示。两节点均无布局矩形，AX 中没有这些提示。**存在空态节点不等于来源成功零项**；本次不是 available-empty，也不是 unknown-empty。
+- 第 1 张日期 label 明确为“10小时前 · 与他人联合创作”，视频描述仅 `-`；可识别的非引用原始描述、opus 正文和转发描述均不存在，相关视频标题存在（长度 26）。只读临时概念映射拒绝这条兴趣候选：candidate/text/title=null、status=partial；不把占位符当正文，也不把未确认作者的相关合作视频标题当空间主人的自述。
+- 这是已知视频结构中的正文/归属不足负例，**不是未知 schema、缺作者或完整 schema-invalid 实测**。结合既有 C“分享动态”拒绝，支持部分正文拒绝边界；未知结构、必要作者缺失仍 NOT_VALIDATED。
+- 没有明确权限拒绝、请求错误或可见 CAPTCHA。没有符合“有效身份 + 明确成功/结束 + 零项”的动态样本，available-empty / permission-denied 保持 NOT_VALIDATED。
+- 浏览器能力只有 visibility/viewport；标签页只有 pageAssets/webmcp，没有受控 offline/网络失败能力。未改变网络或网站脚本，request-failed 保持 NOT_VALIDATED。
+- 点击动态链接时一次工具超时；恢复检查显示仍在主页，之后按已观察 href 正常导航。超时不算来源 request-failed，也不算有效动态读取。
+- 历史 CAPTCHA 来自投稿路径，仅支持安全停止策略；不能冒称动态 CAPTCHA 已实测。本轮没有重试受限路径。
+
+### 动态十二项 Gate 审核
+
+| 条件 | 当前证据 / 判定 |
+| --- | --- |
+| 1 正常重复 | 既有 A/B/C 各三次、108 张卡片观察成立，未重复凑次数 |
+| 2 reload | 既有每账号一次明确 reload 成立 |
+| 3 目标正文与引用归属 | 既有引用边界成立；空间/作者显示名上下文证据有边界，卡片作者 UID 未暴露 |
+| 4 必要字段标准化 | 已知正例可概念映射；本轮合作占位正文拒绝，不猜作者或补造正文 |
+| 5 可选字段缺失 | timestamp=null、page-level sourceUrl + partial 等已有实证 |
+| 6 无法确认时拒绝 | OBSERVED 部分：通用转发 label、合作占位正文；未知结构/必要作者缺失真实负例仍 NOT_VALIDATED |
+| 7 empty 与 unknown | 隐藏空态误判边界及历史 unknown 已有实证；有效 available-empty 仍 NOT_VALIDATED |
+| 8 权限拒绝与 empty | 明确 permission-denied 动态样本 NOT_VALIDATED |
+| 9 请求失败与 empty | 来源 request-failed NOT_VALIDATED；工具超时不计，受控网络测试不可用 |
+| 10 restricted 安全停止 | 历史投稿 CAPTCHA 与停止记录保留；动态 restricted 本身未实测 |
+| 11 无绕过 | 本轮只正常页面导航与只读 DOM；没有 API 重放或绕过 |
+| 12 脱敏可审查 | 新旧 OBSERVED 摘要均落盘；尚缺状态不能写成已有证据 |
+
+**Before FAIL → After FAIL；PASS 1 / FAIL 2 / NOT_VALIDATED 1。**
+动态最小剩余 blocker：有效 available-empty、明确 permission-denied、可证明的来源 request-failed，以及未知正文结构/必要作者缺失的真实拒绝证据。
+无正文占位与隐藏空态的新负例不能替代这些状态。已按限定范围停止，Phase 0 继续 BLOCKED。
+证据见 [读取日志](../fixtures/phase0/read-log.json) 的 `dynamicNegativeSpike20260928`、[候选映射](../fixtures/phase0/mapping-candidates.json) 与 [诊断](../fixtures/phase0/diagnostic-cases.json)。
+
 ## 2026-09-28：修正版与主页区块回归
 
 开始时工作区 clean，main HEAD 为 `285f23d2787410f18095f7bfa79dbea677285e55`；README、Issue、报告均为 PASS 1 / FAIL 2 / NOT_VALIDATED 1，无基线差异。
