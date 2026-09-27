@@ -3,8 +3,16 @@
 ## 当前状态（2026-09-28）
 
 **Source Qualification：PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate：BLOCKED；不允许进入 Phase 1。**
-此前用户批准方案 B，动态限定 PASS；最小权限可行性已 DONE。本轮已知样本未登录正常导航及一次 reload 均身份一致、零卡与通用空态，原因 unknown，logged-out 继续 PARTIAL。其余 Global 状态不变，投稿 FAIL、收藏 NOT_VALIDATED；历史记录保留。
+此前用户批准方案 B，动态限定 PASS；最小权限可行性已 DONE。最新匿名复核首次为零卡通用空态、reload 后为 12 卡，结果互相冲突，logged-out 继续 PARTIAL；分页未得到新增批次或结束边界。其余 Global 状态不变，投稿 FAIL、收藏 NOT_VALIDATED；历史记录保留。
 目标仓库：furX7/BiliInterestProfile；提交结果以 Git 历史及本次汇报为准。
+
+## 2026-09-28：匿名动态复核与分页推进尝试
+
+- 基线 main / fetch 后 origin/main 同为 e972c4321f154e71ac86d2cfe213b093c7d8b397，工作区 clean；重新读取当前三份 Notion、Source of Truth、ADR-007、指定实验记录与 fixture。Chrome 扩展现可读，用户指定它为匿名上下文；内置浏览器为登录态。
+- 登录态既有样本初始 12 动态卡。两次正常键盘推进均被浏览器自动化焦点 deadline 阻断；当前滚动位置未到末尾，无新增批次、重复边界或 continue/end 证据。pagination 保持 NOT_VALIDATED；工具失败不记为页面结束或 Source failure。
+- Chrome 匿名侧正常导航到同一样本：首次 settled DOM 头部/可见 UID/路由一致，0 卡、通用空态；reload 后身份一致并出现 12 卡。无可见 loading、权限、失败或 CAPTCHA。匿名卡头部作者与页面身份一致；既有正文/reference 拒绝规则未放宽。
+- 首次与 reload 输出不稳定，零卡不判 empty、登录入口不判动态限制，reload 后一次 12 卡也不代表稳定。logged-out PARTIAL → PARTIAL。privacy-disabled 和 empty-data 没有现成明确样本，未执行并保持 NOT_VALIDATED。
+- 仅更新实验记录、工程账本、Issue 与脱敏 read-log；Source Qualification 2 / 1 / 1、其他 Global Gate、README 与 Phase 1 文件均不变。
 
 ## 2026-09-28：已知动态样本未登录 Spike
 

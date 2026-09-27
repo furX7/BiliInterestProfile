@@ -51,8 +51,8 @@ PASS 不证明完整历史分页、所有匿名场景、稳定单条 permalink/�
 | Chrome / Edge Chromium scope | DONE | [需求冻结](requirements-freeze.md)限定 Chromium/MV3 | 后续工程构建与安装验收，当前不初始化 |
 | 2–3 stable public Sources | PARTIAL | 基础信息与动态两个限定 Source PASS；来源门槛已达到 | 冻结 v0.1 最终组合、范围及兴趣证据价值；基础信息仅上下文 |
 | different public samples | DONE | TEST_A 大量投稿、B 近期动态、C 相对少内容且含转发 | 空/隐私样本缺口仅在对应任务计入 |
-| pagination | NOT_VALIDATED | 只有当前渲染页；没有下一页/结束/跨页重复记录 | 验证适用来源的分页、终止与重复边界；不以可见页范围免除该任务 |
-| logged-out | PARTIAL | 历史主页可见；本轮已知非空样本在用户提供的未登录上下文中正常打开、一次 reload 后均身份一致但零卡，显示通用空态，无明确动态登录限制 | 缺可信匿名内容或明确可识别访问限制；unknown 不当作 empty，不猜登录因果 |
+| pagination | NOT_VALIDATED | 当前登录态样本初始 12 卡；正常键盘滚动两次均受自动化焦点 deadline 阻断，未取得新增批次、重复边界或明确 continue/end 状态 | 验证适用来源的分页、终止与重复边界；工具操作未生效不当作页面结束 |
+| logged-out | PARTIAL | 匿名同一样本首次稳定读取为 0 卡与通用空态；正常 reload 后身份一致且显示 12 卡。首次与 reload 结果冲突，尚不能称稳定 | 缺重复的可信匿名卡片读取，或明确可识别访问限制；unknown 不当作 empty，不猜登录因果 |
 | logged-in | DONE | 既有 A/B/C 正常回归九读、每账号 reload | 不扩张为所有账号/时段保证 |
 | privacy-disabled | NOT_VALIDATED | 没有明确隐私关闭/拒绝样本；缺入口不算 | 取得明确不可公开证据，核对分类及适用来源范围 |
 | empty-data | NOT_VALIDATED | UID 0 无效、隐藏模板和过滤零候选均不是真空 | 有效身份、明确成功/结束、零项共同成立的真实案例 |
@@ -88,6 +88,18 @@ PASS 不证明完整历史分页、所有匿名场景、稳定单条 permalink/�
 临时结果为 **unavailable / unknown，items=null**。**logged-out：PARTIAL → PARTIAL**；最小 blocker 是可信匿名卡片读取，或能与 unknown/empty 区分的明确动态访问限制。本轮按边界停止，不寻找新账号或请求接口补因果。
 
 Source Qualification 仍 **PASS 2 / FAIL 1 / NOT_VALIDATED 1**；Global 十三项状态未变，整体 **BLOCKED**，Phase 1 **NO**。未开展 privacy-disabled、empty-data、pagination、SPA 实验，未改变动态已登录限定 PASS 范围或创建正式工程。
+
+## 2026-09-28：匿名动态复核与分页推进尝试
+
+起点 main / fetch 后 origin/main 同为 `e972c4321f154e71ac86d2cfe213b093c7d8b397`，工作区 clean。Chrome 扩展连接提供用户声明的匿名上下文；内置浏览器保留登录态。未读取 cookie、token 或私有状态，未登录/退出、调用接口或搜索新账号。
+
+登录态既有公开动态样本初始主卡片为 12 张，页面身份与路由一致。两次正常键盘推进均被浏览器自动化的焦点 deadline 阻断；检查时页面尚未到末尾，未观察到新增卡片、跨批重复、continue 或明确 end。因此 **pagination：NOT_VALIDATED → NOT_VALIDATED**；工具未完成页面滚动不是来源失败，也不能当作 end。
+
+匿名 Chrome 正常导航到同一已知非空动态页。首次 settled DOM 身份一致、0 卡、可见“登录”与“好像没有东西诶”；reload 后身份仍一致、12 卡、无可见 loading、权限、失败或 CAPTCHA 提示。匿名卡片的头部作者与页面身份一致；正文候选与引用节点仍必须遵守既有“当前用户正文只取卡片自身、reference 不回退归属”的规则。本轮不因控件文本中的“转发”字样推定 reference 结构。
+
+首次与 reload 后渲染相互矛盾，不能将零卡定为 empty/unavailable，也不能由全站登录入口推断动态登录限制；一次 reload 后 12 卡也不足以声称匿名稳定。**logged-out：PARTIAL → PARTIAL**。脱敏结构摘要见 [read-log.json](../fixtures/phase0/read-log.json) 的 `loggedOutAndPaginationSpike20260928`。privacy-disabled 与 empty-data 没有当前已打开的明确样本，均未执行并保持 NOT_VALIDATED。
+
+Source Qualification 保持 **PASS 2 / FAIL 1 / NOT_VALIDATED 1**；其余 Global Gate 不变，整体 **BLOCKED**，Phase 1 **NO**。
 
 ## 2026-09-28：最小权限可行性 Spike（无新网页实验）
 

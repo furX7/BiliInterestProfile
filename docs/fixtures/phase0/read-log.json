@@ -584,5 +584,47 @@
       "otherGlobalStatusesChanged": false
     },
     "remainingBlocker": "a normal anonymous read with trustworthy cards, or an explicit dynamic access restriction distinguishable from unknown empty UI"
+  },
+  "loggedOutAndPaginationSpike20260928": {
+    "kind": "logged-out visible-DOM recheck plus logged-in pagination attempt",
+    "experimentDate": "2026-09-28",
+    "baseline": "e972c4321f154e71ac86d2cfe213b093c7d8b397",
+    "sample": "SPIKE_EXISTING_2",
+    "sourceUrl": "https://space.bilibili.com/SPIKE_EXISTING_2/dynamic",
+    "contexts": {
+      "loggedIn": "Codex in-app browser",
+      "loggedOut": "user-designated Chrome anonymous context",
+      "credentialsAccessed": false,
+      "apiReplayPerformed": false,
+      "newAccountSearchPerformed": false
+    },
+    "loggedInPagination": {
+      "initialCardCount": 12,
+      "initialFingerprintLengths": [85,161,146,234,264,128,242,189,129,232,148,196],
+      "normalAdvanceAttempts": 2,
+      "advanceResult": "browser automation focus deadline; no page advance evidence",
+      "atEndProven": false,
+      "newBatchObserved": false,
+      "duplicateBoundaryObserved": false,
+      "continueOrEndObserved": false,
+      "gate": {"before":"NOT_VALIDATED","after":"NOT_VALIDATED"}
+    },
+    "loggedOutReads": [
+      {"afterReload":false,"identityMatchesRoute":true,"loginEntryVisible":true,"dynamicCardCount":0,"genericEmptyVisible":true,"loadingVisible":false,"explicitPermission":false,"explicitFailure":false,"captcha":false},
+      {"afterReload":true,"identityMatchesRoute":true,"loginEntryVisible":true,"dynamicCardCount":12,"genericEmptyVisible":false,"loadingVisible":false,"explicitPermission":false,"explicitFailure":false,"captcha":false}
+    ],
+    "anonymousCardBoundary": {
+      "cardHeaderAuthorMatchesPageIdentity": true,
+      "ownTextOrReferenceFallbackInvented": false,
+      "referenceStructureInferredFromControlText": false
+    },
+    "decision": {
+      "loggedOutBefore":"PARTIAL",
+      "loggedOutAfter":"PARTIAL",
+      "reason":"first and reload renderings conflict; one successful post-reload read is insufficient to establish stable anonymous availability",
+      "sourceQualificationCounts":{"PASS":2,"FAIL":1,"NOT_VALIDATED":1},
+      "global":"BLOCKED"
+    },
+    "unexecuted": {"privacyDisabled":"no qualifying existing sample","emptyData":"no qualifying existing sample"}
   }
 }
