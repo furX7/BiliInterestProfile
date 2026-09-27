@@ -2,7 +2,7 @@
 
 状态：**Phase 0 GLOBAL BLOCKED**；Source Qualification：**PASS 2 / FAIL 1 / NOT_VALIDATED 1**。
 两个限定来源已证明稳定获取与概念标准化；全局风险尚未完成，不允许进入 Phase 1。
-历史实验 2026-09-27；修正版回归、Gate 决策与 SPA 定向 Spike 2026-09-28（Asia/Shanghai）。本轮只审计两个限定 PASS 来源的最小权限，不新增网页实验。
+历史实验 2026-09-27；修正版回归、Gate 决策、SPA 与权限 Spike 2026-09-28（Asia/Shanghai）。本轮仅复用一个已知样本验证正常未登录动态访问。
 本轮唯一范围是 Phase 0。没有 package.json、WXT、正式 TypeScript/Zod Contract 或产品采集器。
 2026-09-27 历史来源实验收尾时工作区已有 Git 目录、原始文档已暂存但暂无提交；该次实验未进行 Git 写操作。
 2026-09-28 前一轮提交前整理仅修改主页、脱敏、链接与提交安全，不增加实验或改变 Gate。
@@ -52,7 +52,7 @@ PASS 不证明完整历史分页、所有匿名场景、稳定单条 permalink/�
 | 2–3 stable public Sources | PARTIAL | 基础信息与动态两个限定 Source PASS；来源门槛已达到 | 冻结 v0.1 最终组合、范围及兴趣证据价值；基础信息仅上下文 |
 | different public samples | DONE | TEST_A 大量投稿、B 近期动态、C 相对少内容且含转发 | 空/隐私样本缺口仅在对应任务计入 |
 | pagination | NOT_VALIDATED | 只有当前渲染页；没有下一页/结束/跨页重复记录 | 验证适用来源的分页、终止与重复边界；不以可见页范围免除该任务 |
-| logged-out | PARTIAL | A 主页两读可见；C 投稿 CAPTCHA、动态未知空态 | 明确匿名正常读取能力及不可用边界，不将空态原因猜成登录限制 |
+| logged-out | PARTIAL | 历史主页可见；本轮已知非空样本在用户提供的未登录上下文中正常打开、一次 reload 后均身份一致但零卡，显示通用空态，无明确动态登录限制 | 缺可信匿名内容或明确可识别访问限制；unknown 不当作 empty，不猜登录因果 |
 | logged-in | DONE | 既有 A/B/C 正常回归九读、每账号 reload | 不扩张为所有账号/时段保证 |
 | privacy-disabled | NOT_VALIDATED | 没有明确隐私关闭/拒绝样本；缺入口不算 | 取得明确不可公开证据，核对分类及适用来源范围 |
 | empty-data | NOT_VALIDATED | UID 0 无效、隐藏模板和过滤零候选均不是真空 | 有效身份、明确成功/结束、零项共同成立的真实案例 |
@@ -68,6 +68,26 @@ PASS 不证明完整历史分页、所有匿名场景、稳定单条 permalink/�
 
 单请求/Source 总 timeout、AbortController、可恢复网络错误 retry/exponential backoff、并发限制、节流、403/429/unauthorized、network request failure、schema validation、Source 独立状态、formal ErrorCode、controlled degradation 及 mock/fixture/controlled failure tests 在正式 Adapter 阶段完成。
 分页风险在 Phase 0 先验证；分页上限、去重等正式机制仍按后续阶段实现。真实网页状态与模拟测试分开标注，历史 CAPTCHA 不冒充 HTTP 403/429，工具 timeout 不冒充 Source failure。不要求在线上撞见每种错误，也不主动制造风控。
+
+## 2026-09-28：已知动态样本未登录 Spike
+
+起点 main / fetch 后 origin/main 均为 `72ae6444fa5a2438590a7806d30a784a4f5fb045`，工作区 clean；复核当前 Notion、Source of Truth、ADR-007、Issue 与既有记录。此前工具仅有内置浏览器且样本仍登录，未计匿名实验；用户随后提供未登录 B站主页标签页，UI 明确显示“登录”。不读取凭据、不由 Agent 登录/退出，也不声称工具验证了独立无痕窗口隔离。
+
+正常导航到同一 `SPIKE_EXISTING_1` 动态页，稳定读取一次，再正常 reload 后读取一次；不是同一 DOM 复读，也不证明两次独立服务器请求。脱敏记录见 [read-log.json](../fixtures/phase0/read-log.json) 的 `loggedOutDynamicSpike20260928`。
+
+| 核对项 | 既有登录态 | 本轮未登录态（首次 / reload 后） |
+| --- | --- | --- |
+| 页面身份 | 正 UID、非空头部、可见个人资料 UID 与路由一致 | 同一动态路由、头部与既知样本一致、可见 UID 与路由一致，两次均成立 |
+| 主卡片 | 12 卡，已知公开内容非空 | 0 / 0；已知正文节点与 reference 均为 0 |
+| 正文 / 引用归属 | 有已知结构与拒绝案例，合作占位不补作自述 | 无卡片，不能复验匿名正文或 reference 归属，不生成空成功结果 |
+| 可见状态 | 既有正常卡片 | 两次“登录”与“好像没有东西诶”；reload 后 readyState=complete，无可见加载 |
+| 明确限制 / 失败 | 历史记录未见对应提示 | reload 后未见明确动态登录限制、权限拒绝、加载失败或 CAPTCHA；未读取 HTTP/业务响应 |
+
+观察时间分别为 UTC `2026-09-27T21:54:20.234Z` / `21:55:20.889Z`（北京时间 2026-09-28）。通用“登录”入口证明当前未登录 UI，不证明零卡由登录限制导致；readyState 与无可见 loader 不证明来源请求成功结束。已知登录态非空与当前零卡形成差异，但不能排除其他原因，也不能判 available-empty、permission-denied 或 request-failed。
+
+临时结果为 **unavailable / unknown，items=null**。**logged-out：PARTIAL → PARTIAL**；最小 blocker 是可信匿名卡片读取，或能与 unknown/empty 区分的明确动态访问限制。本轮按边界停止，不寻找新账号或请求接口补因果。
+
+Source Qualification 仍 **PASS 2 / FAIL 1 / NOT_VALIDATED 1**；Global 十三项状态未变，整体 **BLOCKED**，Phase 1 **NO**。未开展 privacy-disabled、empty-data、pagination、SPA 实验，未改变动态已登录限定 PASS 范围或创建正式工程。
 
 ## 2026-09-28：最小权限可行性 Spike（无新网页实验）
 
@@ -345,4 +365,4 @@ quality 为本阶段手工完整度标记，不是评分、兴趣强度或概率
 
 ## 当前最小下一步（仅建议，未执行）
 
-仅建议下一项最小 Global 验证：对当前两个限定资格来源的页面 DOM 读取核对 minimal permissions feasibility，明确是否需要额外跨域访问及其证据；不创建 manifest/扩展，不扩大来源范围。本轮未执行。SPA 的同标签同文档 blocker 继续保留，不以权限核对替代。
+唯一建议仍为 logged-out：取得同一样本的可信匿名卡片，或明确动态访问限制证据；当前通用空态不能解释原因。本轮不继续执行，也不通过额外请求猜因果。minimal permissions 可行性此前已 DONE，生产验收留待获准的 Phase 1。

@@ -489,5 +489,100 @@
       "no transition sampling, request cancellation or content-script lifetime validation",
       "no source qualification, pagination, favorites or upload attribution experiment"
     ]
+  },
+  "loggedOutDynamicSpike20260928": {
+    "kind": "real logged-out visible-DOM observation; cause of empty UI unknown",
+    "experimentDate": "2026-09-28",
+    "timeZone": "Asia/Shanghai",
+    "baseline": "72ae6444fa5a2438590a7806d30a784a4f5fb045",
+    "sample": "SPIKE_EXISTING_1",
+    "sourceUrl": "https://space.bilibili.com/SPIKE_EXISTING_1/dynamic",
+    "sampleReusedFrom": ["dynamicNegativeSpike20260928", "spaUidSwitch20260928.before"],
+    "context": {
+      "preparation": "user supplied a logged-out Bilibili homepage tab; normal navigation to same known dynamic page",
+      "homepageLoginEntryObserved": true,
+      "freshDynamicLoginEntryObserved": true,
+      "privateWindowIsolationVerified": false,
+      "authenticationBasis": "user-provided logged-out context and visible Login entry; no cookies or private state inspected",
+      "agentLoginOrLogoutPerformed": false,
+      "credentialAccessed": false,
+      "apiReplayPerformed": false
+    },
+    "sampling": "one normal page navigation and one explicit reload; two settled DOM observations, not independent server requests",
+    "reads": [
+      {
+        "observedAt": "2026-09-27T21:54:20.234Z",
+        "afterReload": false,
+        "readyState": "complete",
+        "positiveUid": true,
+        "sameKnownSampleRoute": true,
+        "dynamicPath": true,
+        "headerPresent": true,
+        "headerMatchesKnownSample": true,
+        "visibleProfileUidMatchesRoute": true,
+        "dynamicMainCardCount": 0,
+        "visibleDynamicMainCardCount": 0,
+        "knownOwnBodyNodeCount": 0,
+        "referenceCount": 0,
+        "visibleStatusTexts": ["登录", "好像没有东西诶"]
+      },
+      {
+        "observedAt": "2026-09-27T21:55:20.889Z",
+        "afterReload": true,
+        "readyState": "complete",
+        "positiveUid": true,
+        "sameKnownSampleRoute": true,
+        "dynamicPath": true,
+        "headerPresent": true,
+        "headerMatchesKnownSample": true,
+        "visibleProfileUidMatchesRoute": true,
+        "dynamicMainCardCount": 0,
+        "visibleDynamicMainCardCount": 0,
+        "knownOwnBodyNodeCount": 0,
+        "referenceCount": 0,
+        "loginEntryVisible": true,
+        "genericEmptyVisible": true,
+        "loadingVisible": false,
+        "explicitDynamicLoginRestrictionTexts": [],
+        "permissionRestrictionTexts": [],
+        "failureTexts": [],
+        "captchaTexts": []
+      }
+    ],
+    "comparison": {
+      "loggedInEvidenceKey": "dynamicNegativeSpike20260928.raw",
+      "loggedInCardCount": 12,
+      "loggedInIdentityConsistent": true,
+      "loggedInContentKnownNonempty": true,
+      "loggedInOwnBodyRejectionBoundary": "co-created video placeholder '-' rejected; related title not used as own text",
+      "loggedOutIdentityConsistent": true,
+      "loggedOutCardCounts": [0, 0],
+      "ownTextAndReferenceBoundaryRevalidatedAnonymously": false
+    },
+    "conceptResult": {
+      "status": "unavailable",
+      "reason": "unknown",
+      "items": null,
+      "notAvailableEmpty": true,
+      "loginCausalityProven": false,
+      "sourceRequestFailedProven": false
+    },
+    "limitations": [
+      "generic navigation Login entry identifies logged-out UI, not the cause of missing dynamic cards",
+      "readyState complete and no visible loader do not prove source request success or completion",
+      "no HTTP/business code or network-response observation",
+      "two zero-card renderings do not establish true empty or permission denial",
+      "no anonymous body/reference comparison possible without cards",
+      "one existing sample only; not general anonymous availability",
+      "no privacy-disabled, empty-data, pagination or SPA experiment"
+    ],
+    "gate": {
+      "loggedOutBefore": "PARTIAL",
+      "loggedOutAfter": "PARTIAL",
+      "global": "BLOCKED",
+      "sourceQualificationCounts": {"PASS":2,"FAIL":1,"NOT_VALIDATED":1},
+      "otherGlobalStatusesChanged": false
+    },
+    "remainingBlocker": "a normal anonymous read with trustworthy cards, or an explicit dynamic access restriction distinguishable from unknown empty UI"
   }
 }

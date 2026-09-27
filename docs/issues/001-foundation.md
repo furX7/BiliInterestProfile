@@ -2,7 +2,7 @@
 
 状态：Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate 为 BLOCKED，Phase 1–2 未开始。
 这是本地 Issue 草案；目标仓库为 [furX7/BiliInterestProfile](https://github.com/furX7/BiliInterestProfile)，尚未创建 GitHub Issue。
-当前仍不允许进入 Phase 1；此前按用户批准的 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)重审已有证据。基础信息与动态限定 PASS，投稿归属 FAIL，收藏 NOT_VALIDATED。本轮仅完成最小权限可行性审计；既有 SPA 仍 PARTIAL / NOT PROVEN，历史 FAIL 与未验证事实保留。
+当前仍不允许进入 Phase 1；此前按用户批准的 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)重审已有证据。基础信息与动态限定 PASS，投稿归属 FAIL，收藏 NOT_VALIDATED。本轮已知动态样本未登录两次渲染（含一次 reload）身份一致但零卡，原因 unknown；logged-out 与其他 Gate 状态不变，历史事实保留。
 
 ## 目标
 
@@ -42,7 +42,7 @@ Source / Normalizer / Core Contracts / Storage / Analyzer Contracts / UI shell /
 - [x] no server / no API key、public-data boundary、sensitive-attribute boundary。
 - [ ] v0.1 最终 2–3 来源组合与范围（PARTIAL；已有两个资格来源，基础信息仅上下文）。
 - [ ] pagination（NOT_VALIDATED）。
-- [ ] logged-out（PARTIAL；主页可见，动态未知空态原因未决）。
+- [ ] logged-out（PARTIAL；用户提供未登录上下文，同一已知非空动态样本首次 / reload 后均身份一致、零卡与通用空态；无明确动态登录限制，不猜因果，不当作 available-empty。见 [实验记录](../architecture/phase-0-risk-experiments.md)）。
 - [ ] privacy-disabled / 明确 permission-denied（NOT_VALIDATED）。
 - [ ] empty-data / 有效 available-empty（NOT_VALIDATED）。
 - [ ] full SPA UID switch（PARTIAL / NOT PROVEN；本轮公开 @ 链接正常 Enter 后标签 3→4，原 A 路由/头部/12 卡长度摘要不变；B 新页身份一致不证明同文档切 UID、旧内容隔离或 race 收敛）。

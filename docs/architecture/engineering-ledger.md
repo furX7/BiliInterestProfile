@@ -3,8 +3,18 @@
 ## 当前状态（2026-09-28）
 
 **Source Qualification：PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate：BLOCKED；不允许进入 Phase 1。**
-此前用户批准方案 B，落实分层 Gate 并按已有证据将动态改为限定 PASS；本轮最小权限可行性 PARTIAL → DONE，仅 Phase 0 文档审计，未实现扩展。SPA 继续 PARTIAL / NOT PROVEN，其他 Global 状态不变。投稿仍 FAIL，收藏仍 NOT_VALIDATED；历史记录保留。
+此前用户批准方案 B，动态限定 PASS；最小权限可行性已 DONE。本轮已知样本未登录正常导航及一次 reload 均身份一致、零卡与通用空态，原因 unknown，logged-out 继续 PARTIAL。其余 Global 状态不变，投稿 FAIL、收藏 NOT_VALIDATED；历史记录保留。
 目标仓库：furX7/BiliInterestProfile；提交结果以 Git 历史及本次汇报为准。
+
+## 2026-09-28：已知动态样本未登录 Spike
+
+- main / fetch 后 origin/main 均为 72ae6444fa5a2438590a7806d30a784a4f5fb045，工作区 clean；当前三份 Notion、所需文档与既有样本记录已复核，按用户批准的 Spike 路径执行。使用 Superpowers 与 verification-before-completion，不写正式功能。
+- 工具最初只有仍登录的内置浏览器，不计匿名实验；用户提供未登录主页标签后，主页与重新导航的动态页可见“登录”。本轮不读取 cookie/token 或私有状态，不登录/退出，不声称已验证无痕隔离。
+- 仅复用此前已有 12 卡的 SPIKE_EXISTING_1，正常打开同一动态页，稳定读一次、一次正常 reload 后再读。UTC 21:54:20.234 / 21:55:20.889：URL/头部/可见个人资料 UID 一致，主卡片 0 / 0，已知正文 / reference 0 / 0；显示“好像没有东西诶”。刷新后 readyState complete，无可见 loader 或明确动态登录/权限/失败/CAPTCHA 提示。
+- 无卡片不能检验匿名正文与转发归属。全站登录入口不证明空态因果；无 HTTP/业务响应，不判真空、登录限制、权限拒绝或请求失败。临时候选 unavailable / unknown，items=null；两个渲染读不宣称独立服务器请求。
+- logged-out PARTIAL → PARTIAL，Source 2 / 1 / 1 与十三项 Global 状态不变，整体 BLOCKED，Phase 1 NO。仅更新三份既有 Markdown 与追加 read-log 记录，不改 README、不改旧 fixture 数据；无新账号扫描、API 请求、其他 Global 实验或正式代码。
+- 提交前实际验证：完整 diff 审查与 git diff --check 通过；三份 JSON 可解析，read-log 仅追加一个对象，所有历史值与其他 fixture 不变；73 个本地链接/锚点有效。十三项 Global 状态及 Source 资格表原样，当前摘要 2 / 1 / 1 与 BLOCKED 一致；新增行扫描未发现凭据值或真实账号/视频映射，无冲突标记、package/Manifest/WXT/src/正式代码，README 未变。
+- 唯一剩余建议是同一样本可信匿名内容或明确动态访问限制证据，本轮不继续。正常提交/推送结果以 Git 历史与最终 SHA 核对为准。
 
 ## 2026-09-28：最小权限可行性 Spike
 
