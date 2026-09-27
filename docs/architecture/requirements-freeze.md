@@ -13,7 +13,7 @@
 - 不推断医疗、精神健康、性取向等敏感属性或现实人格。
 - 后续相关产品用语统一为“公开表达特征 / 互动风格”。
 - 数据缺失、空样本及可选来源失败都不是整次分析异常终止条件。
-- v0.1 来源候选为投稿和动态；收藏作为候补。稳定性尚未验证，不冒称最终选择。
+- v0.1 行为来源候选为投稿和动态，收藏作为候补；基础信息仅身份/自述上下文。基础信息与动态已达到限定 Source Qualification，投稿归属未通过；最终组合仍未冻结，Global Gate 仍 BLOCKED，见 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)。
 
 ## 工程约束
 
@@ -31,7 +31,7 @@
 
 ## 验收
 
-Phase 0 来源门槛与未验证场景见风险实验记录。
+Phase 0 分别验收 Source Qualification 与 Global Risk Gate，见 [风险实验记录](phase-0-risk-experiments.md)；两来源资格达到不代表整体通过或允许进入 Phase 1。
 Phase 1 验收：依赖冻结安装、lint、format、typecheck、unit、integration、
 fixture/golden、Chrome / Edge MV3 build、bundle budget；E2E 环境允许时执行。
 Phase 2 验收：Contract Tests 拦截非法数据、Raw 不泄露、
@@ -39,4 +39,3 @@ Evidence 追溯约束、部分失败与版本迁移测试。
 
 禁止范围：完整采集器、兴趣算法、完整时间趋势/多源融合、分享卡片、云 AI、
 本地大模型、ONNX、WebGPU、聚类、第三方代码执行、后端或账户系统。
-

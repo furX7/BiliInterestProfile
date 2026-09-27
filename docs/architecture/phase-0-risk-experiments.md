@@ -1,24 +1,80 @@
 # Phase 0：真实风险实验
 
-状态：**BLOCKED，来源 Gate 未通过**。历史实验 2026-09-27；修正版回归 2026-09-28（Asia/Shanghai）。
+状态：**Phase 0 GLOBAL BLOCKED**；Source Qualification：**PASS 2 / FAIL 1 / NOT_VALIDATED 1**。
+两个限定来源已证明稳定获取与概念标准化；全局风险尚未完成，不允许进入 Phase 1。
+历史实验 2026-09-27；修正版回归与 Gate 决策 2026-09-28（Asia/Shanghai）。本轮仅重审已有证据，没有新 B站实验。
 本轮唯一范围是 Phase 0。没有 package.json、WXT、正式 TypeScript/Zod Contract 或产品采集器。
 2026-09-27 历史来源实验收尾时工作区已有 Git 目录、原始文档已暂存但暂无提交；该次实验未进行 Git 写操作。
 2026-09-28 前一轮提交前整理仅修改主页、脱敏、链接与提交安全，不增加实验或改变 Gate。
 
-## Gate 结论
+## Source Qualification
 
-| 来源 | 本轮判定 | 计数依据 |
+按用户明确批准的 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)执行。Source PASS 只回答明确范围内能否稳定取得、正确归属并成功标准化；九项必要条件见下表。
+valid available-empty / permission-denied 属 Phase 0 全局风险；request-failed、403/429/timeout、schema 等正式错误处理属 Phase 3。它们未实测仍如实保留，但不再要求每个来源遇到全部异常才能 PASS。
+
+| 来源 | 当前资格判定 | 范围 / 证据与原因 |
 | --- | --- | --- |
 | 公开基础信息（空间头部快照） | **PASS，限下述范围** | 三个适合账号各三次读，昵称/简介/URL 身份稳定；各一次刷新；无效 UID 0 拒绝；临时 JSON 映射成功 |
-| 公开投稿（完整来源与主页区块候选） | **FAIL：当前验收未通过** | 主页区块已完成 A/B/C 各三次及 reload；能排除合集/点赞，但合作卡片的实际上传者未确认，B 十张均为合作；异常矩阵不足；未重试受限的完整列表 |
-| 公开动态 | **FAIL：当前验收未通过** | 修正版已完成 A/B/C 各三次及 reload，共 108 张卡片观察；引用原文未进入目标正文；真实空/权限拒绝/请求失败及必要字段缺失负例仍未补齐 |
-| 公开收藏 | **NOT_VALIDATED** | B 四夹摘要与一个公开十项资源页单次可见；未完成三账号重复、reload 和权限矩阵，不计 PASS/FAIL |
+| 公开投稿（完整来源与主页区块候选） | **FAIL** | 九次区块验证可排除合集/点赞；实际上传者与合作角色未充分确认，B 十张均合作。内容归属是核心条件；完整列表历史 CAPTCHA 保留，不重试、不改名计 PASS |
+| 公开动态 | **PASS，限定范围** | 已登录、正常公开动态页、当前渲染卡片、已知正文结构及安全拒绝边界；A/B/C 各三次、每账号 reload，引用分离与概念映射成立，详见逐项审核 |
+| 公开收藏 | **NOT_VALIDATED** | B 四夹摘要与公开十项资源页单次观察，重复稳定性与必要字段标准化证据不足；本轮不补实验 |
 
-**PASS 1、FAIL 2、NOT_VALIDATED 1。至少两来源 PASS 的要求未满足，Phase 0 不标为 PASS。**
+**Source Qualification：PASS 2 / FAIL 1 / NOT_VALIDATED 1。Phase 0 Global Risk Gate：BLOCKED。**
 基础信息只有身份与自述，不等同于足够的兴趣行为证据，不能用它加另一个同类主页字段凑两来源。
-即使以后满足门槛，也只提交报告等用户确认，本轮禁止自动进入 Phase 1–2。
+本次计入基础信息与动态两个不同范围的来源，不代表已有完整兴趣画像或最终冻结 v0.1 行为来源组合。Global Gate 完成并获用户明确批准后才允许进入 Phase 1。
 
-## 2026-09-28：动态剩余负例定向 Spike
+### 动态九项必要条件重审（2026-09-28，无新实验）
+
+证据引用：[read-log.json](../fixtures/phase0/read-log.json) 的 `regression20260928` / `dynamicNegativeSpike20260928`、[候选映射](../fixtures/phase0/mapping-candidates.json)、[诊断](../fixtures/phase0/diagnostic-cases.json)。
+
+| Source Qualification 条件 | 现有证据 | 结论 |
+| --- | --- | --- |
+| 1 多个真实公开样本 | TEST_A/B/C 均有正常动态页记录 | 满足限定范围 |
+| 2 合理重复 / reload | 各三次正常导航、离页返回、明确 reload，共九次、三次 reload | 满足；不是同一 DOM 三次复读，不证明独立服务器请求 |
+| 3 目标与正文归属可信 | 各读路由/空间身份与顶层作者显示名一致；选中正文不在 reference 内；C 当前评论“翻得好！”与引用分离 | 满足当前页面上下文；卡片 UID 未暴露，同名作者强身份不在已证明范围 |
+| 4 必要字段可标准化 | 已知 orig/opus/video/forward 正文结构、dateLabel、目标别名、页面 sourceUrl 有摘要；修正评论 Raw→Candidate 映射成功 | 满足概念验证；不声称 108 次卡片观察全部逐条完成独立映射 |
+| 5 可选缺失不补造 | timestamp=null、文字 title=null、无 item permalink 则页面追溯并标 partial | 满足；观察时刻不替代发布时间 |
+| 6 不可靠内容拒绝/降级 | “分享动态”与合作占位 `-` candidate=null；引用/归属不明标题不补作自述 | 满足已知拒绝边界；未知结构/缺作者真实负例仍 NOT_VALIDATED，范围不扩展到它们 |
+| 7 unknown 不伪装正常或 empty | 历史未知空态 items=null；有 12 卡的隐藏空节点不判 empty；工具超时不判来源失败 | 满足现有边界；真实 available-empty 仍未验证 |
+| 8 不绕过限制 | 正常浏览器会话与只读公开 DOM；历史投稿 CAPTCHA 停止，无接口重放或凭据导出 | 满足访问纪律；动态自身 CAPTCHA 未实测 |
+| 9 脱敏可审查记录 | 三份既有 JSON 保存时间、次数、字段摘要与 Raw/Candidate/拒绝案例 | 满足；匿名模板不能重新定位账号，证据可审查但不保证不可逆匿名化 |
+
+结论：**公开动态 FAIL → PASS，限定范围**。变更源于批准后的判定框架澄清，不是新实验，也不意味着历史数据或旧 FAIL 被改写。
+PASS 不证明完整历史分页、所有匿名场景、稳定单条 permalink/去重、所有 schema、同名作者强 UID 身份、request failure 全覆盖、动态 CAPTCHA 实测或正式 Source Adapter 已实现。无法确认的内容仍须拒绝/降级；partial 的数据质量限制继续保留。
+
+## Phase 0 Global Risk Gate
+
+整体状态：**BLOCKED**。任务依据为当前 [Notion 来源](source-of-truth.md)，状态仅用 DONE / PARTIAL / NOT_VALIDATED。DONE 限 Phase 0 需求/风险范围，不代表产品已经实现。
+
+| Requirement | Status | Evidence | Remaining work |
+| --- | --- | --- | --- |
+| Chrome / Edge Chromium scope | DONE | [需求冻结](requirements-freeze.md)限定 Chromium/MV3 | 后续工程构建与安装验收，当前不初始化 |
+| 2–3 stable public Sources | PARTIAL | 基础信息与动态两个限定 Source PASS；来源门槛已达到 | 冻结 v0.1 最终组合、范围及兴趣证据价值；基础信息仅上下文 |
+| different public samples | DONE | TEST_A 大量投稿、B 近期动态、C 相对少内容且含转发 | 空/隐私样本缺口仅在对应任务计入 |
+| pagination | NOT_VALIDATED | 只有当前渲染页；没有下一页/结束/跨页重复记录 | 验证适用来源的分页、终止与重复边界；不以可见页范围免除该任务 |
+| logged-out | PARTIAL | A 主页两读可见；C 投稿 CAPTCHA、动态未知空态 | 明确匿名正常读取能力及不可用边界，不将空态原因猜成登录限制 |
+| logged-in | DONE | 既有 A/B/C 正常回归九读、每账号 reload | 不扩张为所有账号/时段保证 |
+| privacy-disabled | NOT_VALIDATED | 没有明确隐私关闭/拒绝样本；缺入口不算 | 取得明确不可公开证据，核对分类及适用来源范围 |
+| empty-data | NOT_VALIDATED | UID 0 无效、隐藏模板和过滤零候选均不是真空 | 有效身份、明确成功/结束、零项共同成立的真实案例 |
+| SPA UID switch | PARTIAL | 同 UID 子路由与完整跨账号/新标签导航记录 | 证明同文档跨 UID 后路由、空间身份与内容一致，旧用户内容不混入；正式取消实现后续验证 |
+| minimal permissions | PARTIAL | [权限计划](permissions-plan.md)已有空间匹配/storage最小方案 | 对选定来源核对页面提取/跨域需求及更小权限可行性；生产 manifest/安装检查在后续工程 |
+| no server/API key | DONE | 需求冻结、[ADR-005](../adr/ADR-005-no-server.md)、现有概念获取/映射 | 后续工程继续遵守，不代表扩展运行时已实现 |
+| public-data boundary | DONE | 需求公开范围与实验正常访问纪律 | 继续限制正常可访问公开信息 |
+| sensitive-attribute boundary | DONE | 需求冻结明确敏感推断禁区，无此类实验 | 后续产品与分析器继续遵守 |
+
+全局任务按证据适用范围验收；同一隐私缺口不按四来源重复计算，也不把一次局部观察视作所有来源已验证。
+
+## Phase 3 Adapter Engineering 边界
+
+单请求/Source 总 timeout、AbortController、可恢复网络错误 retry/exponential backoff、并发限制、节流、403/429/unauthorized、network request failure、schema validation、Source 独立状态、formal ErrorCode、controlled degradation 及 mock/fixture/controlled failure tests 在正式 Adapter 阶段完成。
+分页风险在 Phase 0 先验证；分页上限、去重等正式机制仍按后续阶段实现。真实网页状态与模拟测试分开标注，历史 CAPTCHA 不冒充 HTTP 403/429，工具 timeout 不冒充 Source failure。不要求在线上撞见每种错误，也不主动制造风控。
+
+## 历史判定说明
+
+以下历史章节与三份 JSON 保留旧框架下的 FAIL 和 PASS 1 / FAIL 2 / NOT_VALIDATED 1。早期动态确有转发误归属与修正版回归不足；回归补齐后，旧逐 Source 异常矩阵继续阻塞。
+2026-09-28 审计识别层级混用，用户随后批准 ADR-007，按现有证据重判动态。旧日志时间、次数、观察状态、限制均不改写；当前判定以本文件开头为准。
+
+## 2026-09-28 历史实验：动态剩余负例定向 Spike
 
 起点 main 与 fetch 后 origin/main 均为 `fda54d2efdcba457980e65dd62f4650b32e14f03`，工作区 clean。未重复 A/B/C × 3，不做投稿或收藏实验。
 范围限定为既有公开标签页一个目标，落盘别名 `SPIKE_EXISTING_1`；正常打开页面已有动态链接，检查一次渲染页面的边界。未扫描新账号、遍历历史或制造异常。
@@ -35,7 +91,7 @@ UTC 18:11:45–18:13:37（北京时间 2026-09-28 02:11–02:13）的 DOM 检查
 - 点击动态链接时一次工具超时；恢复检查显示仍在主页，之后按已观察 href 正常导航。超时不算来源 request-failed，也不算有效动态读取。
 - 历史 CAPTCHA 来自投稿路径，仅支持安全停止策略；不能冒称动态 CAPTCHA 已实测。本轮没有重试受限路径。
 
-### 动态十二项 Gate 审核
+### 历史动态十二项 Gate 审核（ADR-007 前）
 
 | 条件 | 当前证据 / 判定 |
 | --- | --- |
@@ -53,11 +109,11 @@ UTC 18:11:45–18:13:37（北京时间 2026-09-28 02:11–02:13）的 DOM 检查
 | 12 脱敏可审查 | 新旧 OBSERVED 摘要均落盘；尚缺状态不能写成已有证据 |
 
 **Before FAIL → After FAIL；PASS 1 / FAIL 2 / NOT_VALIDATED 1。**
-动态最小剩余 blocker：有效 available-empty、明确 permission-denied、可证明的来源 request-failed，以及未知正文结构/必要作者缺失的真实拒绝证据。
-无正文占位与隐藏空态的新负例不能替代这些状态。已按限定范围停止，Phase 0 继续 BLOCKED。
+当时逐 Source 矩阵的剩余 blocker 为有效 available-empty、明确 permission-denied、来源 request-failed、未知正文结构/必要作者缺失真实拒绝证据。这些未验证事实保留。
+ADR-007 后，空/隐私归 Global，正式请求失败/schema 覆盖归 Phase 3；不再要求它们逐项真实出现才允许动态资格 PASS。无正文占位与隐藏空态不能替代这些状态；Phase 0 Global 仍 BLOCKED。
 证据见 [读取日志](../fixtures/phase0/read-log.json) 的 `dynamicNegativeSpike20260928`、[候选映射](../fixtures/phase0/mapping-candidates.json) 与 [诊断](../fixtures/phase0/diagnostic-cases.json)。
 
-## 2026-09-28：修正版与主页区块回归
+## 2026-09-28 历史实验：修正版与主页区块回归
 
 开始时工作区 clean，main HEAD 为 `285f23d2787410f18095f7bfa79dbea677285e55`；README、Issue、报告均为 PASS 1 / FAIL 2 / NOT_VALIDATED 1，无基线差异。
 本轮只复验既有 TEST_A/B/C。通过限定日期及空间域名的浏览器历史恢复原公开样本；不将历史明细、真实 UID/昵称映射写入仓库。
@@ -82,7 +138,7 @@ A 初始加载中零卡片不计有效读取、不判 empty。A reload 与 C 离
 日期保留完整 label，包括“14小时前 · 投稿了视频”“3天前”“8月6日”；不从观察时间倒算发布时间。timestamp 均为 null。
 九次均无稳定单条动态 href；相关 BV、@用户、短链不是单条动态链接。sourceUrl 使用空间动态页，traceGranularity=page、status=partial，不能承诺稳定 item 去重。
 C 第二、三读额外检测通用转发 label；首读已保留“分享动态”原始短片段，未伪造该读的额外检测步骤。通用文案的实际降级映射见诊断 fixture。
-九次复验修补了旧转发映射回归缺口，**没有完成整个 Source Gate**。未知正文类型、引用无当前描述、必要作者缺失等拒绝规则尚缺真实负例；真实空/权限/请求失败仍不足，动态保持 FAIL。
+九次复验修补了旧转发映射回归缺口；当时仍按逐 Source 异常矩阵判定动态 FAIL。未知类型、引用无当前描述、必要作者缺失及真实空/权限/请求失败的实测不足仍保留；ADR-007 后按正确层级归类，不再将全部真实负例作为当前动态资格硬阻塞。
 
 ### 主页明确视频区块：九次验证
 
@@ -114,7 +170,7 @@ C 第二、三读额外检测通用转发 label；首读已保留“分享动态
 主任务完成后只单次正常打开已知 B 收藏入口：四个可见摘要计数 10/13/15/15，选中收藏夹明确标“公开 视频数: 10”，正常展示资源。
 没有发现明确空/拒绝/请求失败/验证码，未遍历其余收藏夹；收藏保持 NOT_VALIDATED。未寻找更多账号或扫描内部 API，也没有制造异常。
 本轮九次动态与九次主页记录、字段矩阵、工具失败见 [read-log.json](../fixtures/phase0/read-log.json) 的 `regression20260928`。
-脱敏 Raw → Candidate 与降级案例见 [映射](phase-0-normalization.md)。两项回归次数满足本轮页面读取要求，异常和归属缺口仍阻止 PASS；精确时间/单条链接缺失本身可降级，并不单独作为 FAIL 理由。
+脱敏 Raw → Candidate 与降级案例见 [映射](phase-0-normalization.md)。两项回归次数满足当轮页面读取要求；当时异常矩阵阻止动态 PASS，归属缺口阻止投稿 PASS。ADR-007 后投稿归属 blocker 不变；精确时间/单条链接缺失仍安全降级。
 
 ## 2026-09-27 历史实验：方法、样本和证据范围
 
@@ -203,7 +259,7 @@ OBSERVED=实测；NOT_VALIDATED=未验证；设计分类不冒充实测。
 | schema/身份异常 | SRC_SCHEMA_INVALID 或 SRC_INVALID_CONTEXT / unavailable | UID 0、缺昵称、引用归属错误；已有异常实证 |
 | 不明空态 | SRC_STATUS_UNKNOWN / unavailable | 先前 C 未登录动态；不发布空数组 |
 
-仅公开 DOM 可以做到“不把未知当空”，却无法给未知强行归因。这是动态/投稿全面 PASS 的剩余门槛之一。
+仅公开 DOM 可以做到“不把未知当空”，却无法给未知强行归因。旧框架曾以全面异常实测阻塞动态；ADR-007 保留不可强行归因原则，将全局风险与正式错误处理分开验收，当前动态只在已证明范围 PASS。
 
 ## 临时标准化
 
@@ -235,13 +291,13 @@ quality 为本阶段手工完整度标记，不是评分、兴趣强度或概率
 | 公开基础信息快照 | 4 | 1 | 4 | 2 | 1 | 1 |
 | 已确认投稿区块的可见视频（候选，未 PASS） | 3 | 4 | 3 | 1 | 2 | 3 |
 | 完整投稿列表（未 PASS） | 1 | 4 | 2 | 1 | 5 | 4 |
-| 公开动态（未 PASS） | 3 | 4 | 3 | 3 | 3 | 4 |
+| 公开动态（限定范围 PASS） | 3 | 4 | 3 | 3 | 3 | 4 |
 | 公开收藏资源（未验证） | 2 | 5 | 2 | 4 | 3 | 4 |
 
 收藏评分主要来自方法研究，可信度低；可见视频与完整投稿是同一候选的两种采样方案，不计为两个独立 Source。
-建议后续优先验证价值较高的明确投稿区块与正确区分转发的动态；基础信息只用作身份/上下文。
+基础信息只用作身份/上下文；动态资格已按现有证据通过，投稿归属仍不足。当前优先完成 Global Gate，不重复正常回归凑次数。
 
-## Blocker 与不超过三个调整选项
+## 历史 Blocker 与不超过三个调整选项（ADR-007 前）
 
 1. **可见页面驱动**：只对用户已访问、明确归属的公开视频/动态区块做 partial 采样，保留 unknown；仍须三账号三次与异常 Gate，不能本轮自行把范围改为已通过。
 2. **主动访问后渐进积累**：用户正常切页/刷新时积累有限公开 Evidence，按 UID 清理与去重；需先解决单条引用和转发边界，不后台遍历。
@@ -250,4 +306,8 @@ quality 为本阶段手工完整度标记，不是评分、兴趣强度或概率
 剩余最小补证：有效真空/明确权限拒绝/真实请求失败的正常页面样本、动态必要字段缺失/未知正文的真实拒绝案例、逐卡上传者与合作角色确认。修正版动态和主页区块各三账号三次（含 reload）已在本轮补齐，不能再写成未做。
 历史同文档跨 UID、慢网/旧结果验证仍 NOT_VALIDATED，本轮未扩大到这些路径。
 浏览器工具本次只允许只读 DOM，没有网页响应观察能力，不能伪造 HTTP/业务码或主动调用 API 弥补缺口。
-详见 [验证码专项](bilibili-antibot-observations.md)。来源不足两项，停止在 Phase 0，不降低或后移 Gate。
+详见 [验证码专项](bilibili-antibot-observations.md)。上述“来源不足两项”和逐 Source 异常 Gate 是当时结论，不能当作当前待办。当前来源资格为 2 / 1 / 1，Global Gate 未完成，仍停止在 Phase 0。
+
+## 当前最小下一步（仅建议，未执行）
+
+优先验证一次正常同文档跨 UID SPA 导航：确认 URL、空间头部、当前内容一起切换且不混入旧用户内容。新标签或完整导航不能计作同文档 SPA；不初始化扩展，也不声称旧请求取消实现已验证。本轮不执行网页实验。

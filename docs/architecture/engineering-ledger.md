@@ -2,9 +2,22 @@
 
 ## 当前状态（2026-09-28）
 
-**Phase 0 未通过：PASS 1 / FAIL 2 / 未验证 1；不允许进入 Phase 1。**
-当前轮只做动态剩余负例定向 Spike；新增隐藏空态与合作占位正文的拒绝边界实证。真空、权限拒绝、来源请求失败、未知结构/缺作者负例仍不足，动态保持 FAIL。既有两项九次回归不重复，见历史记录。
+**Source Qualification：PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate：BLOCKED；不允许进入 Phase 1。**
+当前轮用户批准方案 B，只落实分层 Gate 与重审已有证据，无新 B站实验。动态正式变为限定范围 PASS；投稿归属仍 FAIL，收藏仍 NOT_VALIDATED。历史实验、旧 FAIL 与未验证异常状态保留，见下方记录。
 目标仓库：furX7/BiliInterestProfile；提交结果以 Git 历史及本次汇报为准。
+
+## 2026-09-28：用户批准 Gate 分层（无新实验）
+
+- 起点 main 与 fetch 后 origin/main 均为 c23ab078575fb117504d2f0e366f4220cda8fbb2，工作区 clean；重新读取当前三份 Notion 与既有文档、六份 ADR、三份 JSON。
+- Gate 审计发现：防止转发误归属、隐藏空态、工具超时误分类与合作归属错误的有效约束，被扩张成逐 Source 全异常真实实测；混合了 Phase 0 全局风险与 Phase 3 正式工程要求。
+- 用户明确批准方案 B，新增 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)，冻结 Source Qualification / Phase 0 Global Risk Gate / Phase 3 Adapter Engineering 三层。
+- 只重审现有 A/B/C 各三次、三次 reload、108 卡片观察、Raw→Candidate 与拒绝案例。动态九项资格条件在明确范围内成立：FAIL → PASS；基础信息保持限定 PASS，投稿因实际上传者/合作角色不明继续 FAIL，收藏单次证据继续 NOT_VALIDATED。
+- 状态改变来自判定框架澄清，不是旧数据被改写；历史 FAIL、真实异常、NOT_VALIDATED 和 JSON 元数据保持原样，不新增 OBSERVED。
+- 两来源 qualification threshold 已达到；最终 v0.1 来源组合仍待冻结。pagination、logged-out、privacy-disabled、empty-data、SPA UID switch 与 minimal permissions 仍有全局缺口，Phase 0 Global 继续 BLOCKED。
+- README / Issue / 实验报告分别呈现来源计数与全局状态；更新其他当前摘要，避免残留旧 Gate 被当成当前规则。以下章节是历史记录。
+- 未获取新 Source 数据、扫描账号、修改 Notion、初始化 Phase 1、package.json、WXT 或正式 Adapter。未来 Agent 不得重新将所有异常塞回逐 Source Gate；真实网页观察与后续 mock/fixture 必须区分。
+- 提交前实际检查：三份 JSON 可解析且 Git blob hash 与基线相同；十二份改动均为 Markdown，六十二个本地链接/锚点有效；未发现冲突标记、新增凭据值或真实账号/视频 URL；无 Phase 1 工程文件。既有动态九次/108 卡片观察/三次 reload 与新资格表、十三项 Global Checklist 一致，历史 FAIL 保留。
+- git diff --check 通过；提交与远端同步结果以 Git 历史及本轮汇报为准，不把文档更新当成新来源实测。
 
 ## 初始任务与验收（历史范围）
 

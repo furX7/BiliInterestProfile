@@ -55,6 +55,5 @@ complete / partial / empty 有明确语义，empty 不能掩盖验证失败。
 
 ## 当前阶段
 
-Phase 0 来源门槛未通过，见 [真实风险实验](docs/architecture/phase-0-risk-experiments.md)。
+Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate 仍 BLOCKED，不允许进入 Phase 1。分层规则见 [ADR-007](docs/adr/ADR-007-phase0-gate-separation.md)，现有证据见 [真实风险实验](docs/architecture/phase-0-risk-experiments.md)。
 上述边界已冻结，但不声称已有完整采集、Pipeline、评分或 UI。
-

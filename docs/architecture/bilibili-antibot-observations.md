@@ -4,6 +4,12 @@
 工具：普通 Codex 内置浏览器导航、公开 DOM 读取；用户自行正常登录。
 禁止自动解验证、签名接口、身份切换、Cookie/Token 导出、主动采集接口及高频重试。
 
+## 当前 Gate 解释（2026-09-28）
+
+用户批准 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)。Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate 仍 BLOCKED。
+历史 CAPTCHA 是真实风险证据；遇 CAPTCHA 立即停止并保留 restricted，关闭后空态不能转 empty。禁止主动制造风控，不要求每个 Source 为资格 PASS 主动再触发一次 CAPTCHA。
+动态自身 CAPTCHA、真实空/权限/请求失败尚未实测的事实不变。真实 restricted 观察与 Phase 3 正式错误分类/处理分开；没有 HTTP 码不能猜成 403/429。以下实验均为历史记录，本轮无新网页观察。
+
 ## 2026-09-28 动态负例定向 Spike
 
 - 一个既有公开标签页正常动态渲染 12 卡，同时 DOM 保留隐藏空态/加载节点；AX 未显示这些提示，无布局矩形。不能仅根据节点存在或 textContent 判断成功空列表。
@@ -23,7 +29,7 @@
 - 历史 CAPTCHA 与未登录未知空态证据继续有效，但本轮没有新的同类异常；无 403/412/429 实证。未解验证、切换身份、伪造请求、扫描内部 API 或扩大样本范围。
 
 本轮测量窗口 UTC 17:09:55–17:41:49（北京时间 2026-09-28 01:09–01:41）。每次真实读取时间与工具失败见 [read-log.json](../fixtures/phase0/read-log.json)。
-异常分类未补齐，来源数量保持 PASS 1 / FAIL 2 / NOT_VALIDATED 1；正确拒绝和 partial 不能替代 Source Gate。
+当轮异常分类未补齐，旧框架判定 PASS 1 / FAIL 2 / NOT_VALIDATED 1。ADR-007 后按已有证据重判动态限定范围 PASS；未验证状态不变，空/隐私风险归 Global，正式请求错误处理归 Phase 3。
 
 ## 2026-09-27 已观察到的历史事实
 

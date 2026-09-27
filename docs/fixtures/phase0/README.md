@@ -18,5 +18,7 @@
 timestamp=null 表示精确发布时间不可得；observedAt 是读取时刻。quality 是手工完整度标签。
 历史每账号第二读复用 DOM、第三读刷新；本轮动态第二读离页再返回，主页第二读在切至其他账号后返回，第三读均明确 reload，不复用同一个 DOM 冒充三次。
 这些是新页面渲染周期证据，不能证明三次独立接口请求或服务端响应；卡片计数为已渲染 DOM，未遍历历史。
-投稿区块 B 10 张均合作，过滤零候选不判 empty；动态通用转发文案不产生兴趣 Evidence。异常矩阵不足，Gate 仍 PASS 1 / FAIL 2 / NOT_VALIDATED 1。
+投稿区块 B 10 张均合作，过滤零候选不判 empty；动态通用转发文案不产生兴趣 Evidence。当时逐 Source 异常矩阵下判定 PASS 1 / FAIL 2 / NOT_VALIDATED 1。
+2026-09-28 用户批准 [ADR-007](../../adr/ADR-007-phase0-gate-separation.md)后，当前 Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1，Phase 0 Global Risk Gate 仍 BLOCKED。
+没有新实验，三份 JSON 完全保留；其中 sourceGate、gate.counts、remainingBlockers 是历史验收元数据，不能覆盖当前分层规则。OBSERVED/NOT_VALIDATED、时间、次数、样本和映射没有改动。
 详见 [映射说明](../../architecture/phase-0-normalization.md)。

@@ -3,6 +3,9 @@
 这里只是 Evidence-like JSON 概念验证；不创建正式 TypeScript interface、Zod、Adapter 或 Contract tests。
 来源与 Gate 见 [实验记录](phase-0-risk-experiments.md)。
 
+按用户批准的 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)，Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate 仍 BLOCKED。动态仅在已登录正常公开页、当前渲染卡片、已知正文结构与已证明拒绝边界内 PASS。
+没有新实验，不改三份 JSON 的历史 sourceGate、时间、次数或观察状态。真实空/权限缺口归 Global；正式请求失败/schema/timeout 等实现与受控测试归 Phase 3；不能把未观察案例写成已通过。临时映射仍不是正式 Contract 或生产 Normalizer。
+
 ## 字段映射
 
 | Candidate 字段 | profile | video 主页摘录 | dynamic 可见卡片 |
@@ -45,7 +48,7 @@ V2：检测引用边界，读取 `.bili-dyn-content__forw__desc`，得到“翻�
 Candidate：title=null、text=翻得好！、timestamp=null、sourceUrl=匿名动态页、quality=0.5。
 详见 [diagnostic-cases.json](../fixtures/phase0/diagnostic-cases.json)。
 历史 V2 只在 C 复读与刷新各一次验证；2026-09-28 已补齐 A/B/C 各三次新页面读取及 reload，见 [读取日志](../fixtures/phase0/read-log.json) 的 regression20260928。
-本轮已修补这个回归次数缺口。异常矩阵、必要字段缺失/未知类型的真实拒绝样本仍不足，动态保持 FAIL；不能据此发布生产 normalizer。
+当轮已修补回归次数缺口，但旧逐 Source 异常矩阵仍使动态保持 FAIL。ADR-007 后已有稳定获取、归属、映射和拒绝边界支持限定资格 PASS；未知类型/必要作者缺失真实负例仍不足，不能据此发布生产 normalizer 或宣称全类型覆盖。
 
 ## 2026-09-28：实际回归的映射和降级
 
