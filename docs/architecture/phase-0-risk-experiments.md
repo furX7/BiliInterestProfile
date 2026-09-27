@@ -2,7 +2,7 @@
 
 状态：**Phase 0 GLOBAL BLOCKED**；Source Qualification：**PASS 2 / FAIL 1 / NOT_VALIDATED 1**。
 两个限定来源已证明稳定获取与概念标准化；全局风险尚未完成，不允许进入 Phase 1。
-历史实验 2026-09-27；修正版回归、Gate 决策与本轮 SPA 定向 Spike 2026-09-28（Asia/Shanghai）。本轮只验证一条正常跨 UID 导航路径。
+历史实验 2026-09-27；修正版回归、Gate 决策与 SPA 定向 Spike 2026-09-28（Asia/Shanghai）。本轮只审计两个限定 PASS 来源的最小权限，不新增网页实验。
 本轮唯一范围是 Phase 0。没有 package.json、WXT、正式 TypeScript/Zod Contract 或产品采集器。
 2026-09-27 历史来源实验收尾时工作区已有 Git 目录、原始文档已暂存但暂无提交；该次实验未进行 Git 写操作。
 2026-09-28 前一轮提交前整理仅修改主页、脱敏、链接与提交安全，不增加实验或改变 Gate。
@@ -57,17 +57,29 @@ PASS 不证明完整历史分页、所有匿名场景、稳定单条 permalink/�
 | privacy-disabled | NOT_VALIDATED | 没有明确隐私关闭/拒绝样本；缺入口不算 | 取得明确不可公开证据，核对分类及适用来源范围 |
 | empty-data | NOT_VALIDATED | UID 0 无效、隐藏模板和过滤零候选均不是真空 | 有效身份、明确成功/结束、零项共同成立的真实案例 |
 | SPA UID switch | PARTIAL | 既有导航记录；本轮公开 @ 链接正常激活后新增标签，原 A 路由/头部/12 卡摘要不变，NOT PROVEN | 缺同标签、同 document 的跨 UID 路径及旧内容隔离证据；正式取消实现后续验证 |
-| minimal permissions | PARTIAL | [权限计划](permissions-plan.md)已有空间匹配/storage最小方案 | 对选定来源核对页面提取/跨域需求及更小权限可行性；生产 manifest/安装检查在后续工程 |
+| minimal permissions | DONE | [权限计划](permissions-plan.md)逐字段审计两个限定 PASS 来源；已有 DOM / URL 加静态 matches 可采集，无额外 API 请求；Chrome MV3 / WXT 官方语义支持 | 仅 Phase 0 可行性；Phase 1 审实际生产 manifest、caller、安装提示；新增来源/请求重新审计 |
 | no server/API key | DONE | 需求冻结、[ADR-005](../adr/ADR-005-no-server.md)、现有概念获取/映射 | 后续工程继续遵守，不代表扩展运行时已实现 |
 | public-data boundary | DONE | 需求公开范围与实验正常访问纪律 | 继续限制正常可访问公开信息 |
 | sensitive-attribute boundary | DONE | 需求冻结明确敏感推断禁区，无此类实验 | 后续产品与分析器继续遵守 |
 
-全局任务按证据适用范围验收；同一隐私缺口不按四来源重复计算，也不把一次局部观察视作所有来源已验证。
+全局任务按证据适用范围验收；同一隐私缺口不按四来源重复计算，也不把一次局部观察视作所有来源已验证。表中 SPA 路径引用此前同日 Spike，本轮没有新的 SPA 观察。
 
 ## Phase 3 Adapter Engineering 边界
 
 单请求/Source 总 timeout、AbortController、可恢复网络错误 retry/exponential backoff、并发限制、节流、403/429/unauthorized、network request failure、schema validation、Source 独立状态、formal ErrorCode、controlled degradation 及 mock/fixture/controlled failure tests 在正式 Adapter 阶段完成。
 分页风险在 Phase 0 先验证；分页上限、去重等正式机制仍按后续阶段实现。真实网页状态与模拟测试分开标注，历史 CAPTCHA 不冒充 HTTP 403/429，工具 timeout 不冒充 Source failure。不要求在线上撞见每种错误，也不主动制造风控。
+
+## 2026-09-28：最小权限可行性 Spike（无新网页实验）
+
+基线 main / fetch 后 origin/main 均为 `21a8deff86296179b16d26c83adf82c8d1b3d593`，工作区 clean。重新读取指定文档、三份 JSON 与当前三份 Notion；本轮分类 Spike。依据为既有字段读取/标准化/拒绝证据与 2026-09-28 访问的 Chrome MV3 / WXT 官方资料，详见 [权限计划](permissions-plan.md)。
+
+基础信息的 URL/UID、空间昵称、简介与页面身份，以及动态的页面/作者上下文、当前主体正文、转发评论/引用边界、date label、页面 sourceUrl 与已知结构，均来自正常已渲染 DOM / URL，无必需的扩展额外网络请求。静态 content_scripts.matches 可限定 `https://space.bilibili.com/*`，不需另加同域或 API host_permissions。匹配声明仍属于站点访问，不称零权限，不扩大 Source 范围或登录可用性。
+
+采集不需 storage；未来实际使用 chrome/browser.storage 保存设置才需要，扩展 origin IndexedDB 与该命名权限分开。WXT 开发热更新的 tabs / scripting 不计入生产采集需求。矩阵、三策略比较及十二项可行性验收见权限计划；所有生产构建、Manifest/caller 与安装检查仍未执行，保留至获准的 Phase 1。
+
+**minimal permissions：PARTIAL → DONE（Phase 0 feasibility only）。** Source Qualification 仍 **PASS 2 / FAIL 1 / NOT_VALIDATED 1**；其余十二项 Global 状态原样保留，包括 SPA PARTIAL / NOT PROVEN，整体 **BLOCKED**，Phase 1：**NO**。本轮未访问 B站、申请扩展权限或开展分页、异常、SPA 实验，未新增 fixture 或正式工程。
+
+下一步仅建议单独处理 **logged-out** 缺口：正常匿名会话下核对一个已知公开动态样本的可用性证据，不猜未知空态原因。本轮不执行。
 
 ## 2026-09-28：同文档跨 UID SPA 定向 Spike
 

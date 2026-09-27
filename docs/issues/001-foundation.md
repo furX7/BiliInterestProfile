@@ -2,7 +2,7 @@
 
 状态：Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate 为 BLOCKED，Phase 1–2 未开始。
 这是本地 Issue 草案；目标仓库为 [furX7/BiliInterestProfile](https://github.com/furX7/BiliInterestProfile)，尚未创建 GitHub Issue。
-当前仍不允许进入 Phase 1；此前按用户批准的 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)重审已有证据。基础信息与动态限定 PASS，投稿归属 FAIL，收藏 NOT_VALIDATED。本轮单一路径 SPA Spike 新增标签，仍 PARTIAL / NOT PROVEN；历史逐 Source 异常矩阵下的 FAIL 与未验证事实保留。
+当前仍不允许进入 Phase 1；此前按用户批准的 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)重审已有证据。基础信息与动态限定 PASS，投稿归属 FAIL，收藏 NOT_VALIDATED。本轮仅完成最小权限可行性审计；既有 SPA 仍 PARTIAL / NOT PROVEN，历史 FAIL 与未验证事实保留。
 
 ## 目标
 
@@ -46,7 +46,7 @@ Source / Normalizer / Core Contracts / Storage / Analyzer Contracts / UI shell /
 - [ ] privacy-disabled / 明确 permission-denied（NOT_VALIDATED）。
 - [ ] empty-data / 有效 available-empty（NOT_VALIDATED）。
 - [ ] full SPA UID switch（PARTIAL / NOT PROVEN；本轮公开 @ 链接正常 Enter 后标签 3→4，原 A 路由/头部/12 卡长度摘要不变；B 新页身份一致不证明同文档切 UID、旧内容隔离或 race 收敛）。
-- [ ] minimal permissions feasibility（PARTIAL；已有计划，尚缺选定来源需求核对）。
+- [x] minimal permissions feasibility（DONE，仅 Phase 0：两个限定 PASS 来源可读已有 DOM / URL，静态空间 matches 足够；无额外 API host_permissions，storage 与采集分开。见 [权限审计](../architecture/permissions-plan.md)）。
 - [ ] Global Gate 完成后提交报告，并获用户明确批准进入 Phase 1。
 
 **两来源 qualification threshold 已达到，不等于 Phase 1 已获准开始。只有 Global Gate 完成 + 用户明确批准后才能初始化。**
@@ -56,6 +56,7 @@ Source / Normalizer / Core Contracts / Storage / Analyzer Contracts / UI shell /
 request-failed、403/429/unauthorized、timeout/retry/abort、schema validation、Source 独立状态、formal ErrorCode、controlled degradation 及缺字段/未知类型 mock/fixture 测试归 Phase 3。真实未观察状态继续 NOT_VALIDATED，不要求逐 Source 在线上撞见全部负例。
 
 - [ ] 安装依赖、strict TS、WXT MV3、四入口、React shell。
+- [ ] Phase 1 权限实现验收：Chrome / Edge production generated manifest diff、Source caller audit、安装提示、设置 storage 与扩展 origin IndexedDB；本轮均未执行。
 - [ ] lint、format、typecheck、unit、integration、golden、Chrome/Edge build、bundle budget。
 - [ ] Phase 2 Contracts、Zod、Dexie v1、migration、Feature Flags。
 - [ ] 可选失败与 Evidence 引用有真实测试。

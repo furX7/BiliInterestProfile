@@ -3,8 +3,19 @@
 ## 当前状态（2026-09-28）
 
 **Source Qualification：PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate：BLOCKED；不允许进入 Phase 1。**
-此前用户批准方案 B，落实分层 Gate 并按已有证据将动态改为限定 PASS；本轮仅同文档跨 UID Spike，正常公开链接新增标签，SPA 继续 PARTIAL / NOT PROVEN。投稿归属仍 FAIL，收藏仍 NOT_VALIDATED；历史实验、旧 FAIL 与未验证状态保留。
+此前用户批准方案 B，落实分层 Gate 并按已有证据将动态改为限定 PASS；本轮最小权限可行性 PARTIAL → DONE，仅 Phase 0 文档审计，未实现扩展。SPA 继续 PARTIAL / NOT PROVEN，其他 Global 状态不变。投稿仍 FAIL，收藏仍 NOT_VALIDATED；历史记录保留。
 目标仓库：furX7/BiliInterestProfile；提交结果以 Git 历史及本次汇报为准。
+
+## 2026-09-28：最小权限可行性 Spike
+
+- 基线 main / fetch 后 origin/main 均为 21a8deff86296179b16d26c83adf82c8d1b3d593，工作区 clean。重新完整读取指定本地文档与三份 JSON；当前 Notion Idea / 流程 / 工程页 last-edited 分别为 2026-09-27T13:57:58.064Z、2026-09-27T14:00:51.642Z、2026-09-27T18:46:01.241Z，包括最新执行协议、DoD 与 Skill Routing。未修改 Notion 或历史快照。
+- 按 Spike 只审既有两个限定 PASS 来源的数据路径与官方权限语义；使用 notion-research-documentation，Chrome MV3 / WXT 官方文档 accessed 2026-09-28。没有新 B站页面读取、扩展安装、实际权限申请、API 请求或其他 Global 实验。
+- Profile 头部/身份与 Dynamics 当前主体/引用边界/dateLabel/sourceUrl 均可从已有 DOM / 当前 URL 得到。静态空间 matches 的 DOM-only candidate 不需额外空间/API host_permissions 或命名 API 权限；仍声明站点访问。页面自身请求不当作扩展请求。
+- storage 对采集 NOT_REQUIRED，未来设置 API 使用 DEFERRED；扩展 origin IndexedDB 不等于 storage permission，内容脚本的网页 origin 存储不当作扩展 Evidence Store。WXT dev 的 tabs / scripting 不计为生产权限。
+- [权限计划](permissions-plan.md)完成逐字段审计、六概念区别、权限矩阵、匹配范围、三策略比较与未来重新审计规则；minimal permissions PARTIAL → DONE，范围为 Phase 0 feasibility，不是 Phase 1 production manifest 已验证。生产 caller/build/安装与存储位置检查保留。
+- Source Qualification 2 / 1 / 1 与其余十二项 Global 状态不变，整体 BLOCKED，Phase 1 NO。仅更新既有四份 Markdown，不修改 JSON、不生成 Manifest/package/src/WXT 或正式代码；下一项只建议 logged-out，不执行。
+- 提交前实际检查：三份 JSON 可解析且 Git blob 与基线一致；四份改动均为已有 Markdown，71 个本地链接/锚点有效；十三项 Global 只有 minimal permissions 行变化，Source 资格表原样、六份当前摘要均为 2 / 1 / 1 与 BLOCKED。完整 diff 审查与新增行扫描未发现凭据值或真实账号/视频映射，无冲突标记、Manifest/package/src/WXT/正式代码；git diff --check 通过。权限计划十三个官方引用页面均正常打开，生产构建/安装未执行。
+- 检查器曾因行尾/字符串兼容性失败，修正后完整重跑通过，不计来源实验或网站失败。提交与正常推送以 Git 历史及汇报为准；文档分析不冒充新增 OBSERVED 或生产测试。
 
 ## 2026-09-28：SPA UID switch 单一路径 Spike
 
