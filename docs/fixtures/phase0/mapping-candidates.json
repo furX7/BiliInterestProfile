@@ -1,0 +1,31 @@
+{
+  "kind": "phase0-concept-mapping-not-production-contract",
+  "anonymization": {"userIds":"aliases","nicknames":"placeholders","descriptions":"placeholders","sourceUrls":"non-resolvable alias templates; original account/video mappings not committed","publicVideoTitleAndBV":"redacted placeholders","minimalCommentExcerpt":"retained only for attribution-boundary validation"},
+  "examples": [
+    {
+      "metadata": {"sample":"TEST_A","observedAt":"2026-09-27T14:39:12.758Z","scope":"public-space-header","status":"available","sourceGate":"PASS-limited-to-header","contactRedacted":true},
+      "raw": {"urlUid":"TEST_A","nickname":"[PUBLIC_NAME_A]","description":"[PUBLIC_DESCRIPTION_A]"},
+      "candidate": {"source":"profile","userId":"TEST_A","timestamp":null,"title":"[PUBLIC_NAME_A]","text":"[PUBLIC_DESCRIPTION_A]","tags":[],"category":null,"sourceUrl":"https://space.bilibili.com/TEST_A","quality":0.25}
+    },
+    {
+      "metadata": {"sample":"TEST_B","observedAt":"2026-09-27T14:44:42.242Z","scope":"public-space-header","status":"available","sourceGate":"PASS-limited-to-header"},
+      "raw": {"urlUid":"TEST_B","nickname":"[PUBLIC_NAME_B]","description":"[PUBLIC_DESCRIPTION_B]"},
+      "candidate": {"source":"profile","userId":"TEST_B","timestamp":null,"title":"[PUBLIC_NAME_B]","text":"[PUBLIC_DESCRIPTION_B]","tags":[],"category":null,"sourceUrl":"https://space.bilibili.com/TEST_B","quality":0.25}
+    },
+    {
+      "metadata": {"sample":"TEST_C","observedAt":"2026-09-27T14:49:45.413Z","scope":"public-space-header","status":"available","sourceGate":"PASS-limited-to-header","externalProfileLinkRedacted":true,"noSensitiveInference":true},
+      "raw": {"urlUid":"TEST_C","nickname":"[PUBLIC_NAME_C]","description":"[PUBLIC_DESCRIPTION_C]"},
+      "candidate": {"source":"profile","userId":"TEST_C","timestamp":null,"title":"[PUBLIC_NAME_C]","text":"[PUBLIC_DESCRIPTION_C]","tags":[],"category":null,"sourceUrl":"https://space.bilibili.com/TEST_C","quality":0.25}
+    },
+    {
+      "metadata": {"sample":"TEST_A","observedAt":"2026-09-27T14:29:38.993Z","scope":"visible-homepage-collection-card","status":"partial","sourceGate":"FAIL","datePrecision":"day-only; no exact publication timestamp"},
+      "raw": {"title":"[PUBLIC_VIDEO_TITLE_A]","href":"https://www.bilibili.com/video/BV_REDACTED_A?spm_id_from=REDACTED","cardText":"[PUBLIC_VIDEO_TITLE_A]\n2024年1月10日","dateLabel":"2024年1月10日"},
+      "candidate": {"source":"video","userId":"TEST_A","timestamp":null,"title":"[PUBLIC_VIDEO_TITLE_A]","text":null,"tags":[],"category":null,"sourceUrl":"https://www.bilibili.com/video/BV_REDACTED_A/","quality":0.6}
+    },
+    {
+      "metadata": {"sample":"TEST_C","observedAt":"2026-09-27T14:51:25.124Z","scope":"visible-forward-comment-excerpt","status":"partial","sourceGate":"FAIL","mapperVersion":2,"traceGranularity":"page","originalContentExcluded":true},
+      "raw": {"headerAuthor":"[PUBLIC_NAME_C]","dateLabel":"8月6日","forwardComment":"翻得好！","originalIsReference":true,"stableDynamicId":null,"itemPermalink":null},
+      "candidate": {"source":"dynamic","userId":"TEST_C","timestamp":null,"title":null,"text":"翻得好！","tags":[],"category":null,"sourceUrl":"https://space.bilibili.com/TEST_C/dynamic","quality":0.5}
+    }
+  ]
+}

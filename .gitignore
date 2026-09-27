@@ -1,0 +1,55 @@
+# Dependencies and build output
+node_modules/
+dist/
+.output/
+.wxt/
+
+# Local environment values
+.env
+.env.*
+!.env.example
+
+# Test output
+playwright-report/
+test-results/
+coverage/
+
+# Editor and system files
+*.log
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary files and debug caches
+tmp/
+temp/
+.cache/
+debug-cache/
+captures/
+
+# Browser profiles and saved authentication state
+browser-profile*/
+.browser-profile/
+chrome-profile*/
+edge-profile*/
+chromium-profile*/
+user-data-dir/
+playwright/.auth/
+auth-state*.json
+storage-state*.json
+storageState*.json
+
+# Cookie/session dumps and network captures
+cookie-dump*/
+cookie-dump*
+*cookies*.json
+*cookie*.txt
+*.cookies
+sessions/
+session*.json
+*.session
+*.har
+*.pcap
+*.pcapng
+*.trace

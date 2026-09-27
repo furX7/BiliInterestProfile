@@ -1,0 +1,12 @@
+{
+  "kind": "observed-negative-and-partial-cases",
+  "cases": [
+    {"id":"invalid-context","observedAt":"2026-09-27T14:54:39.778Z","raw":{"uid":"INVALID_UID","nickname":"","description":"","pageMessage":"空间主人还没投过稿，这里什么也没有..."},"result":{"status":"unavailable","error":"SRC_INVALID_CONTEXT","items":null},"notProven":"not a valid empty account, not an observed HTTP failure"},
+    {"id":"forward-attribution-v1","observedAt":"2026-09-27T14:49:45.413Z","raw":{"sample":"TEST_C","selectedClass":"bili-dyn-content__orig reference","referencedVideoTitle":"[REFERENCED_VIDEO_TITLE]","actualUserComment":"翻得好！"},"result":{"status":"rejected-candidate","error":"ATTRIBUTION_MISMATCH","candidate":null},"correction":{"selector":"bili-dyn-content__forw__desc","text":"翻得好！","verifiedReads":2,"includesReload":true}},
+    {"id":"captcha-followed-by-empty-ui","observedAt":null,"raw":{"sample":"TEST_C","loggedIn":false,"route":"upload/video","captchaObserved":true,"afterClosingVerification":"空间主人还没投过视频"},"result":{"status":"unavailable","error":"SRC_RESTRICTED","items":null},"origin":"prior real browser observation preserved in Phase 0 report"},
+    {"id":"unconfirmed-dynamic-empty","observedAt":null,"raw":{"sample":"TEST_C","loggedIn":false,"pageMessage":"好像没有东西诶","successfulResponseConfirmed":false},"result":{"status":"unavailable","error":"SRC_STATUS_UNKNOWN","items":null},"laterObservation":"logged-in page showed 12 real cards; does not establish the original error cause"},
+    {"id":"missing-video-date","observedAt":"2026-09-27T14:29:38.993Z","raw":{"sample":"TEST_A","title":"[PUBLIC_VIDEO_TITLE_WITHOUT_DATE]","bv":"BV_REDACTED_WITHOUT_DATE","dateLabel":null},"result":{"status":"partial","timestamp":null,"warning":"publication-time-unavailable"}},
+    {"id":"relative-dynamic-date-and-page-reference","observedAt":"2026-09-27T14:39:12.758Z","raw":{"sample":"TEST_A","dateLabel":"9月23日","textExcerpt":"[REDACTED_TEXT_EXCERPT]","itemPermalink":null},"result":{"status":"partial","timestamp":null,"traceGranularity":"page","warning":"no exact timestamp or stable item permalink"}}
+  ],
+  "notObserved": ["confirmed valid empty result","explicit private-source denial","HTTP 403/412/429","slow-network simulation","content-script lifetime"]
+}

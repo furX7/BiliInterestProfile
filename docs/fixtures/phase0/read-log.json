@@ -1,0 +1,25 @@
+{
+  "kind": "real-browser-observation-summary",
+  "experimentDate": "2026-09-27",
+  "timeZone": "Asia/Shanghai",
+  "timestampFormat": "observedAt is UTC ISO8601, not publication time",
+  "sampling": "read 1; same rendered DOM read 2; reload before read 3",
+  "userIdsRedacted": true,
+  "loggedInReads": [
+    {"userId":"TEST_A","round":1,"observedAt":"2026-09-27T14:39:12.758Z","profileFieldsPresent":true,"dynamicCardCount":12,"dynamicMapperVersion":1,"afterReload":false,"visibleRestrictionSignals":[]},
+    {"userId":"TEST_A","round":2,"observedAt":"2026-09-27T14:39:46.545Z","profileFieldsPresent":true,"dynamicCardCount":12,"dynamicMapperVersion":1,"afterReload":false,"visibleRestrictionSignals":[]},
+    {"userId":"TEST_A","round":3,"observedAt":"2026-09-27T14:41:12.841Z","profileFieldsPresent":true,"dynamicCardCount":12,"dynamicMapperVersion":1,"afterReload":true,"visibleRestrictionSignals":[]},
+    {"userId":"TEST_B","round":1,"observedAt":"2026-09-27T14:44:42.242Z","profileFieldsPresent":true,"dynamicCardCount":12,"dynamicMapperVersion":1,"afterReload":false,"visibleRestrictionSignals":[]},
+    {"userId":"TEST_B","round":2,"observedAt":"2026-09-27T14:45:24.358Z","profileFieldsPresent":true,"dynamicCardCount":12,"dynamicMapperVersion":1,"afterReload":false,"visibleRestrictionSignals":[]},
+    {"userId":"TEST_B","round":3,"observedAt":"2026-09-27T14:46:58.164Z","profileFieldsPresent":true,"dynamicCardCount":12,"dynamicMapperVersion":1,"afterReload":true,"visibleRestrictionSignals":[]},
+    {"userId":"TEST_C","round":1,"observedAt":"2026-09-27T14:49:45.413Z","profileFieldsPresent":true,"dynamicCardCount":12,"dynamicMapperVersion":1,"afterReload":false,"visibleRestrictionSignals":[],"dynamicNormalizationAccepted":false,"reason":"forwarded original misattributed by mapper v1"},
+    {"userId":"TEST_C","round":2,"observedAt":"2026-09-27T14:51:25.124Z","profileFieldsPresent":true,"dynamicCardCount":12,"dynamicMapperVersion":2,"afterReload":false,"visibleRestrictionSignals":[],"verifiedForwardComment":"翻得好！"},
+    {"userId":"TEST_C","round":3,"observedAt":"2026-09-27T14:52:47.422Z","profileFieldsPresent":true,"dynamicCardCount":12,"dynamicMapperVersion":2,"afterReload":true,"visibleRestrictionSignals":[],"verifiedForwardComment":"翻得好！"}
+  ],
+  "negativeRead": {"userId":"INVALID_UID","observedAt":"2026-09-27T14:54:39.778Z","profileFieldsPresent":false,"nickname":"","description":"","dynamicCardCount":0,"status":"unavailable","error":"SRC_INVALID_CONTEXT","items":null},
+  "loggedOutHomepageReads": [
+    {"userId":"TEST_A","round":1,"observedAt":"2026-09-27T14:29:38.993Z","profileFieldsPresent":true,"allPageVideoTitleLinks":49,"afterReload":false},
+    {"userId":"TEST_A","round":2,"observedAt":"2026-09-27T14:30:26.618Z","profileFieldsPresent":true,"allPageVideoTitleLinks":49,"afterReload":true}
+  ],
+  "limitations": ["same-page reads are not independent network fetches","no HTTP or business code capture","all-page video link counts are not uploads counts","no verified empty or private sample","mapper v2 regression incomplete"]
+}
