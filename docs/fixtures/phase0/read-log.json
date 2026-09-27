@@ -21,5 +21,274 @@
     {"userId":"TEST_A","round":1,"observedAt":"2026-09-27T14:29:38.993Z","profileFieldsPresent":true,"allPageVideoTitleLinks":49,"afterReload":false},
     {"userId":"TEST_A","round":2,"observedAt":"2026-09-27T14:30:26.618Z","profileFieldsPresent":true,"allPageVideoTitleLinks":49,"afterReload":true}
   ],
-  "limitations": ["same-page reads are not independent network fetches","no HTTP or business code capture","all-page video link counts are not uploads counts","no verified empty or private sample","mapper v2 regression incomplete"]
+  "limitations": ["historical second reads reused the same DOM","no HTTP or business code capture","all-page video link counts are not uploads counts","no verified empty or private sample","historical mapper v2 regression was incomplete; follow-up below records nine new rendered-page reads"],
+  "regression20260928": {
+    "experimentDate": "2026-09-28",
+    "timeZone": "Asia/Shanghai",
+    "scope": "Phase 0 only; existing public TEST_A/B/C; no credential export or API replay",
+    "dynamicSampling": "fresh navigation; leave to homepage and return; confirmed explicit reload; interrupted operations excluded",
+    "homepageSampling": "normal navigation; return after another account; confirmed explicit reload",
+    "networkIndependence": "new page/render cycles observed; HTTP request identity, cache behavior and request success counts not captured",
+    "dynamicReads": [
+      {"sample":"TEST_A","round":1,"observedAt":"2026-09-27T17:09:55.707Z","method":"normal-navigation","cardCount":12,"referenceCount":4,"pageUidMatches":true,"authorNamesMatch":12,"selectedInsideReference":0,"stableItemPermalinks":0,"restrictionSignals":[],"sourceUrl":"https://space.bilibili.com/TEST_A/dynamic","genericForwardLabelExcluded":"not separately measured in this read"},
+      {"sample":"TEST_A","round":2,"observedAt":"2026-09-27T17:11:36.559Z","method":"leave-and-return","cardCount":12,"referenceCount":4,"pageUidMatches":true,"authorNamesMatch":12,"selectedInsideReference":0,"stableItemPermalinks":0,"restrictionSignals":[],"sourceUrl":"https://space.bilibili.com/TEST_A/dynamic","genericForwardLabelExcluded":"not separately measured in this read"},
+      {"sample":"TEST_A","round":3,"observedAt":"2026-09-27T17:15:08.849Z","method":"explicit-reload-confirmed","cardCount":12,"referenceCount":4,"pageUidMatches":true,"authorNamesMatch":12,"selectedInsideReference":0,"stableItemPermalinks":0,"restrictionSignals":[],"sourceUrl":"https://space.bilibili.com/TEST_A/dynamic","genericForwardLabelExcluded":"not separately measured in this read"},
+      {"sample":"TEST_B","round":1,"observedAt":"2026-09-27T17:17:52.168Z","method":"normal-navigation","cardCount":12,"referenceCount":5,"pageUidMatches":true,"authorNamesMatch":12,"selectedInsideReference":0,"stableItemPermalinks":0,"restrictionSignals":[],"sourceUrl":"https://space.bilibili.com/TEST_B/dynamic","genericForwardLabelExcluded":"not separately measured in this read"},
+      {"sample":"TEST_B","round":2,"observedAt":"2026-09-27T17:20:40.607Z","method":"leave-and-return","cardCount":12,"referenceCount":5,"pageUidMatches":true,"authorNamesMatch":12,"selectedInsideReference":0,"stableItemPermalinks":0,"restrictionSignals":[],"sourceUrl":"https://space.bilibili.com/TEST_B/dynamic","genericForwardLabelExcluded":"not separately measured in this read"},
+      {"sample":"TEST_B","round":3,"observedAt":"2026-09-27T17:22:07.941Z","method":"explicit-reload-confirmed","cardCount":12,"referenceCount":5,"pageUidMatches":true,"authorNamesMatch":12,"selectedInsideReference":0,"stableItemPermalinks":0,"restrictionSignals":[],"sourceUrl":"https://space.bilibili.com/TEST_B/dynamic","genericForwardLabelExcluded":"not separately measured in this read"},
+      {"sample":"TEST_C","round":1,"observedAt":"2026-09-27T17:23:46.387Z","method":"normal-navigation","cardCount":12,"referenceCount":11,"pageUidMatches":true,"authorNamesMatch":12,"selectedInsideReference":0,"stableItemPermalinks":0,"restrictionSignals":[],"sourceUrl":"https://space.bilibili.com/TEST_C/dynamic","genericForwardLabelExcluded":"not separately measured in this read"},
+      {"sample":"TEST_C","round":2,"observedAt":"2026-09-27T17:27:51.283Z","method":"leave-and-return","cardCount":12,"referenceCount":11,"pageUidMatches":true,"authorNamesMatch":12,"selectedInsideReference":0,"stableItemPermalinks":0,"restrictionSignals":[],"sourceUrl":"https://space.bilibili.com/TEST_C/dynamic","genericForwardLabelExcluded":1},
+      {"sample":"TEST_C","round":3,"observedAt":"2026-09-27T17:29:04.384Z","method":"explicit-reload-confirmed","cardCount":12,"referenceCount":11,"pageUidMatches":true,"authorNamesMatch":12,"selectedInsideReference":0,"stableItemPermalinks":0,"restrictionSignals":[],"sourceUrl":"https://space.bilibili.com/TEST_C/dynamic","genericForwardLabelExcluded":1}
+    ],
+    "homepageReads": [
+      {"sample":"TEST_A","round":1,"observedAt":"2026-09-27T17:32:39.535Z","method":"normal-navigation","urlUidMatches":true,"visibleUidMatches":true,"blockTitle":"视频","blockClass":"section-wrap video-section","blockAttributionConfirmed":true,"cardCount":10,"coCreationCount":2,"partialBlockBoundCandidates":8,"allPageVideoTitleLinks":56,"sameSanitizedCardFieldsAsFirst":null,"signals":[]},
+      {"sample":"TEST_A","round":2,"observedAt":"2026-09-27T17:33:55.447Z","method":"cross-account-navigation","urlUidMatches":true,"visibleUidMatches":true,"blockTitle":"视频","blockClass":"section-wrap video-section","blockAttributionConfirmed":true,"cardCount":10,"coCreationCount":2,"partialBlockBoundCandidates":8,"allPageVideoTitleLinks":56,"sameSanitizedCardFieldsAsFirst":true,"signals":[]},
+      {"sample":"TEST_A","round":3,"observedAt":"2026-09-27T17:34:10.938Z","method":"explicit-reload-confirmed","urlUidMatches":true,"visibleUidMatches":true,"blockTitle":"视频","blockClass":"section-wrap video-section","blockAttributionConfirmed":true,"cardCount":10,"coCreationCount":2,"partialBlockBoundCandidates":8,"allPageVideoTitleLinks":56,"sameSanitizedCardFieldsAsFirst":true,"signals":[]},
+      {"sample":"TEST_B","round":1,"observedAt":"2026-09-27T17:33:05.695Z","method":"normal-navigation","urlUidMatches":true,"visibleUidMatches":true,"blockTitle":"视频","blockClass":"section-wrap video-section","blockAttributionConfirmed":true,"cardCount":10,"coCreationCount":10,"partialBlockBoundCandidates":0,"allPageVideoTitleLinks":68,"sameSanitizedCardFieldsAsFirst":null,"signals":[]},
+      {"sample":"TEST_B","round":2,"observedAt":"2026-09-27T17:34:32.905Z","method":"cross-account-navigation","urlUidMatches":true,"visibleUidMatches":true,"blockTitle":"视频","blockClass":"section-wrap video-section","blockAttributionConfirmed":true,"cardCount":10,"coCreationCount":10,"partialBlockBoundCandidates":0,"allPageVideoTitleLinks":68,"sameSanitizedCardFieldsAsFirst":true,"signals":[]},
+      {"sample":"TEST_B","round":3,"observedAt":"2026-09-27T17:34:52.845Z","method":"explicit-reload-confirmed","urlUidMatches":true,"visibleUidMatches":true,"blockTitle":"视频","blockClass":"section-wrap video-section","blockAttributionConfirmed":true,"cardCount":10,"coCreationCount":10,"partialBlockBoundCandidates":0,"allPageVideoTitleLinks":68,"sameSanitizedCardFieldsAsFirst":true,"signals":[]},
+      {"sample":"TEST_C","round":1,"observedAt":"2026-09-27T17:33:23.786Z","method":"normal-navigation","urlUidMatches":true,"visibleUidMatches":true,"blockTitle":"视频","blockClass":"section-wrap video-section","blockAttributionConfirmed":true,"cardCount":25,"coCreationCount":2,"partialBlockBoundCandidates":23,"allPageVideoTitleLinks":25,"sameSanitizedCardFieldsAsFirst":null,"signals":[]},
+      {"sample":"TEST_C","round":2,"observedAt":"2026-09-27T17:35:09.188Z","method":"cross-account-navigation","urlUidMatches":true,"visibleUidMatches":true,"blockTitle":"视频","blockClass":"section-wrap video-section","blockAttributionConfirmed":true,"cardCount":25,"coCreationCount":2,"partialBlockBoundCandidates":23,"allPageVideoTitleLinks":25,"sameSanitizedCardFieldsAsFirst":true,"signals":[]},
+      {"sample":"TEST_C","round":3,"observedAt":"2026-09-27T17:36:24.864Z","method":"explicit-reload-confirmed","urlUidMatches":true,"visibleUidMatches":true,"blockTitle":"视频","blockClass":"section-wrap video-section","blockAttributionConfirmed":true,"cardCount":25,"coCreationCount":2,"partialBlockBoundCandidates":23,"allPageVideoTitleLinks":25,"sameSanitizedCardFieldsAsFirst":true,"signals":[]}
+    ],
+    "dynamicCardSnapshots": [
+      {
+        "sample": "TEST_A",
+        "observedRound": 3,
+        "allAuthorsMatchPageName": true,
+        "cardAuthorUidExposed": false,
+        "allSelectedOutsideReference": true,
+        "stableItemPermalinks": 0,
+        "timestamp": null,
+        "traceGranularity": "page",
+        "selectorKey": {
+          "orig-desc": ".bili-dyn-content__orig__desc",
+          "opus-paragraph": ".dyn-card-opus__summary .opus-paragraph-children",
+          "video-desc": ".bili-dyn-card-video__desc",
+          "forward-desc": ".bili-dyn-content__forw__desc"
+        },
+        "columns": ["index","selectorKey","textLength","dateLabel","reference","titlePresent","genericForwardLabel"],
+        "cards": [
+          [1,"orig-desc",13,"14小时前 · 投稿了视频",false,true,null],
+          [2,"opus-paragraph",230,"9月23日",false,false,null],
+          [3,"forward-desc",16,"9月23日",true,false,null],
+          [4,"orig-desc",12,"9月22日 · 投稿了视频",false,true,null],
+          [5,"forward-desc",84,"9月22日",true,false,null],
+          [6,"opus-paragraph",131,"9月22日",false,false,null],
+          [7,"video-desc",19,"9月21日 · 发布了动态视频",false,true,null],
+          [8,"forward-desc",149,"9月21日",true,false,null],
+          [9,"forward-desc",35,"9月19日",true,false,null],
+          [10,"orig-desc",23,"9月17日 · 发布了动态视频",false,true,null],
+          [11,"orig-desc",14,"9月16日 · 投稿了视频",false,true,null],
+          [12,"opus-paragraph",115,"9月16日",false,false,null]
+        ]
+      },
+      {
+        "sample": "TEST_B",
+        "observedRound": 3,
+        "allAuthorsMatchPageName": true,
+        "cardAuthorUidExposed": false,
+        "allSelectedOutsideReference": true,
+        "stableItemPermalinks": 0,
+        "timestamp": null,
+        "traceGranularity": "page",
+        "selectorKey": {
+          "orig-desc": ".bili-dyn-content__orig__desc",
+          "opus-paragraph": ".dyn-card-opus__summary .opus-paragraph-children",
+          "video-desc": ".bili-dyn-card-video__desc",
+          "forward-desc": ".bili-dyn-content__forw__desc"
+        },
+        "columns": ["index","selectorKey","textLength","dateLabel","reference","titlePresent","genericForwardLabel"],
+        "cards": [
+          [1,"opus-paragraph",244,"3天前",false,false,null],
+          [2,"opus-paragraph",193,"3天前",false,false,null],
+          [3,"forward-desc",44,"9月21日",true,false,null],
+          [4,"forward-desc",53,"9月21日",true,false,null],
+          [5,"opus-paragraph",206,"9月21日",false,false,null],
+          [6,"forward-desc",151,"9月17日",true,false,null],
+          [7,"forward-desc",86,"9月16日",true,false,null],
+          [8,"video-desc",144,"9月16日 · 与他人联合创作",false,true,null],
+          [9,"opus-paragraph",218,"9月16日",false,false,null],
+          [10,"opus-paragraph",141,"9月15日",false,false,null],
+          [11,"forward-desc",53,"9月14日",true,false,null],
+          [12,"opus-paragraph",235,"9月11日",false,false,null]
+        ]
+      },
+      {
+        "sample": "TEST_C",
+        "observedRound": 3,
+        "allAuthorsMatchPageName": true,
+        "cardAuthorUidExposed": false,
+        "allSelectedOutsideReference": true,
+        "stableItemPermalinks": 0,
+        "timestamp": null,
+        "traceGranularity": "page",
+        "selectorKey": {
+          "orig-desc": ".bili-dyn-content__orig__desc",
+          "opus-paragraph": ".dyn-card-opus__summary .opus-paragraph-children",
+          "video-desc": ".bili-dyn-card-video__desc",
+          "forward-desc": ".bili-dyn-content__forw__desc"
+        },
+        "columns": ["index","selectorKey","textLength","dateLabel","reference","titlePresent","genericForwardLabel"],
+        "cards": [
+          [1,"forward-desc",4,"8月6日",true,false,false],
+          [2,"forward-desc",4,"8月5日",true,false,true],
+          [3,"forward-desc",61,"7月19日",true,false,false],
+          [4,"video-desc",34,"7月13日 · 投稿了视频",false,true,false],
+          [5,"forward-desc",9,"6月9日",true,false,false],
+          [6,"forward-desc",8,"5月31日",true,false,false],
+          [7,"forward-desc",5,"5月23日",true,false,false],
+          [8,"forward-desc",4,"4月20日",true,false,false],
+          [9,"forward-desc",11,"4月16日",true,false,false],
+          [10,"forward-desc",16,"2月18日",true,false,false],
+          [11,"forward-desc",4,"1月30日",true,false,false],
+          [12,"forward-desc",4,"1月21日",true,false,false]
+        ]
+      }
+    ],
+    "homepageCardSnapshots": [
+      {
+        "sample": "TEST_A",
+        "observedRound": 1,
+        "columns": ["index","titleLength","dateLabel","unionTag"],
+        "cards": [
+          [1,30,"14小时前",false],
+          [2,18,"9月22日",false],
+          [3,25,"9月16日",false],
+          [4,9,"9月14日",false],
+          [5,7,"9月12日",false],
+          [6,24,"9月8日",true],
+          [7,16,"8月30日",true],
+          [8,23,"8月28日",false],
+          [9,17,"8月26日",false],
+          [10,19,"8月18日",false]
+        ],
+        "allTitlesPresent": true,
+        "allBvAndCanonicalUrlsValid": true,
+        "cardCreatorUidExposed": false,
+        "timestamp": null,
+        "title": "[VIDEO_TITLE_REDACTED]",
+        "sourceUrlTemplate": "https://www.bilibili.com/video/BV_REDACTED_TEST_A_<index>/",
+        "templatesAreNotStableEvidenceIds": true,
+        "excludedSections": [
+          {"block":"top-section","titleLinks":0},
+          {"block":"lists-section visitor","titleLinks":46},
+          {"block":"article-section","titleLinks":0}
+        ]
+      },
+      {
+        "sample": "TEST_B",
+        "observedRound": 1,
+        "columns": ["index","titleLength","dateLabel","unionTag"],
+        "cards": [
+          [1,17,"9月16日",true],
+          [2,53,"9月6日",true],
+          [3,54,"9月6日",true],
+          [4,59,"9月6日",true],
+          [5,28,"9月5日",true],
+          [6,50,"8月18日",true],
+          [7,20,"8月7日",true],
+          [8,60,"7月25日",true],
+          [9,58,"7月23日",true],
+          [10,66,"7月20日",true]
+        ],
+        "allTitlesPresent": true,
+        "allBvAndCanonicalUrlsValid": true,
+        "cardCreatorUidExposed": false,
+        "timestamp": null,
+        "title": "[VIDEO_TITLE_REDACTED]",
+        "sourceUrlTemplate": "https://www.bilibili.com/video/BV_REDACTED_TEST_B_<index>/",
+        "templatesAreNotStableEvidenceIds": true,
+        "excludedSections": [
+          {"block":"top-section","titleLinks":0},
+          {"block":"fav-section","titleLinks":0},
+          {"block":"bangumi-section","titleLinks":0},
+          {"block":"lists-section visitor","titleLinks":48},
+          {"block":"article-section","titleLinks":0},
+          {"block":"like-section","titleLinks":10}
+        ]
+      },
+      {
+        "sample": "TEST_C",
+        "observedRound": 1,
+        "columns": ["index","titleLength","dateLabel","unionTag"],
+        "cards": [
+          [1,4,"7月13日",false],
+          [2,14,"2024年8月26日",true],
+          [3,35,"2023年6月18日",true],
+          [4,5,"2023年2月5日",false],
+          [5,20,"2022年1月30日",false],
+          [6,16,"2022年1月1日",false],
+          [7,11,"2021年4月25日",false],
+          [8,11,"2021年2月10日",false],
+          [9,16,"2020年12月31日",false],
+          [10,38,"2019年12月11日",false],
+          [11,16,"2019年7月25日",false],
+          [12,10,"2019年2月22日",false],
+          [13,18,"2018年7月18日",false],
+          [14,7,"2018年6月15日",false],
+          [15,10,"2018年1月31日",false],
+          [16,8,"2017年12月12日",false],
+          [17,18,"2017年5月10日",false],
+          [18,14,"2016年8月3日",false],
+          [19,17,"2015年4月12日",false],
+          [20,9,"2014年1月14日",false],
+          [21,21,"2012年7月25日",false],
+          [22,11,"2012年6月1日",false],
+          [23,21,"2012年2月22日",false],
+          [24,20,"2011年9月6日",false],
+          [25,8,"2011年7月26日",false]
+        ],
+        "allTitlesPresent": true,
+        "allBvAndCanonicalUrlsValid": true,
+        "cardCreatorUidExposed": false,
+        "timestamp": null,
+        "title": "[VIDEO_TITLE_REDACTED]",
+        "sourceUrlTemplate": "https://www.bilibili.com/video/BV_REDACTED_TEST_C_<index>/",
+        "templatesAreNotStableEvidenceIds": true,
+        "excludedSections": [
+          {"block":"top-section","titleLinks":0},
+          {"block":"bangumi-section","titleLinks":0},
+          {"block":"lists-section visitor","titleLinks":0},
+          {"block":"article-section","titleLinks":0}
+        ]
+      }
+    ],
+    "toolFailures": [
+      {"step":"dynamic summary formatting","kind":"host code generation disallowed","counted":false,"sourceRequestFailed":false},
+      {"step":"TEST_A reload sequence","kind":"browser tool timeout and connection reset","counted":false,"sourceRequestFailed":false},
+      {"step":"TEST_C departure sequence","kind":"browser tool timeout and connection reset","counted":false,"sourceRequestFailed":false}
+    ],
+    "exceptions": {
+      "availableEmpty": "NOT_VALIDATED",
+      "permissionDenied": "NOT_VALIDATED",
+      "requestFailed": "NOT_VALIDATED",
+      "restricted": "OBSERVED historical CAPTCHA; no new CAPTCHA in this regression",
+      "unknown": "OBSERVED historical unconfirmed empty; no new final unknown empty; initial A loading shell excluded"
+    },
+    "gate": {
+      "profile": "PASS-limited-to-header",
+      "video": "FAIL",
+      "dynamic": "FAIL",
+      "favorites": "NOT_VALIDATED",
+      "counts": {
+        "PASS": 1,
+        "FAIL": 2,
+        "NOT_VALIDATED": 1
+      }
+    },
+    "supplementaryFavoriteRead": {
+      "sample": "TEST_B",
+      "observedAt": "2026-09-27T17:41:49.151Z",
+      "method": "one normal navigation to an existing public favorites link",
+      "uidMatches": true,
+      "folderCountsFromAX": [10,13,15,15],
+      "selectedFolderPublicLabel": "公开视频数: 10",
+      "visibleResourceCountFromAX": 10,
+      "sourceUrl": "https://space.bilibili.com/TEST_B/favlist?fid=FOLDER_REDACTED&ftype=create",
+      "errorSignals": [],
+      "sourceGate": "NOT_VALIDATED",
+      "reason": "single nonempty observation; no three-account repeated validation or failure matrix"
+    }
+  }
 }

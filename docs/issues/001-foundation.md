@@ -2,7 +2,7 @@
 
 状态：Phase 0 继续验证已记录；PASS 1 / FAIL 2 / 未验证 1，来源门槛仍阻塞，Phase 1–2 未开始。
 这是本地 Issue 草案；目标仓库为 [furX7/BiliInterestProfile](https://github.com/furX7/BiliInterestProfile)，尚未创建 GitHub Issue。
-当前仍不允许进入 Phase 1；本次整理提交只涉及 README、脱敏、链接、忽略规则和状态一致性。
+当前仍不允许进入 Phase 1；本轮仅动态/主页投稿区块回归、有限异常补证与既有文档/fixture 更新，Source Gate 不放宽。
 
 ## 目标
 
@@ -30,7 +30,11 @@ Source / Normalizer / Core Contracts / Storage / Analyzer Contracts / UI shell /
 - [ ] 两个来源稳定获取与标准化。
 - [ ] Phase 1 来源门槛通过（用户明确要求不提前放行）。
 - [x] 本轮三候选插件研究、真实账号重复 DOM 记录、临时映射与失败诊断。
-- [ ] 动态修正版三账号各三次、真实空/权限/请求失败状态补证及跨 UID SPA 验证。
+- [x] 动态修正版三账号各三次新页面读取，含每账号一次明确 reload（本轮九次，108 卡片观察）。
+- [x] 主页明确 video-section 三账号各三次，含 reload，排除合集/点赞/代表作；保留合作卡片归属缺口。
+- [ ] 逐卡上传者与合作角色充分确认；B 全部可见卡片合作，不能作为独立投稿通过。
+- [ ] 真实 available-empty / permission-denied / request-failed，以及必要字段缺失/未知正文类型拒绝负例。
+- [ ] 真实同文档跨 UID SPA 验证；本轮未扩大此路径。
 - [ ] 两来源 PASS 后提交报告并获用户进入 Phase 1 的确认（本轮禁止自动初始化）。
 - [ ] 安装依赖、strict TS、WXT MV3、四入口、React shell。
 - [ ] lint、format、typecheck、unit、integration、golden、Chrome/Edge build、bundle budget。
