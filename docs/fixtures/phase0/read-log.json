@@ -834,5 +834,137 @@
       "the initial out-of-viewport coordinate was rejected before any page input and did not count as an advance",
       "no network response, page-end marker, or full history traversal was observed"
     ]
+  },
+  "spaUidSwitchSingleClick20260928": {
+    "kind": "approved single-page cross-UID click attempt; route transition not observed",
+    "experimentDate": "2026-09-28",
+    "sample": "USER_CURRENT_OPEN_SPACE",
+    "startPageType": "homepage",
+    "startRouteUidMatchesVisibleProfileUid": true,
+    "startDynamicMainCardsObserved": false,
+    "candidate": "accessibility-listed site account link to a different UID; offscreen in initial narrow viewport",
+    "action": "one browser accessibility click call",
+    "tabCountBefore": 8,
+    "tabCountAfter": 8,
+    "originalTabUrlChanged": false,
+    "originalTabHeaderChanged": false,
+    "horizontalViewportPositionChanged": true,
+    "linkActivationProven": false,
+    "sameTabUidSwitchObserved": false,
+    "sameDocumentUidSwitchProven": false,
+    "crossUidCardAttributionTestable": false,
+    "decision": {
+      "spaUidSwitchBefore": "PARTIAL",
+      "spaUidSwitchAfter": "PARTIAL",
+      "reason": "one permitted click produced no observed route or tab change; the homepage supplied no dynamic-card baseline",
+      "global": "BLOCKED",
+      "gateChanged": false
+    },
+    "limitations": [
+      "no second click or alternative link path attempted",
+      "the observed viewport shift does not prove link activation or website SPA behavior",
+      "no claim about stale content, transition race, or other UID switch routes"
+    ]
+  },
+  "loggedOutOpenedDynamicReload20260928": {
+    "kind": "approved logged-out visible-page read and one normal reload of an already-open public dynamic tab",
+    "experimentDate": "2026-09-28",
+    "sample": "OPEN_ANON_DYNAMIC_1",
+    "sourceUrl": "https://space.bilibili.com/OPEN_ANON_DYNAMIC_1/dynamic",
+    "browserContext": "external Chrome; visible Login entry before reload and Login overlay after reload",
+    "reads": [
+      {"afterReload":false,"dynamicRoute":true,"routeHeaderAndProfileUidConsistent":true,"loginEntryVisible":true,"dynamicMainCardCount":12,"topLevelCardAuthorsMatchHeader":true},
+      {"afterReload":true,"dynamicRoute":true,"routeHeaderAndProfileUidConsistent":true,"loginOverlayVisible":true,"dynamicMainCardCount":12,"topLevelCardAuthorsMatchHeader":true,"genericEmptyVisible":false,"loadingVisible":false,"captchaVisible":false,"privacyOrPermissionNoticeVisible":false}
+    ],
+    "normalReloadCount": 1,
+    "assessment": "one anonymous sample showed attributable dynamic cards in both settled renderings",
+    "decision": {"loggedOutBefore":"PARTIAL","loggedOutAfter":"PARTIAL","global":"BLOCKED","gateChanged":false},
+    "limitations": [
+      "the pre-reload baseline was read in Prompt Compiler and rechecked without navigation before the one reload",
+      "two page renderings do not prove independent server responses or broad anonymous availability",
+      "historical zero-versus-twelve card conflict remains recorded",
+      "quoted/reference content was not normalized as the page author's own text",
+      "the newly observed evidence has not been adjudicated into the Gate table"
+    ]
+  },
+  "loggedInPaginationTerminal20260928": {
+    "kind": "approved visible-page pagination boundary probe from an already-open logged-in profile",
+    "experimentDate": "2026-09-28",
+    "sample": "CURRENT_OPEN_SIGNED_IN_PROFILE",
+    "sourceUrl": "https://space.bilibili.com/CURRENT_OPEN_SIGNED_IN_PROFILE/dynamic",
+    "entry": {
+      "sameProfileDynamicLinkUsed": true,
+      "firstAccessibilityClickChangedRoute": false,
+      "visibleCoordinateClickChangedRoute": true,
+      "routeHeaderAndProfileUidConsistent": true,
+      "loggedInNavigationVisible": true,
+      "stableInitialMainCardCount": 4,
+      "topLevelCardAuthorsMatchHeader": true
+    },
+    "advances": [
+      {"round":1,"action":"one normal in-viewport downward scroll","newBatchObserved":false,"mainCardCountAfter":4},
+      {"round":2,"action":"one normal in-viewport downward scroll","newBatchObserved":false,"mainCardCountAfter":4,"atScrollableBottom":true}
+    ],
+    "boundary": {
+      "explicitEndText": "你已经到达世界的尽头",
+      "endTextInAccessibilityTree": true,
+      "endTextInRenderedPageText": true,
+      "continueStateObserved": false,
+      "crossBatchDuplicateTestable": false
+    },
+    "decision": {"paginationBefore":"NOT_VALIDATED","paginationAfter":"NOT_VALIDATED","global":"BLOCKED","gateChanged":false},
+    "limitations": [
+      "one short public dynamic list only",
+      "no new batch means cross-batch duplicate and continuing pagination remain untested",
+      "absence of new cards alone was not treated as an end marker"
+    ]
+  },
+  "anonymousPaginationTerminal20260928": {
+    "kind": "approved pagination boundary probe on one already-open anonymous public dynamic tab",
+    "experimentDate": "2026-09-28",
+    "sample": "OPEN_ANON_DYNAMIC_1",
+    "sourceUrl": "https://space.bilibili.com/OPEN_ANON_DYNAMIC_1/dynamic",
+    "entry": {
+      "routeHeaderAndProfileUidConsistent": true,
+      "loginEntryVisible": true,
+      "stableInitialMainCardCount": 12,
+      "topLevelCardAuthorsMatchHeader": true,
+      "captchaPrivacyPermissionOrLoadFailureVisible": false
+    },
+    "advances": [
+      {"round":1,"action":"one normal downward scroll of about three viewports","mainCardCountAfter":12,"newBatchObserved":false},
+      {"round":2,"action":"one normal downward scroll of about three viewports","mainCardCountAfter":12,"newBatchObserved":false,"atScrollableBottom":true,"transientLoadingTextObserved":true}
+    ],
+    "boundary": {
+      "explicitEndText": "你已经到达世界的尽头",
+      "endTextInAccessibilityTree": true,
+      "endTextInRenderedPageText": true,
+      "loadingTextCleared": true,
+      "continueStateObserved": false,
+      "crossBatchDuplicateTestable": false
+    },
+    "decision": {"paginationBefore":"NOT_VALIDATED","paginationAfter":"NOT_VALIDATED","global":"BLOCKED","gateChanged":false},
+    "limitations": [
+      "one anonymous short public dynamic list only",
+      "no new batch means continuing pagination and cross-batch duplicate remain untested",
+      "anonymous result does not replace logged-in pagination evidence",
+      "absence of new cards alone was not treated as an end marker"
+    ]
+  },
+  "loggedOutGateAdjudication20260928": {
+    "kind": "user-approved Phase 0 logged-out Gate adjudication using existing evidence; no new browser probe",
+    "decisionDate": "2026-09-28",
+    "evidenceKey": "loggedOutOpenedDynamicReload20260928",
+    "approvedMinimumCriterion": "repeated trustworthy anonymous dynamic card reading on the same public page across one normal reload",
+    "observedCardCounts": [12, 12],
+    "routeHeaderProfileUidAndTopLevelAuthorsConsistent": true,
+    "historicalCardCountSequencesRetained": [[0, 0], [0, 12]],
+    "historicalZeroCardCause": "unknown; not classified as empty, login restriction or source failure",
+    "limitations": [
+      "one public dynamic page in an anonymous browser environment",
+      "not proof that all pages or anonymous access are generally stable",
+      "not proof of independent server response stability"
+    ],
+    "decision": {"loggedOutBefore":"PARTIAL","loggedOutAfter":"DONE","sourceQualificationCounts":{"PASS":2,"FAIL":1,"NOT_VALIDATED":1},"pagination":"NOT_VALIDATED","spaUidSwitch":"PARTIAL","global":"BLOCKED","gateChanged":true,"phase1Started":false}
   }
 }

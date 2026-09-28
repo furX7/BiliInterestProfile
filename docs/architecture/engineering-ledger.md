@@ -3,8 +3,38 @@
 ## 当前状态（2026-09-28）
 
 **Source Qualification：PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate：BLOCKED；不允许进入 Phase 1。**
-此前用户批准方案 B，动态限定 PASS；最小权限可行性与有效 available-empty 均已 DONE。最新已登录分页重试两次有效滚动均未到新增批次、重复或结束边界；pagination 继续 NOT_VALIDATED。匿名复核仍输出冲突，logged-out 继续 PARTIAL；其余 Global 状态不变，投稿 FAIL、收藏 NOT_VALIDATED；历史记录保留。
+此前用户批准方案 B，动态限定 PASS；最小权限可行性与有效 available-empty 均已 DONE。已登录 4 卡与匿名 12 卡样本分别取得明确结束提示，但均无新批次，跨批重复仍不可验证；pagination 继续 NOT_VALIDATED。用户按最低证据路径批准 logged-out：PARTIAL → DONE，历史匿名零卡冲突保留；其余 Global 状态不变，投稿 FAIL、收藏 NOT_VALIDATED。
 目标仓库：furX7/BiliInterestProfile；提交结果以 Git 历史及本次汇报为准。
+
+## 2026-09-28：logged-out Gate 审计后判定
+
+- 用户明确批准只按原 Gate 最低路径，将 logged-out 从 PARTIAL 改为 DONE。同一匿名公开动态页正常 reload 前后均为 12 张顶层作者匹配的主卡片，路由、头部与资料 UID 一致；不是同一 DOM 的两次复读。
+- 历史 0/0 与 0/12 均保留为 unknown；零卡不判真实 empty 或动态登录限制。12/12 不证明所有页面、匿名访问普遍稳定或独立服务器响应稳定。此前 read-log 的 PARTIAL 为观察时状态，本次新决策见 `loggedOutGateAdjudication20260928`。
+- 仅 logged-out Gate 状态改变；Source Qualification 2 / 1 / 1，pagination NOT_VALIDATED、SPA UID switch PARTIAL 与 Global BLOCKED 不变，Phase 1 不启动。
+
+## 2026-09-28：当前已登录空间的动态终止边界
+
+- 用户批准从当前已打开的内置浏览器空间主页正常点击“动态”，最多两次正常推进。可访问性点击未改变页面；截图确认入口可见后，对同一入口的正常坐标点击进入同 UID 动态页。页面身份、资料 UID 与已登录导航一致；稳定基线为 4 张同一顶层作者的动态卡片。
+- 两次正常下滚后仍为 4 张卡片，没有新批次，因而跨批重复不可测试。页面渲染文本和可访问性树均出现“你已经到达世界的尽头”；只读页面布局显示已到滚动底部。该样本取得明确结束状态，不证明其他账号或长列表的继续、去重边界。
+- pagination 仍为 NOT_VALIDATED，Global Gate 仍 BLOCKED；本轮只追加脱敏证据，不改 Gate。详情见 `read-log.json` 的 `loggedInPaginationTerminal20260928`。
+
+## 2026-09-28：已打开匿名动态页的分页边界
+
+- 用户明确批准调整后的单页匿名 pagination Probe。仅使用外部 Chrome 已打开的公开动态页；URL、空间头部与个人资料 UID 一致，可见登录入口，稳定基线为 12 张顶层作者匹配的动态主卡片。未见验证码、隐私拒绝或加载异常。
+- 共两次正常下滚推进（每次约三个视口）：首次仍为 12 张；第二次到达底部时短暂显示“正在玩命加载…”，随后转为明确的“你已经到达世界的尽头”，卡片仍为 12 张。没有新批次，跨批重复不可测试；结束判断依据明确提示与底部位置，而非仅凭无新增。
+- 此证据只说明该匿名短列表的终止边界，不替代已登录分页验证，也不证明继续分页或去重边界。pagination 保持 NOT_VALIDATED，Global Gate 保持 BLOCKED；本轮只追加脱敏证据，不改 Gate。详情见 `read-log.json` 的 `anonymousPaginationTerminal20260928`。
+
+## 2026-09-28：已打开匿名动态页 reload 复核
+
+- 复用已获批准的 logged-out Question + Probe；只使用外部 Chrome 中已打开的一个公开动态页。可见“登录”入口，动态路由、空间头部及个人资料 UID 一致；首次稳定页面有 12 张动态主卡片，顶层作者均与空间身份一致。
+- 对同一标签进行一次正常 reload 后，路由、头部和资料 UID 仍一致；12 张动态主卡片及其顶层作者归属仍可见，页面截图显示“立即登录”。未见通用空态、可见加载、CAPTCHA、隐私拒绝或权限错误。转发引用内容仍与顶层作者区分，不据此重验正文标准化。
+- 该单样本提供了此前缺少的匿名有卡片且跨 reload 稳定的观察；不证明所有匿名会话或账号均可用，也不抹除历史 0/12 卡冲突。本轮只追加脱敏证据，不改 logged-out 的既有 PARTIAL 判定或 Global BLOCKED；Gate 是否更新留待另行审定。详情见 `read-log.json` 的 `loggedOutOpenedDynamicReload20260928`。
+
+## 2026-09-28：SPA UID switch 单页一次点击补证
+
+- 用户批准以当前已打开的公开个人空间页为唯一起点，最多一次正常站内点击。起点为主页，路由 UID 与可见个人资料 UID 一致；该主页没有可供比较的动态主卡片。浏览器可访问性树列出另一个 UID 的站内账号链接，但在初始窄视口截图中该入口位于可见区域之外。
+- 对该链接进行一次浏览器可访问性点击调用后，原标签 URL、头部和 8 个标签总数均未变化；只观察到页面水平位置移动。不能证明链接真正激活，也没有同标签 UID 切换或卡片归属证据。按一次点击上限停止，不再尝试其他入口。
+- SPA UID switch 保持 PARTIAL / NOT PROVEN；Global Gate 保持 BLOCKED。脱敏结构记录见 `read-log.json` 的 `spaUidSwitchSingleClick20260928`。未改变 Gate、Plan 或其他 Spike。
 
 ## 2026-09-28：privacy-disabled 关注列表单页 Spike
 

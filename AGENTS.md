@@ -33,6 +33,25 @@
 - 自检通过不等于用户批准。
 - ARCHITECTURAL 的 Design / Spec 最终 approval 仍必须由用户明确给出；Codex 不得自我批准并继续到 writing-plans。
 
+# Spike 批准复用与批量审批
+
+已明确批准的具体 Question + Probe，不因一次 inconclusive、BLOCKED_ENV、页面未稳定、点击未命中、工具 timeout 或当前样本不合格而自动失效。后续执行只要仍处于原 Question + Probe 的样本、操作与尝试次数范围内，Approval state 保持 **VALID / ALREADY_APPROVED**，可继续执行同一 Spike，无需重复申请批准。
+
+以下情况必须重新审批：
+
+- Question 改变或 Probe 实质改变；
+- 扩大样本类别，或超出原批准的样本数、尝试次数；
+- 新增搜索账号、猜 URL、调用接口等能力；
+- 新增风险或外部副作用；
+- Source of Truth 变化导致原 Probe 不再适用；
+- 用户明确撤销批准。
+
+生成新的 Probe 时，应在风险允许的范围内预留合理执行自治：可提出从当前已打开页面中自行选择最多 2–3 个同类合格样本，并使用正常点击、导航、reload、scroll。用户批准该范围后，更换范围内的同类合格样本无需反复申请；不得据此扩大任何既有 Probe 的批准范围。
+
+Prompt Compiler 可一次提出最多 3 个**已明确展示**的 Phase 0 Spike Question + Probe 供用户批量审批。用户明确批准后，这些具体 Spike 均视为已批准，可按优先级连续执行；批量审批不构成对尚不存在的未来 Spike 的无限授权。
+
+保留 Superpowers 的 hard gate：新的 Question 或实质改变后的 Probe，仍必须获得用户明确批准。
+
 # Architectural Plan 的 Git 与审批边界
 
 当用户已明确批准 Architectural Spec，并授权进入 `superpowers:writing-plans` 时，Codex 可自行生成 Implementation Plan。Plan 必须标记为 **Draft / Pending Approval**。

@@ -2,7 +2,7 @@
 
 状态：Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate 为 BLOCKED，Phase 1–2 未开始。
 这是本地 Issue 草案；目标仓库为 [furX7/BiliInterestProfile](https://github.com/furX7/BiliInterestProfile)，尚未创建 GitHub Issue。
-当前仍不允许进入 Phase 1；此前按用户批准的 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)重审已有证据。基础信息与动态限定 PASS，投稿归属 FAIL，收藏 NOT_VALIDATED。最新匿名动态复核首次为零卡通用空态、reload 后为 12 卡；结果不稳定，logged-out 与其他 Gate 状态不变，历史事实保留。
+当前仍不允许进入 Phase 1；此前按用户批准的 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)重审已有证据。基础信息与动态限定 PASS，投稿归属 FAIL，收藏 NOT_VALIDATED。用户依据同一匿名公开动态页 reload 前后均为 12 卡的可信重复读取，批准 logged-out 在限定 Phase 0 范围内 PARTIAL → DONE；历史 0/0、0/12 与零卡原因未知保留，其他 Gate 状态不变。
 
 ## 目标
 
@@ -42,7 +42,7 @@ Source / Normalizer / Core Contracts / Storage / Analyzer Contracts / UI shell /
 - [x] no server / no API key、public-data boundary、sensitive-attribute boundary。
 - [ ] v0.1 最终 2–3 来源组合与范围（PARTIAL；已有两个资格来源，基础信息仅上下文）。
 - [ ] pagination（NOT_VALIDATED；历史两次推进受自动化焦点 deadline 阻断；本轮已登录页两次有效滚动未到新增批次、重复或明确结束边界。无新增或工具限制均不当作页面结束）。
-- [ ] logged-out（PARTIAL；匿名同一样本首次为零卡通用空态、reload 后为 12 卡，身份一致但输出不稳定；不猜空态或登录因果，不当作 available-empty。见 [实验记录](../architecture/phase-0-risk-experiments.md)）。
+- [x] logged-out（DONE，仅 Phase 0 最低证据路径；同一匿名公开动态页正常 reload 前后均为 12 张卡片，身份与顶层作者一致。历史 0/0、0/12 和零卡原因未知保留；不判真实 empty 或登录限制，不证明普遍或独立服务器响应稳定。见 [实验记录](../architecture/phase-0-risk-experiments.md)）。
 - [x] privacy-disabled / 明确 permission-denied（DONE；用户指定的已登录单页通过可见“关注数”控件后明确显示“由于该用户隐私设置，关注列表不可见”；不将普通空列表或初始坐标未命中当作隐私拒绝）。
 - [x] empty-data / 有效 available-empty（DONE；用户指定的已登录内置浏览器单页，身份一致、明确空态和 0 张动态主卡片在一次正常 reload 前后稳定成立；未将 Chrome 未登录 preflight 的 BLOCKED_ENV 当作证据）。
 - [ ] full SPA UID switch（PARTIAL / NOT PROVEN；本轮公开 @ 链接正常 Enter 后标签 3→4，原 A 路由/头部/12 卡长度摘要不变；B 新页身份一致不证明同文档切 UID、旧内容隔离或 race 收敛）。
