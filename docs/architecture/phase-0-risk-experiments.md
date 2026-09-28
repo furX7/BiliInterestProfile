@@ -49,7 +49,7 @@ PASS 不证明完整历史分页、所有匿名场景、稳定单条 permalink/�
 | Requirement | Status | Evidence | Remaining work |
 | --- | --- | --- | --- |
 | Chrome / Edge Chromium scope | DONE | [需求冻结](requirements-freeze.md)限定 Chromium/MV3 | 后续工程构建与安装验收，当前不初始化 |
-| 2–3 stable public Sources | PARTIAL | 基础信息与动态两个限定 Source PASS；来源门槛已达到 | 冻结 v0.1 最终组合、范围及兴趣证据价值；基础信息仅上下文 |
+| 2–3 stable public Sources | DONE | 基础信息与动态两个限定 Source Qualification PASS；用户已批准 v0.1 来源组合 Spec，冻结了来源角色与兴趣证据价值 | 限已批准范围：公开动态是唯一兴趣行为证据源；公开基础资料仅用于身份与上下文；投稿排除且保持 FAIL；收藏排除且保持 NOT_VALIDATED；明确单一行为来源局限，不宣称多源行为印证。此项不改变 Source Qualification、其他 Global Gate 或 Phase 1 授权 |
 | different public samples | DONE | TEST_A 大量投稿、B 近期动态、C 相对少内容且含转发 | 空/隐私样本缺口仅在对应任务计入 |
 | pagination | NOT_VALIDATED | 历史两次键盘推进受自动化焦点 deadline 阻断；本轮已登录页两次有效视口内滚动均只前进页面，未到新增批次、重复边界或明确 continue/end 状态 | 验证适用来源的分页、终止与重复边界；任何工具限制或无新增观察都不当作页面结束 |
 | logged-out | DONE | 同一公开动态页在匿名环境正常 reload 前后均为 12 张主卡片，路由、头部、个人资料 UID 和顶层作者一致；满足已定义的“重复的可信匿名卡片读取”最低路径 | 限该样本与 Phase 0 风险范围；历史 0/0、0/12 及零卡原因未知保留，零卡不得判 empty 或登录限制；不证明普遍或独立服务器响应稳定 |

@@ -1,10 +1,16 @@
 # 工程执行记录
 
-## 当前状态（2026-09-28）
+## 当前状态（2026-09-29）
 
 **Source Qualification：PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate：BLOCKED；不允许进入 Phase 1。**
 此前用户批准方案 B，动态限定 PASS；最小权限可行性与有效 available-empty 均已 DONE。已登录 4 卡与匿名 12 卡样本分别取得明确结束提示，但均无新批次，跨批重复仍不可验证；pagination 继续 NOT_VALIDATED。用户按最低证据路径批准 logged-out：PARTIAL → DONE，历史匿名零卡冲突保留；其余 Global 状态不变，投稿 FAIL、收藏 NOT_VALIDATED。
 目标仓库：furX7/BiliInterestProfile；提交结果以 Git 历史及本次汇报为准。
+
+## 2026-09-29：v0.1 来源组合 Gate 同步
+
+- 按用户已批准的来源组合 Spec，将 Global Gate“2–3 stable public Sources”从 PARTIAL 同步为 DONE；本次是范围与摘要一致性收尾，不新增来源资格结论或重新设计。
+- v0.1 范围为公开动态唯一兴趣行为证据源、公开基础资料仅作身份与上下文、投稿排除且保持 FAIL、收藏排除且保持 NOT_VALIDATED；明确单一行为来源局限，不宣称多源行为印证。
+- pagination 保持 NOT_VALIDATED、SPA UID switch 保持 PARTIAL，Global Gate 仍 BLOCKED，Phase 1 未获准且未启动；Source Qualification 仍 PASS 2 / FAIL 1 / NOT_VALIDATED 1。
 
 ## 2026-09-28：logged-out Gate 审计后判定
 

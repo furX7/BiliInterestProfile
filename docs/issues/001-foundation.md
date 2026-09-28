@@ -40,7 +40,7 @@ Source / Normalizer / Core Contracts / Storage / Analyzer Contracts / UI shell /
 
 - [x] Chrome / Edge Chromium 范围、不同类型公开样本、logged-in。
 - [x] no server / no API key、public-data boundary、sensitive-attribute boundary。
-- [ ] v0.1 最终 2–3 来源组合与范围（PARTIAL；已有两个资格来源，基础信息仅上下文）。
+- [x] v0.1 来源组合与范围（DONE；按已批准 Spec：公开动态是唯一兴趣行为证据源，基础资料仅作身份与上下文，投稿排除且保持 FAIL，收藏排除且保持 NOT_VALIDATED；明确单一行为来源局限，不宣称多源行为印证）。
 - [ ] pagination（NOT_VALIDATED；历史两次推进受自动化焦点 deadline 阻断；本轮已登录页两次有效滚动未到新增批次、重复或明确结束边界。无新增或工具限制均不当作页面结束）。
 - [x] logged-out（DONE，仅 Phase 0 最低证据路径；同一匿名公开动态页正常 reload 前后均为 12 张卡片，身份与顶层作者一致。历史 0/0、0/12 和零卡原因未知保留；不判真实 empty 或登录限制，不证明普遍或独立服务器响应稳定。见 [实验记录](../architecture/phase-0-risk-experiments.md)）。
 - [x] privacy-disabled / 明确 permission-denied（DONE；用户指定的已登录单页通过可见“关注数”控件后明确显示“由于该用户隐私设置，关注列表不可见”；不将普通空列表或初始坐标未命中当作隐私拒绝）。
