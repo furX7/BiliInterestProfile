@@ -29,3 +29,16 @@
 Source PASS 不代表 Phase 0 PASS；两个 Source PASS 也不能自动进入 Phase 1。Global Gate 必须独立完成，并由用户明确批准下一阶段。
 Phase 3 仍须完整实现错误处理。已收集真实异常证据继续有效，不删除；历史日志的时间、次数、OBSERVED/NOT_VALIDATED、旧 FAIL 保留，不重新解释为不存在的成功。
 当前来源判定及动态限定范围逐项证据见 [实验报告](../architecture/phase-0-risk-experiments.md)。未来 Agent 不得将全部异常重新塞回逐 Source Gate；规则变更须明确决策依据。
+
+## 修订（2026-09-29，已获用户批准）：两项延期验证
+
+现有 `pagination = NOT_VALIDATED` 与 `SPA UID switch = PARTIAL` 保持原状态。它们可作为明确记录的 deferred validation / residual risk，供未来另行授权的 Phase 0 closure audit 评估；延期不是验证通过，不得写作 DONE / PASS，不得删除、弱化或重解释历史网页观察与 fixture。
+
+- **pagination：** 已登录 4 卡与匿名 12 卡短列表均有明确终止边界，但未出现新批次，故继续分页、跨批重复及长列表终止均未验证。出现已打开、身份可确认且可能加载第二批的长列表时，须在既批 Question + Probe 的样本类别、数量与尝试次数内重验；超界或实质改变 Probe 须重新批准。现行 v0.1 仍限已批准的当前渲染卡片；任何新增的分页/完整历史能力验收或发布前，必须取得真实新批次与跨批重复边界证据，否则该新增能力只能标为未验证。受控测试不替代真实网页证据。
+- **SPA UID switch：** 已测公开链接新开标签或未证实激活，未取得同一标签、同一 document 的跨 UID 路径；旧内容隔离、旧请求取消与对象一致性未验证。出现身份明确的正常同文档路径时，须在既批范围内重验，超界或新 Probe 须重新批准。任何 v0.1 同文档切 UID 能力验收或发布前，必须取得真实路径证据及受控切换/旧结果隔离测试；若真实路径仍不可得，只能明确网页实测未验证，并由用户决定是否缩减该能力范围。
+
+本修订不改变现行 Global Gate、Notion 阶段要求或 Phase 1 前置条件。用户已批准 Notion Phase 0 延期边界及本 ADR / Spec / Plan 前置条件的同步；它们仍不构成 Global Gate 例外。即使 closure audit 被授权，它也只能提出建议，不能自行覆盖这些条件或授权下一阶段。
+
+## 2026-09-29 最终用户处置
+
+用户已批准 [Phase 0 closure audit](../architecture/phase-0-closure-audit-2026-09-29.md)，明确接受上述两项延期风险，决定 Phase 0 closure 完成、Global Gate 不再阻塞 Phase 1，并批准 Phase 0 → Phase 1 与已批准 Implementation Plan 的执行。pagination 仍为 NOT_VALIDATED，SPA UID switch 仍为 PARTIAL；延期不代表任一子项通过。前述 BLOCKED 和待审批表述是该决定前的历史状态，不得用于撤销本次明确授权或改写历史证据。

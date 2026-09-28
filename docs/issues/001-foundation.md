@@ -1,8 +1,8 @@
 # Issue 001：正式建立工程地基
 
-状态：Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate 为 BLOCKED，Phase 1–2 未开始。
+状态：Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 closure audit 已获批准，Global Gate 不再阻塞 Phase 1；pagination = NOT_VALIDATED、SPA UID switch = PARTIAL；Phase 1 已获执行授权，实施尚未开始。
 这是本地 Issue 草案；目标仓库为 [furX7/BiliInterestProfile](https://github.com/furX7/BiliInterestProfile)，尚未创建 GitHub Issue。
-当前仍不允许进入 Phase 1；此前按用户批准的 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)重审已有证据。基础信息与动态限定 PASS，投稿归属 FAIL，收藏 NOT_VALIDATED。用户依据同一匿名公开动态页 reload 前后均为 12 卡的可信重复读取，批准 logged-out 在限定 Phase 0 范围内 PARTIAL → DONE；历史 0/0、0/12 与零卡原因未知保留，其他 Gate 状态不变。
+用户已批准进入 Phase 1，并按 [ADR-007](../adr/ADR-007-phase0-gate-separation.md) 的延期风险边界执行现有计划。基础信息与动态限定 PASS，投稿归属 FAIL，收藏 NOT_VALIDATED。logged-out 在限定 Phase 0 范围内 DONE；历史 0/0、0/12 与零卡原因未知保留。
 
 ## 目标
 
@@ -34,7 +34,7 @@ Source / Normalizer / Core Contracts / Storage / Analyzer Contracts / UI shell /
 - [ ] 逐卡上传者与合作角色充分确认；B 全部可见卡片合作，不能作为独立投稿通过。
 - [x] 历史动态定向 Spike：有数据时隐藏空态模板不算 empty；合作占位描述不补造自述，候选拒绝并保留 partial；不替代仍未验证的全局异常或正式工程覆盖。
 
-### Phase 0 Global Risk Gate（仍 BLOCKED）
+### Phase 0 Global Risk Gate（closure 已获批准）
 
 完整证据与状态见 [Global Checklist](../architecture/phase-0-risk-experiments.md#phase-0-global-risk-gate)。以下打勾只对应 Phase 0 文档/风险范围，不宣称产品已实现。
 
@@ -47,11 +47,11 @@ Source / Normalizer / Core Contracts / Storage / Analyzer Contracts / UI shell /
 - [x] empty-data / 有效 available-empty（DONE；用户指定的已登录内置浏览器单页，身份一致、明确空态和 0 张动态主卡片在一次正常 reload 前后稳定成立；未将 Chrome 未登录 preflight 的 BLOCKED_ENV 当作证据）。
 - [ ] full SPA UID switch（PARTIAL / NOT PROVEN；本轮公开 @ 链接正常 Enter 后标签 3→4，原 A 路由/头部/12 卡长度摘要不变；B 新页身份一致不证明同文档切 UID、旧内容隔离或 race 收敛）。
 - [x] minimal permissions feasibility（DONE，仅 Phase 0：两个限定 PASS 来源可读已有 DOM / URL，静态空间 matches 足够；无额外 API host_permissions，storage 与采集分开。见 [权限审计](../architecture/permissions-plan.md)）。
-- [ ] Global Gate 完成后提交报告，并获用户明确批准进入 Phase 1。
+- [x] Phase 0 closure audit 获批；用户接受 pagination 与 SPA UID switch 延期风险，决定 Global Gate 不再阻塞 Phase 1，并明确授权实施现有 Plan。
 
-**两来源 qualification threshold 已达到，不等于 Phase 1 已获准开始。只有 Global Gate 完成 + 用户明确批准后才能初始化。**
+**两来源 qualification threshold 已达到；Phase 0 closure 与 Phase 1 实施已获用户明确批准。pagination 和 SPA UID switch 的证据状态及重验条件继续有效。**
 
-### 后续工程（本轮不执行）
+### 后续工程
 
 request-failed、403/429/unauthorized、timeout/retry/abort、schema validation、Source 独立状态、formal ErrorCode、controlled degradation 及缺字段/未知类型 mock/fixture 测试归 Phase 3。真实未观察状态继续 NOT_VALIDATED，不要求逐 Source 在线上撞见全部负例。
 

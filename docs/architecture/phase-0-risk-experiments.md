@@ -1,7 +1,7 @@
 # Phase 0：真实风险实验
 
-状态：**Phase 0 GLOBAL BLOCKED**；Source Qualification：**PASS 2 / FAIL 1 / NOT_VALIDATED 1**。
-两个限定来源已证明稳定获取与概念标准化；全局风险尚未完成，不允许进入 Phase 1。
+状态：**Phase 0 closure 已获用户批准；Global Gate 不再阻塞 Phase 1**。pagination = NOT_VALIDATED；SPA UID switch = PARTIAL；Source Qualification：**PASS 2 / FAIL 1 / NOT_VALIDATED 1**。下文的 BLOCKED 是 closure 前历史判定。
+两个限定来源已证明稳定获取与概念标准化；用户已接受两项延期风险并明确批准进入 Phase 1，后续能力仍须按重验条件验收。
 历史实验 2026-09-27；修正版回归、Gate 决策、SPA 与权限 Spike 2026-09-28（Asia/Shanghai）。最新匿名动态复核与经批准的 logged-out Gate 判定见下文。
 本轮唯一范围是 Phase 0。没有 package.json、WXT、正式 TypeScript/Zod Contract 或产品采集器。
 2026-09-27 历史来源实验收尾时工作区已有 Git 目录、原始文档已暂存但暂无提交；该次实验未进行 Git 写操作。
@@ -63,6 +63,21 @@ PASS 不证明完整历史分页、所有匿名场景、稳定单条 permalink/�
 | sensitive-attribute boundary | DONE | 需求冻结明确敏感推断禁区，无此类实验 | 后续产品与分析器继续遵守 |
 
 全局任务按证据适用范围验收；同一隐私缺口不按四来源重复计算，也不把一次局部观察视作所有来源已验证。表中 SPA 路径引用此前同日 Spike，本轮没有新的 SPA 观察。
+
+### Gate 修订（2026-09-29，已获用户批准）：deferred validation / residual risk
+
+本节不改上表 `Status`，不触发 closure audit 或 Phase 1。`pagination` 继续为 **NOT_VALIDATED**，`SPA UID switch` 继续为 **PARTIAL**；两项均不是 DONE / PASS，现行 Global Gate 继续 **BLOCKED**。此前实验文本、观察次数和 [read-log.json](../fixtures/phase0/read-log.json) 全部保留。
+
+| Requirement | 明确残余风险 | 重验触发与最迟节点 |
+| --- | --- | --- |
+| pagination | 已登录 4 卡与匿名 12 卡样本均仅证明短列表终止边界；真实新批次、跨批重复及长列表终止仍未知。 | 现行 v0.1 仍限已批准的当前渲染卡片。当前存在身份可确认、可能加载第二批的合格长列表时，在既批 Question + Probe 范围内重验；超界或实质变更须重新审批。任何新增分页/完整历史能力验收或发布前须取得真实新批次及跨批重复边界证据；否则该新增能力保持未验证。 |
+| SPA UID switch | 已测路径新开标签或未证实点击；同 document 跨 UID、旧内容隔离、旧请求取消和对象一致性仍未知。 | 出现身份明确的正常同 document 路径时，在既批范围内重验；超界或新 Probe 须重新审批。任何 v0.1 同文档切 UID 能力验收或发布前，真实路径证据与受控切换/旧结果隔离测试须同时具备；任一缺失，该能力不得验收或宣称已验证。真实路径缺失时网页实测保持未验证；仅缺受控测试时，网页实测与能力验收分开记录。 |
+
+本修订记录 `deferral design = Approved`；`closure decision` 仍为 `Pending Separate Audit / User Approval`。它不覆盖 Notion、ADR-007 的现行 Phase 1 前置条件，亦不将延期解释为验证通过。
+
+### 2026-09-29 Phase 0 closure 最终处置
+
+用户已批准 [closure audit](phase-0-closure-audit-2026-09-29.md) 并接受已记录的 deferred validation / residual risk。`closure decision = Approved`；Phase 0 closure 完成，Global Gate 不再作为 Phase 1 阻塞项。上表子项证据状态不变：pagination = **NOT_VALIDATED**，SPA UID switch = **PARTIAL**；所有历史 BLOCKED 判定及 fixture 保留原时点含义，不回写为 DONE / PASS。Phase 0 → Phase 1 和已批准 Implementation Plan 执行已获用户明确授权。
 
 ## Phase 3 Adapter Engineering 边界
 

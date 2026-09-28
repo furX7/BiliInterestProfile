@@ -24,7 +24,7 @@
 - 尚未进入正式扩展工程开发阶段；未初始化 WXT / TypeScript 工程。
 - Source qualification（来源资格）：**PASS 2 / FAIL 1 / 未验证 1**。
 
-**Phase 0 整体仍未通过（Global Risk Gate：BLOCKED）**：v0.1 来源组合已按批准 Spec 冻结；分页新批次与跨批重复、同文档 SPA UID 切换仍有缺口。v0.1 仅以公开动态作为兴趣行为证据，基础资料只作身份与上下文，投稿排除、收藏暂不纳入；必须披露单一行为来源局限，不宣称多源行为印证。logged-out 已按同一匿名公开动态页 reload 前后均为 12 卡的最低证据路径 DONE；历史零卡原因未知，不证明匿名访问普遍稳定或独立服务器响应稳定。
+**Phase 0 closure 已获用户批准，Global Gate 不再阻塞 Phase 1**：pagination 仍 NOT_VALIDATED、SPA UID switch 仍 PARTIAL，作为明确接受的延期风险保留，并须按既定条件重验。v0.1 仅以公开动态当前渲染卡片作为兴趣行为证据，基础资料只作身份与上下文，投稿排除、收藏暂不纳入；不宣称多源行为印证。logged-out 在限定最低证据路径内 DONE；历史零卡原因未知，不证明匿名访问普遍稳定或独立服务器响应稳定。
 通过项为公开基础信息快照，以及已登录公开动态页当前渲染内容的限定范围验证，不能代表兴趣分析已经可用。投稿仍有合作内容归属缺口，收藏尚未完成验证。
 两来源资格门槛已达到；只有全局风险 Gate 完成并获用户明确批准后，才能进入 Phase 1。
 详见 [Phase 0 实验报告](docs/architecture/phase-0-risk-experiments.md)。
