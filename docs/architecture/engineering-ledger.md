@@ -3,8 +3,32 @@
 ## 当前状态（2026-09-28）
 
 **Source Qualification：PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate：BLOCKED；不允许进入 Phase 1。**
-此前用户批准方案 B，动态限定 PASS；最小权限可行性已 DONE。最新匿名复核首次为零卡通用空态、reload 后为 12 卡，结果互相冲突，logged-out 继续 PARTIAL；分页未得到新增批次或结束边界。其余 Global 状态不变，投稿 FAIL、收藏 NOT_VALIDATED；历史记录保留。
+此前用户批准方案 B，动态限定 PASS；最小权限可行性与有效 available-empty 均已 DONE。最新已登录分页重试两次有效滚动均未到新增批次、重复或结束边界；pagination 继续 NOT_VALIDATED。匿名复核仍输出冲突，logged-out 继续 PARTIAL；其余 Global 状态不变，投稿 FAIL、收藏 NOT_VALIDATED；历史记录保留。
 目标仓库：furX7/BiliInterestProfile；提交结果以 Git 历史及本次汇报为准。
+
+## 2026-09-28：privacy-disabled 关注列表单页 Spike
+
+- 用户批准只使用当前单一公开用户空间页，通过正常浏览器点击“关注数/关注”检查隐私状态；页面身份、UID 与登录环境均正常，未见 CAPTCHA、登录限制或加载失败。
+- 首次两次点击无可见结果，anchor 核对只证明“关注数”不是链接、不能据此断定控件不可点击。用户重新指正坐标后，同一页面的正常点击出现明确提示：“由于该用户隐私设置，关注列表不可见”。未进入普通空列表，也未猜测 URL、搜索账号、使用接口或尝试其他入口。
+- privacy-disabled：NOT_VALIDATED → DONE，临时候选为 SRC_PERMISSION_DENIED；Source Qualification 2 / 1 / 1、Global BLOCKED 与 Phase 1 NO 不变。仅追加脱敏 read-log、实验报告、账本和 Issue；按本批验证结果统一提交与推送。
+
+## 2026-09-28：available-empty 已登录单页 Spike
+
+- 用户指定 Codex 内置浏览器中已登录、已打开的单一公开动态空白页；只验证 available-empty。路由/可见 UID/头部身份一致，已登录 UI 正常，未见 CAPTCHA、登录限制、隐私拒绝、加载失败或权限错误；明确空态“好像没有东西诶”与 0 张动态主卡片同时可见。
+- 一次正常 reload 后，身份、已登录环境、明确空态和 0 张主卡片均保持一致。满足用户规定的联合判据，empty-data：NOT_VALIDATED → DONE。未搜索其他账号、测试 pagination/privacy-disabled/logged-out、读取凭据或调用接口。
+- Source Qualification 2 / 1 / 1 与其余 Global Gate 不变；Global 仍 BLOCKED，Phase 1 NO。此前 Chrome 指定标签的未登录前置阻断保留为独立历史记录；仅追加脱敏 read-log、实验报告、账本和 Issue。
+
+## 2026-09-28：available-empty 单页 Probe 前置阻断
+
+- 用户批准只检查当前已打开的单一公开动态页，并要求已登录正常环境、稳定读与一次 reload；不搜索其他账号或测试其他 Gate。当前 Chrome 标签路由/可见 UID/头部身份一致，但明确显示“登录”，故已登录前提未成立。
+- 未等待、读取卡片、判定空态/结束或 reload；没有把页面内容、0 项、通用空态、工具状态或登录入口解释为 empty，也未读取凭据、登录/退出、调用接口或修复会话。
+- 按系统化排查，阻断点是用户指定 Chrome 标签的会话环境与批准前提不一致；不扩展到另一页面验证。记录为 BLOCKED_ENV，empty-data 保持 NOT_VALIDATED；Source Qualification 2 / 1 / 1、Global BLOCKED 与 Phase 1 NO 不变。仅追加脱敏 read-log、实验报告、账本和 Issue。
+
+## 2026-09-28：已登录动态分页重试
+
+- 用户明确批准仅在既有公开动态页最多两次正常推进。Chrome 动态页仍可见登录状态，不满足前提；内置浏览器主页已登录，故只在同一已登录会话打开同一已知公开动态页。未读取凭据、登录/退出、调用接口或搜索新账号。
+- 路由、页面身份与已登录 UI 一致，初始 12 卡。首次请求坐标在当前视口外，输入未注入且不计推进；随后两次有效视口内滚动均完成。两次均未出现焦点 deadline；页面前进，第二次出现“顶部”控件，但无新增批次、重复边界、continue 或明确 end。
+- pagination 保持 NOT_VALIDATED；无新增并不等于结束。Source Qualification 2 / 1 / 1、其余 Global 状态、Phase 0 BLOCKED 与 Phase 1 NO 均不变。仅追加脱敏 read-log、实验报告、账本和 Issue；未改 Notion、Gate、正式工程或依赖。
 
 ## 2026-09-28：匿名动态复核与分页推进尝试
 

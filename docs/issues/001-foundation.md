@@ -41,10 +41,10 @@ Source / Normalizer / Core Contracts / Storage / Analyzer Contracts / UI shell /
 - [x] Chrome / Edge Chromium 范围、不同类型公开样本、logged-in。
 - [x] no server / no API key、public-data boundary、sensitive-attribute boundary。
 - [ ] v0.1 最终 2–3 来源组合与范围（PARTIAL；已有两个资格来源，基础信息仅上下文）。
-- [ ] pagination（NOT_VALIDATED；登录态样本初始 12 卡，但两次正常推进受浏览器自动化焦点 deadline 阻断，未取得新增批次/结束边界；工具失败不当作页面结束）。
+- [ ] pagination（NOT_VALIDATED；历史两次推进受自动化焦点 deadline 阻断；本轮已登录页两次有效滚动未到新增批次、重复或明确结束边界。无新增或工具限制均不当作页面结束）。
 - [ ] logged-out（PARTIAL；匿名同一样本首次为零卡通用空态、reload 后为 12 卡，身份一致但输出不稳定；不猜空态或登录因果，不当作 available-empty。见 [实验记录](../architecture/phase-0-risk-experiments.md)）。
-- [ ] privacy-disabled / 明确 permission-denied（NOT_VALIDATED）。
-- [ ] empty-data / 有效 available-empty（NOT_VALIDATED）。
+- [x] privacy-disabled / 明确 permission-denied（DONE；用户指定的已登录单页通过可见“关注数”控件后明确显示“由于该用户隐私设置，关注列表不可见”；不将普通空列表或初始坐标未命中当作隐私拒绝）。
+- [x] empty-data / 有效 available-empty（DONE；用户指定的已登录内置浏览器单页，身份一致、明确空态和 0 张动态主卡片在一次正常 reload 前后稳定成立；未将 Chrome 未登录 preflight 的 BLOCKED_ENV 当作证据）。
 - [ ] full SPA UID switch（PARTIAL / NOT PROVEN；本轮公开 @ 链接正常 Enter 后标签 3→4，原 A 路由/头部/12 卡长度摘要不变；B 新页身份一致不证明同文档切 UID、旧内容隔离或 race 收敛）。
 - [x] minimal permissions feasibility（DONE，仅 Phase 0：两个限定 PASS 来源可读已有 DOM / URL，静态空间 matches 足够；无额外 API host_permissions，storage 与采集分开。见 [权限审计](../architecture/permissions-plan.md)）。
 - [ ] Global Gate 完成后提交报告，并获用户明确批准进入 Phase 1。

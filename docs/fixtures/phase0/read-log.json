@@ -626,5 +626,213 @@
       "global":"BLOCKED"
     },
     "unexecuted": {"privacyDisabled":"no qualifying existing sample","emptyData":"no qualifying existing sample"}
+  },
+  "availableEmptyPreflight20260928": {
+    "kind": "approved available-empty spike preflight",
+    "experimentDate": "2026-09-28",
+    "sample": "USER_CURRENT_OPEN_DYNAMIC",
+    "sourceUrl": "https://space.bilibili.com/USER_CURRENT_OPEN_DYNAMIC/dynamic",
+    "scope": {
+      "singleUserOpenedPublicDynamicPage": true,
+      "otherAccountSearchPerformed": false,
+      "apiReplayPerformed": false,
+      "credentialsAccessed": false,
+      "privacyDisabledTested": false,
+      "paginationTested": false,
+      "loggedOutTested": false
+    },
+    "preflight": {
+      "routeIsDynamic": true,
+      "routeUidMatchesVisibleProfileUid": true,
+      "pageIdentityPresent": true,
+      "loggedInNormalEnvironmentConfirmed": false,
+      "visibleLoginEntry": true,
+      "captchaVisible": false,
+      "explicitPrivacyDeniedVisible": false,
+      "explicitLoadFailureVisible": false
+    },
+    "execution": {
+      "settledCardCountRead": false,
+      "explicitEmptyOrEndRead": false,
+      "reloadPerformed": false,
+      "reason": "required logged-in normal-environment precondition was not met in the user-designated current Chrome tab"
+    },
+    "decision": {
+      "emptyDataBefore": "NOT_VALIDATED",
+      "emptyDataAfter": "NOT_VALIDATED",
+      "classification": "BLOCKED_ENV",
+      "reason": "the available-empty conjunction cannot be evaluated without the approved logged-in precondition; no zero-card, empty, end, or reload evidence was used"
+    },
+    "gate": {
+      "sourceQualificationCounts": {"PASS":2,"FAIL":1,"NOT_VALIDATED":1},
+      "global": "BLOCKED"
+    }
+  },
+  "availableEmptyLoggedInSpike20260928": {
+    "kind": "approved logged-in available-empty visible-DOM spike",
+    "experimentDate": "2026-09-28",
+    "sample": "USER_CURRENT_OPEN_EMPTY_DYNAMIC",
+    "sourceUrl": "https://space.bilibili.com/USER_CURRENT_OPEN_EMPTY_DYNAMIC/dynamic",
+    "scope": {
+      "singleUserOpenedPublicDynamicPage": true,
+      "browser": "Codex in-app browser",
+      "otherAccountSearchPerformed": false,
+      "apiReplayPerformed": false,
+      "credentialsAccessed": false,
+      "privacyDisabledTested": false,
+      "paginationTested": false,
+      "loggedOutTested": false
+    },
+    "beforeReload": {
+      "routeIsDynamic": true,
+      "routeUidMatchesVisibleProfileUid": true,
+      "pageIdentityPresent": true,
+      "loggedInNormalEnvironmentConfirmed": true,
+      "visibleLoginEntry": false,
+      "captchaVisible": false,
+      "explicitPrivacyDeniedVisible": false,
+      "explicitLoadFailureVisible": false,
+      "dynamicMainCardCount": 0,
+      "explicitEmptyVisible": true,
+      "explicitEndVisible": false
+    },
+    "afterOneNormalReload": {
+      "routeAndIdentityStillMatch": true,
+      "loggedInNormalEnvironmentConfirmed": true,
+      "captchaVisible": false,
+      "explicitPrivacyDeniedVisible": false,
+      "explicitLoadFailureVisible": false,
+      "dynamicMainCardCount": 0,
+      "explicitEmptyVisible": true,
+      "explicitEndVisible": false
+    },
+    "decision": {
+      "emptyDataBefore": "NOT_VALIDATED",
+      "emptyDataAfter": "DONE",
+      "classification": "available-empty",
+      "reason": "valid identity, normal logged-in source availability, explicit stable empty state, and zero dynamic main cards jointly held before and after one normal reload"
+    },
+    "gate": {
+      "sourceQualificationCounts": {"PASS":2,"FAIL":1,"NOT_VALIDATED":1},
+      "global": "BLOCKED"
+    }
+  },
+  "privacyDisabledFollowEntryPreflight20260928": {
+    "kind": "approved privacy-disabled single-page follow-list entry preflight",
+    "experimentDate": "2026-09-28",
+    "sample": "USER_CURRENT_OPEN_PRIVACY_CANDIDATE",
+    "sourceUrl": "https://space.bilibili.com/USER_CURRENT_OPEN_PRIVACY_CANDIDATE",
+    "scope": {
+      "singleUserOpenedPublicPage": true,
+      "otherAccountSearchPerformed": false,
+      "apiReplayPerformed": false,
+      "credentialsAccessed": false,
+      "paginationTested": false,
+      "loggedOutTested": false,
+      "emptyDataTested": false
+    },
+    "preflight": {
+      "routeUidMatchesVisibleProfileUid": true,
+      "pageIdentityPresent": true,
+      "loggedInNormalEnvironmentConfirmed": true,
+      "captchaVisible": false,
+      "explicitPrivacyDeniedVisible": false,
+      "explicitLoadFailureVisible": false
+    },
+    "approvedEntryAttempt": {
+      "requestedEntry": "visible following-count/following control",
+      "normalClickAttempts": 2,
+      "navigationObserved": false,
+      "visibleLinkAudit": {
+        "followingAnchorPresent": false,
+        "followerAnchorPresent": true,
+        "note": "anchor audit does not determine whether the non-anchor following control has a click handler"
+      },
+      "reason": "the first two coordinate attempts produced no visible result; this preliminary diagnostic did not establish source status"
+    },
+    "decision": {
+      "privacyDisabledBefore": "NOT_VALIDATED",
+      "privacyDisabledAfter": "NOT_VALIDATED",
+      "classification": "INCONCLUSIVE_INITIAL_INPUT",
+      "reason": "no privacy conclusion was made before the later user-corrected normal click"
+    },
+    "gate": {
+      "sourceQualificationCounts": {"PASS":2,"FAIL":1,"NOT_VALIDATED":1},
+      "global": "BLOCKED"
+    }
+  },
+  "privacyDisabledFollowListSpike20260928": {
+    "kind": "approved privacy-disabled single-page follow-list visible-DOM spike",
+    "experimentDate": "2026-09-28",
+    "sample": "USER_CURRENT_OPEN_PRIVACY_CANDIDATE",
+    "sourceUrl": "https://space.bilibili.com/USER_CURRENT_OPEN_PRIVACY_CANDIDATE",
+    "scope": {
+      "singleUserOpenedPublicPage": true,
+      "normalBrowserInteractionOnly": true,
+      "otherAccountSearchPerformed": false,
+      "apiReplayPerformed": false,
+      "credentialsAccessed": false,
+      "paginationTested": false,
+      "loggedOutTested": false,
+      "emptyDataTested": false
+    },
+    "preflight": {
+      "routeUidMatchesVisibleProfileUid": true,
+      "pageIdentityPresent": true,
+      "loggedInNormalEnvironmentConfirmed": true,
+      "captchaVisible": false,
+      "explicitLoadFailureVisible": false,
+      "ordinaryEmptyListVisible": false
+    },
+    "observed": {
+      "entry": "visible following-count control on the same page",
+      "resultText": "由于该用户隐私设置，关注列表不可见",
+      "explicitPrivacyDeniedVisible": true,
+      "followListItemsObserved": false
+    },
+    "decision": {
+      "privacyDisabledBefore": "NOT_VALIDATED",
+      "privacyDisabledAfter": "DONE",
+      "classification": "SRC_PERMISSION_DENIED",
+      "reason": "the source explicitly attributes the unavailable follow list to the user's privacy setting"
+    },
+    "gate": {
+      "sourceQualificationCounts": {"PASS":2,"FAIL":1,"NOT_VALIDATED":1},
+      "global": "BLOCKED"
+    }
+  },
+  "loggedInPaginationRetry20260928": {
+    "kind": "approved logged-in visible-DOM pagination retry",
+    "experimentDate": "2026-09-28",
+    "sample": "SPIKE_EXISTING_3",
+    "sourceUrl": "https://space.bilibili.com/SPIKE_EXISTING_3/dynamic",
+    "context": {
+      "browser": "Codex in-app browser",
+      "loggedInVisible": true,
+      "credentialsAccessed": false,
+      "apiReplayPerformed": false,
+      "newAccountSearchPerformed": false
+    },
+    "preflight": {
+      "routeMatchesDynamic": true,
+      "pageIdentityMatchesRoute": true,
+      "initialVisibleCardCount": 12
+    },
+    "attempts": [
+      {"round":1,"action":"one normal in-viewport scroll","pageAdvanced":true,"newBatchObserved":false,"duplicateBoundaryObserved":false,"continueOrEndObserved":false,"focusDeadline":false},
+      {"round":2,"action":"one normal in-viewport scroll","pageAdvanced":true,"newBatchObserved":false,"duplicateBoundaryObserved":false,"continueOrEndObserved":false,"focusDeadline":false,"visibleTopControl":true}
+    ],
+    "decision": {
+      "paginationBefore":"NOT_VALIDATED",
+      "paginationAfter":"NOT_VALIDATED",
+      "reason":"two approved page advances did not reach a new batch, duplicate boundary, or explicit continue/end state",
+      "sourceQualificationCounts":{"PASS":2,"FAIL":1,"NOT_VALIDATED":1},
+      "global":"BLOCKED"
+    },
+    "limitations": [
+      "one existing public sample only",
+      "the initial out-of-viewport coordinate was rejected before any page input and did not count as an advance",
+      "no network response, page-end marker, or full history traversal was observed"
+    ]
   }
 }

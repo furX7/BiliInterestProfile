@@ -51,11 +51,11 @@ PASS 不证明完整历史分页、所有匿名场景、稳定单条 permalink/�
 | Chrome / Edge Chromium scope | DONE | [需求冻结](requirements-freeze.md)限定 Chromium/MV3 | 后续工程构建与安装验收，当前不初始化 |
 | 2–3 stable public Sources | PARTIAL | 基础信息与动态两个限定 Source PASS；来源门槛已达到 | 冻结 v0.1 最终组合、范围及兴趣证据价值；基础信息仅上下文 |
 | different public samples | DONE | TEST_A 大量投稿、B 近期动态、C 相对少内容且含转发 | 空/隐私样本缺口仅在对应任务计入 |
-| pagination | NOT_VALIDATED | 当前登录态样本初始 12 卡；正常键盘滚动两次均受自动化焦点 deadline 阻断，未取得新增批次、重复边界或明确 continue/end 状态 | 验证适用来源的分页、终止与重复边界；工具操作未生效不当作页面结束 |
+| pagination | NOT_VALIDATED | 历史两次键盘推进受自动化焦点 deadline 阻断；本轮已登录页两次有效视口内滚动均只前进页面，未到新增批次、重复边界或明确 continue/end 状态 | 验证适用来源的分页、终止与重复边界；任何工具限制或无新增观察都不当作页面结束 |
 | logged-out | PARTIAL | 匿名同一样本首次稳定读取为 0 卡与通用空态；正常 reload 后身份一致且显示 12 卡。首次与 reload 结果冲突，尚不能称稳定 | 缺重复的可信匿名卡片读取，或明确可识别访问限制；unknown 不当作 empty，不猜登录因果 |
 | logged-in | DONE | 既有 A/B/C 正常回归九读、每账号 reload | 不扩张为所有账号/时段保证 |
-| privacy-disabled | NOT_VALIDATED | 没有明确隐私关闭/拒绝样本；缺入口不算 | 取得明确不可公开证据，核对分类及适用来源范围 |
-| empty-data | NOT_VALIDATED | UID 0 无效、隐藏模板和过滤零候选均不是真空 | 有效身份、明确成功/结束、零项共同成立的真实案例 |
+| privacy-disabled | DONE | 已登录用户指定公开空间页，身份一致；通过同页可见“关注数”控件后明确显示“由于该用户隐私设置，关注列表不可见” | 已按本轮单页、关注列表范围完成；不推广至其他来源/账号 |
+| empty-data | DONE | 已登录内置浏览器的用户当前公开动态页：路由/可见 UID/头部身份一致，明确空态且主卡片为 0；一次正常 reload 后同样成立，无 CAPTCHA、权限拒绝或加载失败 | 已按本轮单页范围完成；不推广至其他来源/账号 |
 | SPA UID switch | PARTIAL | 既有导航记录；本轮公开 @ 链接正常激活后新增标签，原 A 路由/头部/12 卡摘要不变，NOT PROVEN | 缺同标签、同 document 的跨 UID 路径及旧内容隔离证据；正式取消实现后续验证 |
 | minimal permissions | DONE | [权限计划](permissions-plan.md)逐字段审计两个限定 PASS 来源；已有 DOM / URL 加静态 matches 可采集，无额外 API 请求；Chrome MV3 / WXT 官方语义支持 | 仅 Phase 0 可行性；Phase 1 审实际生产 manifest、caller、安装提示；新增来源/请求重新审计 |
 | no server/API key | DONE | 需求冻结、[ADR-005](../adr/ADR-005-no-server.md)、现有概念获取/映射 | 后续工程继续遵守，不代表扩展运行时已实现 |
@@ -100,6 +100,38 @@ Source Qualification 仍 **PASS 2 / FAIL 1 / NOT_VALIDATED 1**；Global 十三�
 首次与 reload 后渲染相互矛盾，不能将零卡定为 empty/unavailable，也不能由全站登录入口推断动态登录限制；一次 reload 后 12 卡也不足以声称匿名稳定。**logged-out：PARTIAL → PARTIAL**。脱敏结构摘要见 [read-log.json](../fixtures/phase0/read-log.json) 的 `loggedOutAndPaginationSpike20260928`。privacy-disabled 与 empty-data 没有当前已打开的明确样本，均未执行并保持 NOT_VALIDATED。
 
 Source Qualification 保持 **PASS 2 / FAIL 1 / NOT_VALIDATED 1**；其余 Global Gate 不变，整体 **BLOCKED**，Phase 1 **NO**。
+
+## 2026-09-28：已登录动态分页重试
+
+用户明确批准后，仅在一个已知公开动态页的已登录会话中重试分页。先确认路由、页面身份与已登录 UI；初始可见主卡片为 12。首次坐标不在当前视口，浏览器在注入输入前拒绝该操作，因此不计推进；随后两次在有效视口内各完成一次正常下滚。
+
+两次有效滚动均未触发焦点 deadline；页面可正常前进，第二次出现“顶部”控件，但未观察到新批次、跨批重复、continue 或明确 end。没有读取凭据、调用接口、搜索新账号或改变 Gate 规则。故 **pagination：NOT_VALIDATED → NOT_VALIDATED**；页面滚动与无新增观察均不能作为到达末尾的证据。脱敏结构摘要见 [read-log.json](../fixtures/phase0/read-log.json) 的 `loggedInPaginationRetry20260928`。
+
+Source Qualification 仍 **PASS 2 / FAIL 1 / NOT_VALIDATED 1**；其余 Global Gate 不变，整体 **BLOCKED**，Phase 1 **NO**。
+
+## 2026-09-28：available-empty 单页 Probe 前置检查
+
+用户批准仅检查其当前已打开的一个公开动态页，目标为 available-empty；不搜索其他账号，不测试 pagination、privacy-disabled、logged-out 或其他路径。当前 Chrome 标签的动态路由、可见 UID 与页面头部身份一致，但页面显式显示“登录”，未满足该 Probe 要求的“已登录正常浏览环境”。
+
+因此未等待稳定、未读取动态主卡片数量、未判定空态/结束、也未 reload；没有 CAPTCHA、明确隐私拒绝或明确加载失败可作为替代证据。根因限于该指定标签的会话环境与批准前提不一致；未读取凭据、登录/退出或尝试修复环境。
+
+故 **empty-data：NOT_VALIDATED → NOT_VALIDATED**，本次为 **BLOCKED_ENV** 而非零项观察或来源失败。Source Qualification 仍 **PASS 2 / FAIL 1 / NOT_VALIDATED 1**；Global Gate **BLOCKED**，Phase 1 **NO**。脱敏摘要见 [read-log.json](../fixtures/phase0/read-log.json) 的 `availableEmptyPreflight20260928`。
+
+## 2026-09-28：available-empty 已登录单页 Spike
+
+用户随后指定 Codex 内置浏览器中已登录、已经打开的一个动态空白账号；仅使用该页。动态路由、可见个人资料 UID 与头部身份一致，内置浏览器的已登录 UI 正常可见；未见 CAPTCHA、登录限制、隐私拒绝、加载失败或权限错误。页面显示明确空态“好像没有东西诶”，动态主卡片为 0。
+
+按批准执行一次正常 reload 后，路由与身份仍一致、已登录环境仍正常，明确空态和 0 张主卡片仍存在，且仍未见上述阻断提示。因此“有效身份 + Source 正常可用 + 明确稳定空态 + 0 items”共同成立；故 **empty-data：NOT_VALIDATED → DONE**。本轮未测试 pagination、privacy-disabled、logged-out 或其他账号，未读取凭据或调用接口。
+
+Source Qualification 仍 **PASS 2 / FAIL 1 / NOT_VALIDATED 1**；其他 Global Gate 不变，整体 **BLOCKED**，Phase 1 **NO**。脱敏摘要见 [read-log.json](../fixtures/phase0/read-log.json) 的 `availableEmptyLoggedInSpike20260928`。
+
+## 2026-09-28：privacy-disabled 关注列表单页 Spike
+
+用户批准仅在当前已打开的单一公开用户空间页，通过正常点击“关注数/关注”检查关注列表隐私状态。该页路由、可见 UID 与头部身份一致，内置浏览器为正常登录态；未见 CAPTCHA、登录限制或加载失败。
+
+首次两次坐标点击没有可见结果；只读链接核对显示“关注数”不是 anchor，但不能据此推定控件不可点击或形成来源结论。用户指正后，基于新截图在同一可见控件右下区域进行一次正常点击，页面明确显示：“由于该用户隐私设置，关注列表不可见”。没有进入普通空列表，亦未猜测 URL、搜索账号、调用接口或使用其他入口。
+
+该明确来源提示排除了 unknown、普通空数据、登录限制、CAPTCHA 与加载失败；故 **privacy-disabled：NOT_VALIDATED → DONE**，临时候选为 `SRC_PERMISSION_DENIED`。Source Qualification 仍 **PASS 2 / FAIL 1 / NOT_VALIDATED 1**；其他 Global Gate 不变，整体 **BLOCKED**，Phase 1 **NO**。脱敏摘要见 [read-log.json](../fixtures/phase0/read-log.json) 的 `privacyDisabledFollowListSpike20260928`。
 
 ## 2026-09-28：最小权限可行性 Spike（无新网页实验）
 
