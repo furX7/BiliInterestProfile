@@ -1,6 +1,6 @@
 # Phase 1 剩余工程骨架 Spec
 
-状态：**Approved Spec / Implementation Plan Pending Approval**。日期：2026-09-29。本文件记录已获批准的完整 Design 对应的正式 Contract；用户随后明确批准本 Spec，仅授权调用 `superpowers:writing-plans` 编写完整待审批 Plan。Spec approval 不等于 Plan execution approval；Plan 获批前不实施产品代码、CI 或配置，不修改 Gate、合并 main 或发布。
+状态：**Approved Spec；对应 Implementation Plan 已获执行批准；环境阻断修订已批准（2026-09-30）**。日期：2026-09-29。本文件记录已获批准的完整 Design 对应的正式 Contract；原有“Spec approval 不等于 Plan execution approval”的审批边界仍保留。环境阻断修订不改变原验收完成条件，也不授权阶段推进、合并 main 或发布。
 
 ## 1. 目标、依据与现状
 
@@ -69,7 +69,7 @@ Playwright smoke 提供本地及单独 CI 运行入口，但不被包装为 Noti
 
 ## 8. 依赖顺序、验证与回滚
 
-后续待审批 Implementation Plan 应按依赖安排：先固定入口、版本与 ErrorCode Contract；再实现惰性入口及 Manifest/无副作用测试；接入 Prettier 与隔离的 Playwright smoke；建立包含实际构建依赖的 CI；基于新增入口后的干净构建冻结双浏览器包体预算；配置 Dependabot、CHANGELOG 与状态同步；最后做独立总 review 和 fresh full verification。各阶段可形成 logical checkpoint，但前序验收不过不得假称下游完成。
+已批准的 Implementation Plan 按依赖安排：先固定入口、版本与 ErrorCode Contract；再实现惰性入口及 Manifest/无副作用测试；接入 Prettier 与隔离的 Playwright smoke；建立包含实际构建依赖的 CI；基于新增入口后的干净构建冻结双浏览器包体预算；配置 Dependabot、CHANGELOG 与状态同步；最后做独立总 review 和 fresh full verification。各阶段可形成 logical checkpoint，但前序验收不过不得假称下游完成。
 
 完整验收需同时证明：两份 Manifest 的入口、版本、匹配与权限；后台/options 无采集副作用；现有 popup→content 显式链路不回退；格式与 Playwright smoke 真实运行；十项 CI 在干净环境逐项可失败且通过；预算被人工冻结且超限会失败；依赖更新策略与版本/CHANGELOG 一致；ErrorCode 不污染来源语义。此前 Chrome/Edge 真实安装态证据、合成 fixture 与本轮 CI 证据必须分列，不能相互替代。
 
@@ -81,4 +81,12 @@ Playwright smoke 提供本地及单独 CI 运行入口，但不被包装为 Noti
 
 残余风险：新增 worker 可能改变扩展生命周期；Playwright 自带 Chromium 不能证明真实 Chrome/Edge 安装或权限受限态；CI 的浏览器安装与构建缓存可能影响可复现性；125% 预算基线必须待新入口实测；Dependabot feature-branch 配置尚非定时运行证据；分支保护尚未配置。后续实施须逐项记录实际结果，不能将未运行或受限条件写成 PASS。
 
-用户已明确批准本 Spec 与 125% 包体规则，并授权产出另行审批的完整 Implementation Plan；这不授权提前实施。Plan 获批前不得修改产品代码、CI、配置或权限。文档保存或 Git 同步均不代表 Plan 自动获批。
+审批历史：用户先批准本 Spec 与 125% 包体规则，再单独批准对应 Implementation Plan 执行，随后批准第 10 节的限定环境阻断修订。各次批准仅覆盖各自明确范围；文档保存或 Git 同步不构成阶段推进授权。
+
+## 10. 已批准修订：Playwright 环境阻断验证债务
+
+本节及[工程规则修订文本](2026-09-29-environment-blocked-validation-rule.md)已获批准，必要 Notion 规则已同步；但本笔债务的原始证据尚未归档，不能申请 P1 带债进入 P2。第 3、8 节的 Playwright smoke 真实运行要求保持原样：`BLOCKED_ENV / NOT_VERIFIED` 不等于 PASS，Task 6、Task 8 smoke 部分、整份 Plan 和 Definition of Done 均不得因此标为 complete。
+
+本次只为当前 Windows 主机上在产品断言前无法启动的 Playwright bundled Chromium smoke 登记具名残余债务。Harness、配置、helper 与清理逻辑仍须完成所有可运行的 unit/static 验证；full verification 中除具名阻断项外的可执行检查须逐项 fresh PASS，对当前可验证范围须完成独立 review，产品代码不得有已知 FAIL；整个 full verification 不得标 PASS。被阻断项补跑通过后仍须完成原 Plan 的最终总 review。已通过的真实 Chrome / Edge 安装态观察和十项 PR CI 不替代该 smoke，也不扩大豁免范围。证据、风险和重验条件以工程规则修订文本登记为准。
+
+正式规则及本节虽已获批，仍须先满足原始证据归档与其余 fresh 验收，再另行请求明确的 Phase progression 决定；这不表示 Phase 1 全面验证通过。合并 main 前必须在受支持环境以 bundled Chromium 补跑并 PASS；Release 还须满足既有发布门禁。环境恢复后的首次合格机会若更早，须立即补跑；一旦出现产品断言失败，按真实 FAIL 处理，不再适用环境债务。

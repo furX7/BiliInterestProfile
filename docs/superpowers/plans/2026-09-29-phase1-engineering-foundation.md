@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended when independent reviewers are available) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** Draft / Pending Approval。用户已批准对应 Design 与正式 Spec，尚未批准执行本 Plan；文档 commit/push 不代表 Plan 获批。
+**Status:** Approved for execution；下述限定环境阻断修订已批准（2026-09-30）。用户已批准原 Plan 的 Task 1–9 连续实施；本次修订不改变 Task 6、Task 8 或整个 Plan 的未完成状态，也不授权阶段推进。
 
 **Goal:** 在现有 WXT 扩展上补齐 Phase 1 工程入口、测试与十项 PR CI 门禁，不增加兴趣分析或采集权限。
 
@@ -132,4 +132,12 @@
 - [ ] **Fresh full verification。** 从干净源码和空构建输出按 CI DAG 运行冻结安装、lint、Prettier check、typecheck、unit、golden、Chrome/Edge production build、integration、bundle check；另运行独立 Playwright smoke。逐项读取真实输出、测试数与退出码；审计两份 Manifest exact matches/无新增权限、package/Manifest version、预算 SHA/公式/超限负例、`git diff --check`、文档与 Gate 一致性。任一适用项未验证或 FAIL，不声称整个 Plan 完成。
 - [ ] **Git 与状态。** 各 Task 只精确暂存自身实际改动；总审阅若有收尾修复，仅在 fresh verification 后形成对应 logical commit，若无新改动则不创建空 commit。按 feature-branch 既有授权 push；push 前 fetch 排除 divergence，后 fetch 确认 Local HEAD == Remote HEAD，并如实报告工作区。不得 merge main、tag/Release 或改写历史。Plan 完成只表示本工程骨架范围验收，不自动等于整个 Phase 1 完成或授权 Phase 2。
 
-**执行审批：** 本 Plan 为 Draft / Pending Approval。用户明确批准后，按 `AGENTS.md` 连续执行已批准 Tasks，不因普通细节或 Task 切换再次请求许可；Plan 未获批准前不得改产品代码、CI、配置、权限或启动实现型 TDD。
+**执行审批：** 本 Plan 原稿曾为 Draft / Pending Approval；用户随后已明确批准 Task 1–9 在 `AGENTS.md` 边界内连续执行，不因普通细节或 Task 切换再次请求许可。环境阻断修订另获明确批准，但原 Plan approval 与本修订 approval 均不代表 Task / Plan 完成或 P1 → P2 获批。
+
+## 已批准修订：Task 6 / Task 8 的具名环境阻断债务
+
+本节、[工程规则修订文本](../specs/2026-09-29-environment-blocked-validation-rule.md)与对应 Spec 修订已获批准，必要 Notion 规则已同步；本笔债务仍缺原始证据归档，不具备阶段处置条件。当前 Task 6 Step 3、Task 8 独立 smoke workflow 和 Final verification 的原验收继续有效；不得用本节提前标记 PASS 或 complete。
+
+- **Task 6 Step 3**：harness、配置、helper、profile 清理逻辑及可运行的 unit/static 检查仍须逐项验收。当前主机因 bundled Chromium 在产品断言前启动失败而无法运行 smoke 时，记录原始错误、独立诊断、未验证断言和重验条件为 `BLOCKED_ENV`；不得将静态检查、合成 fixture 或真实品牌浏览器观察改写成 Playwright smoke PASS，也不得标 Task 6 complete。
+- **Task 8 独立 smoke 入口**：工作流定义与可运行的解析/静态检查仍须验证；没有真实 bundled Chromium smoke PASS 时，独立 smoke workflow 保持 `NOT_VERIFIED / BLOCKED_ENV`，Task 8 的 smoke 部分和整体 Task 状态不得标 complete。已通过的十项 PR CI 仍须独立 fresh PASS，不因本债务增加第十一项通用 PR Gate 或豁免原十项。
+- **Final verification 与阶段处置**：在其余可执行验收完成、Task 6/8 如实标 partial 后，对当前可验证范围先做独立 review，并逐项列出可执行检查的 fresh 结果；这不是上文须待 Task 1–9 各自验收通过才完成的最终总 review。阶段处置前还须补齐工程规则修订文本列明的可定位原始诊断记录；任何产品代码 FAIL 或其他未验证项均不得纳入此例外。整份 Plan 与 Phase 1 Definition of Done 保持未完成；规则与具名范围虽已批准，仍只能另行请求用户明确批准 Phase progression，不能自动转换阶段。合并 main 前，或环境恢复后首次合格机会（先到者），必须以 Playwright bundled Chromium 补跑原 smoke 并 PASS，然后完成原定最终总 review 与完整验收；产品断言失败按 FAIL 处理。Release 仍受既有门禁约束。
