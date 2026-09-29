@@ -17,17 +17,18 @@
 
 ## 🚧 当前状态
 
-**项目仍处于 Phase 0：公开数据来源稳定性验证。Phase 0 尚未通过，不允许进入 Phase 1。**
+**Phase 0 closure 已获批准；当前在 Phase 1 工程验证中，尚未完成整个 Phase 1。**
 
 - 当前没有正式安装包，也没有已完成的兴趣分析功能。
-- 正在验证公开数据来源稳定性、风控、页面变化和降级策略。
-- 尚未进入正式扩展工程开发阶段；未初始化 WXT / TypeScript 工程。
+- 已初始化 WXT / TypeScript 工程，并实现用户从扩展 popup 显式触发当前公开动态页的采集链路；它只返回脱敏来源状态，不生成兴趣画像。
+- Chrome / Edge 生产扩展的已允许站点访问路径已取得真实安装态观察；持续未允许状态为 `BLOCKED_ENV`，撤销后即时及重载后的行为为 `NOT_VERIFIED`，均不是通过结论。
 - Source qualification（来源资格）：**PASS 2 / FAIL 1 / 未验证 1**。
 
 **Phase 0 closure 已获用户批准，Global Gate 不再阻塞 Phase 1**：pagination 仍 NOT_VALIDATED、SPA UID switch 仍 PARTIAL，作为明确接受的延期风险保留，并须按既定条件重验。v0.1 仅以公开动态当前渲染卡片作为兴趣行为证据，基础资料只作身份与上下文，投稿排除、收藏暂不纳入；不宣称多源行为印证。logged-out 在限定最低证据路径内 DONE；历史零卡原因未知，不证明匿名访问普遍稳定或独立服务器响应稳定。
 通过项为公开基础信息快照，以及已登录公开动态页当前渲染内容的限定范围验证，不能代表兴趣分析已经可用。投稿仍有合作内容归属缺口，收藏尚未完成验证。
-两来源资格门槛已达到；只有全局风险 Gate 完成并获用户明确批准后，才能进入 Phase 1。
+两来源资格门槛、Phase 0 closure 和进入 Phase 1 的用户审批均已完成；pagination 与 SPA UID switch 的历史证据状态保持不变。
 详见 [Phase 0 实验报告](docs/architecture/phase-0-risk-experiments.md)。
+当前运行时范围及两项安装态残余风险见 [安装态审计](docs/architecture/runtime-analysis-install-audit.md)。
 
 ## 为什么做这个项目
 
@@ -112,7 +113,8 @@ UI
 
 | 阶段 | 目标 |
 | --- | --- |
-| **Phase 0（当前）** | 分别验证来源资格与全局风险；整体尚未通过 |
+| **Phase 0（已完成 closure）** | 来源资格与全局风险分别记录；pagination、SPA UID switch 保留已接受的延期风险 |
+| **Phase 1（进行中）** | 工程骨架、采集链路与安装态验收；不等于兴趣画像完成 |
 | **v0.1** | 稳定采集、基础兴趣画像、可解释证据 |
 | **v0.2** | 多来源融合、时间趋势、置信度 |
 | **v0.3** | 本地轻量语义能力、长尾兴趣发现、自动降级 |
@@ -121,10 +123,9 @@ UI
 
 ## 技术方向
 
-**正式工程尚未进入 Phase 1。以下技术尚未初始化，是计划采用的方向：**
+**Phase 1 已启动；当前代码与后续计划应分开看：**
 
-TypeScript、WXT、React、Manifest V3、Zod、IndexedDB / Dexie、Vitest、Playwright。
-当前没有 `package.json`，尚无安装、开发、测试或构建命令。
+当前已有 TypeScript strict、WXT、React、Manifest V3、Zod、Vitest 与 Chrome / Edge 生产构建；Playwright 依赖已列入工程，但不能据此宣称真实安装态自动化验收完成。IndexedDB / Dexie 等后续存储能力尚未实现。仓库已有 `package.json`，测试、lint、typecheck 分别使用 `pnpm test`、`pnpm lint`、`pnpm typecheck`。
 
 ## 成熟项目参考原则
 
@@ -148,6 +149,6 @@ TypeScript、WXT、React、Manifest V3、Zod、IndexedDB / Dexie、Vitest、Play
 
 ## 📌 项目状态
 
-**当前阶段：Phase 0。**项目目前仍处于实验与工程验证阶段，尚无正式可安装版本。
+**当前阶段：Phase 1 工程验证。**项目尚无正式可安装版本，也尚未生成兴趣画像。
 
 如果你对这个方向感兴趣，可以关注项目后续更新。
