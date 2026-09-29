@@ -4,6 +4,8 @@ import { describe, expect, it } from 'vitest'
 
 type ProductionManifest = {
   version?: string
+  background?: { service_worker?: string }
+  options_ui?: { page?: string }
   action?: {
     default_popup?: string
   }
@@ -24,6 +26,8 @@ function readManifest(browser: 'chrome' | 'edge'): ProductionManifest {
 function approvedManifestFixture(overrides: Partial<ProductionManifest> = {}): ProductionManifest {
   return {
     manifest_version: 3,
+    background: { service_worker: 'background.js' },
+    options_ui: { page: 'options.html' },
     action: { default_popup: 'popup.html' },
     content_scripts: [{ matches: approvedMatches }],
     ...overrides,
@@ -32,6 +36,8 @@ function approvedManifestFixture(overrides: Partial<ProductionManifest> = {}): P
 
 function assertApprovedManifest(manifest: ProductionManifest): void {
   expect(manifest.manifest_version).toBe(3)
+  expect(manifest.background?.service_worker).toBe('background.js')
+  expect(manifest.options_ui?.page).toBe('options.html')
   expect(manifest.action?.default_popup).toBe('popup.html')
   const matches = manifest.content_scripts?.flatMap((script) => script.matches ?? []) ?? []
   expect(matches).toEqual(approvedMatches)
@@ -82,6 +88,11 @@ describe('production manifest permissions', () => {
     expect(() => assertApprovedManifest(approvedManifestFixture({
       content_scripts: [{ matches: ['https://space.bilibili.com/*', 'https://other.example/*'] }],
     }))).toThrow()
+  })
+
+  it('rejects a missing background or options entry', () => {
+    expect(() => assertApprovedManifest(approvedManifestFixture({ background: undefined }))).toThrow()
+    expect(() => assertApprovedManifest(approvedManifestFixture({ options_ui: undefined }))).toThrow()
   })
 
   it('rejects a manifest with a declared non-forbidden permission', () => {
