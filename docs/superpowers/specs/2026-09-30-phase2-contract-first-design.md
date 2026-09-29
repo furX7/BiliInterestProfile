@@ -1,6 +1,6 @@
 # Phase 2 Contract First Spec
 
-状态：**Draft / Pending User Approval**。日期：2026-09-30。用户已批准分层 Contract 的 Design 方向；本文件尚未获得 Spec 批准，不能据此实施、启动新 Spike、进入下一阶段或改变既有 Gate。
+状态：**Approved Spec（2026-09-30）；Implementation Plan 尚待审批**。日期：2026-09-30。用户已批准分层 Contract 的 Design 与本正式 Spec；该批准只授权编写待审批 Plan，不授权实施、启动新 Spike、进入下一阶段或改变既有 Gate。
 
 ## 1. 目标、权威与当前基线
 
@@ -33,6 +33,8 @@ P1 `EvidenceItem.sourceUrl` 是可回溯的页面或单条链接，`traceGranula
 `EvidenceId` 是单条已识别 Evidence 的不透明、非空身份值，可由 `InterestSignal.evidenceIds` 引用。TypeScript 使用与普通 URL/字符串不互换的名义类型；Zod 单值 schema 校验非空、拒绝直接使用 URL 充当 ID。身份的语义是同一份可审计 Evidence 在一次分析输入中的唯一引用；单页 URL、UID、数组下标、卡片位置或只有页面粒度的 `sourceUrl` 均不能冒充单条稳定 ID。重复 ID、悬空引用及跨用户引用需要把 `IdentifiedEvidenceItem[] + AnalysisContext + AnalyzerResult` 放在同一次上下文校验/contract test 中判断，不能声称单个 ID 或信号的 Zod parse 足以证明。P2 不规定 ID 算法、跨会话稳定性实现、去重、持久化或真实 producer；这些属于后续 Evidence Store 阶段，未有 producer 前不声称已具备端到端可追溯分析。
 
 `RawSourceResult<TRaw>` 仅是来源边界的类型化结果：非空 `sourceId`、`SourceStatus`、已由来源私有 schema 校验的 `data: TRaw | null` 与 `SourceWarning[]`；`unknown` / `unavailable` 仍须为 `null`，`empty` 仍须有经批准的确认依据，不能以“零 DOM”或工具异常推断。`SourceAdapter<TRaw, TInput>` 是具有 `sourceId`、`apiVersion: 1` 与 `read(input): Promise<Result<RawSourceResult<TRaw>, AppError>>` 的版本化读取接口；`TInput` 与 raw 类型留在 Source 侧，新增 Core contracts / Analyzer 不导入该接口。P2 只验证接口、schema 与依赖边界，不替换 P1 registry、不新增网络访问、来源或浏览器权限。未来真实 Adapter 的超时、Abort、403/429、retry 等属 P3，不能由本接口的存在宣称已实现。
+
+**Spec 批准时的两层语义补充：**外层 `Result` 只表达调用/合同层成功或失败；仅在外层成功时，内层 `RawSourceResult.status` 才表达来源数据状态。两层不得合并，不能把内层 `unknown` 自动改成外层失败，也不能把外层失败伪装为内层 `unavailable`。P2 只通过 TypeScript、Zod 与 contract tests 固定这一区别；timeout、403、429、未授权等未来情形最终归属哪一层，留待 P3 单独决定。
 
 ### 4.2 通用 Result 与跨模块 issue
 
@@ -82,4 +84,4 @@ Contract tests 使用明确标注的合成 fixtures，覆盖成功、失败、�
 
 主要残余风险：P2 只有身份与引用结构，没有 P4 稳定 EvidenceId producer，因此真实 P1 数据暂不能直接进入 Analyzer；只有 schema 的画像不能说明兴趣质量；未验证的分页、SPA 与 Playwright smoke 继续保持原债务。任何未来 Source/Analyzer/存储 producer 引入前，须在其获批阶段验证身份、版本与可恢复失败，不能用本 Spec 推定已经安全可用。
 
-本 Spec 不授权更改 P1 来源结果或 Pipeline、采集新 Source、网络请求或扩展权限、稳定 ID 生成/去重/持久化、Dexie migration、P3 Adapter 异常矩阵、评分/taxonomy/真实 Analyzer、兴趣画像生成或 UI、浏览器 Spike、Phase 0 Gate 修改、merge main、Release 或进入 P3。Spec 获用户明确批准后，才可调用 `superpowers:writing-plans` 写待审批 Implementation Plan；Plan 再获批准前不实施。
+本 Spec 不授权更改 P1 来源结果或 Pipeline、采集新 Source、网络请求或扩展权限、稳定 ID 生成/去重/持久化、Dexie migration、P3 Adapter 异常矩阵、评分/taxonomy/真实 Analyzer、兴趣画像生成或 UI、浏览器 Spike、Phase 0 Gate 修改、merge main、Release 或进入 P3。用户已明确批准本 Spec 并授权调用 `superpowers:writing-plans` 写待审批 Implementation Plan；Plan 再获批准前不实施。
