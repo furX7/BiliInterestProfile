@@ -1,7 +1,19 @@
 import { defineConfig } from 'wxt'
 import packageJson from './package.json'
 
-if (typeof packageJson.version !== 'string' || !/^\d+(?:\.\d+){0,3}$/.test(packageJson.version)) {
+export function isValidExtensionVersion(value: unknown): value is string {
+  if (typeof value !== 'string') return false
+  const components = value.split('.')
+  return (
+    components.length <= 4 &&
+    components.every(
+      (component) => /^(?:0|[1-9]\d*)$/.test(component) && Number(component) <= 65535,
+    ) &&
+    components.some((component) => component !== '0')
+  )
+}
+
+if (!isValidExtensionVersion(packageJson.version)) {
   throw new Error('package.json must contain a valid extension version')
 }
 

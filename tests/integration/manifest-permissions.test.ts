@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { isValidExtensionVersion } from '../../wxt.config'
 
 type ProductionManifest = {
   version?: string
@@ -60,7 +61,7 @@ describe('production manifest permissions', () => {
       const packageJson = JSON.parse(readFileSync(resolve('package.json'), 'utf8')) as {
         version?: string
       }
-      expect(packageJson.version).toMatch(/^\d+(?:\.\d+){0,3}$/)
+      expect(isValidExtensionVersion(packageJson.version)).toBe(true)
       expect(readManifest(browser).version).toBe(packageJson.version)
     })
   }
