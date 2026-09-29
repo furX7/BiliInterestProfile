@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "bundle:check": "node scripts/check-bundle-budget.mjs",
     "test": "vitest run",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"

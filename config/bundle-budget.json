@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "62f06d27fbb0d7b90afd578cca55f564177e870a",
+  "meter": "js-css-bytes",
+  "chrome": {
+    "baselineBytes": 234491,
+    "maxBytes": 293114
+  },
+  "edge": {
+    "baselineBytes": 234491,
+    "maxBytes": 293114
+  }
+}
