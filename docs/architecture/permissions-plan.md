@@ -111,13 +111,13 @@ IndexedDB 是 Web 平台存储，不要求同一扩展 storage 权限；扩展�
 
 ### 2026-09-29 Task 6 production Manifest audit
 
-本轮分别执行 `pnpm exec wxt build -b chrome --mv3` 与 `pnpm exec wxt build -b edge --mv3`。两份生成的生产 Manifest 均为 Manifest V3，只注册 `content-scripts/content.js`，其 `matches` 仅为 `https://space.bilibili.com/*`；未生成 `permissions`、`host_permissions` 或 `optional_host_permissions` 字段。`tests/integration/manifest-permissions.test.ts` 同时审计两份产物，并以禁用 permission、host permission 和 optional host permission 的合成 Manifest 验证拒绝路径。
+Task 6 当时分别执行 `pnpm exec wxt build -b chrome --mv3` 与 `pnpm exec wxt build -b edge --mv3`。两份生成的生产 Manifest 均为 Manifest V3；`content_scripts` 只注册 `content-scripts/content.js`，其 `matches` 仅为 `https://space.bilibili.com/*`；未生成 `permissions`、`host_permissions` 或 `optional_host_permissions` 字段。`tests/integration/manifest-permissions.test.ts` 同时审计两份产物，并以禁用 permission、host permission 和 optional host permission 的合成 Manifest 验证拒绝路径。随后 Runtime Plan Task 3 增加 `action.default_popup = popup.html`；本轮重新构建后的两份生产 Manifest 仍保持同一 matches 与无新增权限字段。
 
-实际注册 caller 是 `src/entrypoints/content.ts` 的静态 content script。该入口当前未调用 profile reader、dynamic reader 或 pipeline；本轮仅审计其生产注册范围，不把尚未接入入口的来源读取描述为已在页面运行。
+实际注册 caller 是 `src/entrypoints/content.ts` 的静态 content script。上述 Task 6 审计时，该入口尚未调用 reader 或 Pipeline；此后获批的 Runtime Plan Task 2 已将显式 popup 消息接入 `collectApprovedSources`，未点击前不自动调用。当前已允许站点访问的 Chrome / Edge 生产运行观察见 [安装态审计](runtime-analysis-install-audit.md)，不得把该观察倒写为 Task 6 当时已验证。
 
-浏览器在新页面加载时未授予扩展此站点访问权时，静态 content script 不会注入，因此不会产生 SourceResult，也不会把未读取页面改写为空数据。popup 对消息连接失败显示中性的 `connection-unavailable` 交互状态，提示用户确认当前为动态页、扩展已获站点访问并在授权后重新加载；该状态不宣称失败必为权限原因，也不伪造来源 unavailable、empty 或 unknown。popup UI 已接入实现，但真实 Chrome / Edge 安装态、用户临时授权、撤销和重新授予行为仍须分别实测；本段不是安装态 PASS。
+浏览器在新页面加载时未授予扩展此站点访问权时，静态 content script 不应注入，因此不应产生 SourceResult，也不得把未读取页面改写为空数据；这一拒绝态运行行为尚未得到稳定的真实安装验证。popup 对消息连接失败显示中性的 `connection-unavailable` 交互状态，提示用户确认当前为动态页、扩展已获站点访问并在授权后重新加载；该状态不宣称失败必为权限原因，也不伪造来源 unavailable、empty 或 unknown。Chrome / Edge 已允许站点访问的生产运行路径已取得真实 Logpoint 观察；持续未允许为 `BLOCKED_ENV`，撤销后即时与重载后均为 `NOT_VERIFIED`，均不等于 PASS，详见安装态审计。
 
-以下均尚未执行，**Phase 0 DONE 不等于 Phase 1 生产 Manifest 已验证**：
+以下为仍未验证或未来新增能力的独立事项；本轮 Chrome / Edge 生产 Manifest 已验证，**Phase 0 DONE 本身不代表这些未来事项已通过**：
 
 - 安装核对权限提示及用户限制站点访问时的实际用户界面降级，不把 matches 称为无站点授权。
 - 验证设置 storage API 权限与 Evidence / Profile 的扩展 origin IndexedDB，审可信消息边界。
