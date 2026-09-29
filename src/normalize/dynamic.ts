@@ -1,4 +1,9 @@
-import type { EvidenceItem, ProfileContext, SourceResult, SourceWarning } from '../core/contracts/source'
+import type {
+  EvidenceItem,
+  ProfileContext,
+  SourceResult,
+  SourceWarning,
+} from '../core/contracts/source'
 import type { DynamicCardCandidate } from '../sources/bilibili/dynamics/read-dynamic-cards'
 
 function rejected(code: SourceWarning['code'], message: string): SourceResult<EvidenceItem> {
@@ -24,10 +29,11 @@ export function normalizeDynamicCandidate(
     return rejected(candidate.rejectionReason, rejectionMessage(candidate.rejectionReason))
   }
 
-  const identityMatches = candidate.identity === 'confirmed'
-    && candidate.routeUserId === context.userId
-    && candidate.headerDisplayName === context.displayName
-    && candidate.cardAuthorDisplayName === context.displayName
+  const identityMatches =
+    candidate.identity === 'confirmed' &&
+    candidate.routeUserId === context.userId &&
+    candidate.headerDisplayName === context.displayName &&
+    candidate.cardAuthorDisplayName === context.displayName
   if (!identityMatches) {
     return rejected('identity_mismatch', rejectionMessage('identity_mismatch'))
   }

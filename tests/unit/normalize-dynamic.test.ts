@@ -44,8 +44,15 @@ describe('dynamic candidate normalizer (synthetic inputs only)', () => {
   })
 
   it('keeps the reader-confirmed forwarding description and does not require reference content', () => {
-    const result = normalizeDynamicCandidate(candidate({ hasReference: true, text: 'Synthetic forwarding comment' }), context)
-    expect(result.data).toMatchObject({ text: 'Synthetic forwarding comment', title: null, traceGranularity: 'page' })
+    const result = normalizeDynamicCandidate(
+      candidate({ hasReference: true, text: 'Synthetic forwarding comment' }),
+      context,
+    )
+    expect(result.data).toMatchObject({
+      text: 'Synthetic forwarding comment',
+      title: null,
+      traceGranularity: 'page',
+    })
     expect(result.status).toBe('partial')
   })
 
@@ -59,15 +66,28 @@ describe('dynamic candidate normalizer (synthetic inputs only)', () => {
       expect(normalizeDynamicCandidate(rejected, context)).toEqual({
         status: 'unknown',
         data: null,
-        warnings: [{ code: 'content_unusable', message: 'Dynamic candidate is not usable as current-user evidence' }],
+        warnings: [
+          {
+            code: 'content_unusable',
+            message: 'Dynamic candidate is not usable as current-user evidence',
+          },
+        ],
       })
     }
   })
 
   it('rejects mismatched candidate identity or an uncertain page state without emitting evidence', () => {
     for (const rejected of [
-      candidate({ cardAuthorDisplayName: 'Other User', identity: 'mismatch', rejectionReason: 'identity_mismatch' }),
-      candidate({ identity: 'missing', cardAuthorDisplayName: null, rejectionReason: 'identity_mismatch' }),
+      candidate({
+        cardAuthorDisplayName: 'Other User',
+        identity: 'mismatch',
+        rejectionReason: 'identity_mismatch',
+      }),
+      candidate({
+        identity: 'missing',
+        cardAuthorDisplayName: null,
+        rejectionReason: 'identity_mismatch',
+      }),
       candidate({ rejectionReason: 'page_state_uncertain' }),
       candidate({ routeUserId: '456' }),
       candidate({ headerDisplayName: 'Other User' }),

@@ -18,7 +18,8 @@ const cardSelector = '.bili-dyn-item__main'
 const dynamicListSelector = 'main.route_dynamic .bili-dyn-list'
 const loggedInSelector = '.message-entry a.right-entry__item-trigger'
 const authorSelector = '.bili-dyn-item__header > .bili-dyn-title > span.bili-dyn-title__text'
-const dateSelector = '.bili-dyn-item__header > .bili-dyn-item__desc > .bili-dyn-time[data-module="time"]'
+const dateSelector =
+  '.bili-dyn-item__header > .bili-dyn-item__desc > .bili-dyn-time[data-module="time"]'
 const contentSelector = '.bili-dyn-content'
 const referenceSelector = '.bili-dyn-content__orig.reference'
 const forwardingSelector = '.bili-dyn-content__forw__desc'
@@ -30,10 +31,15 @@ const originalTextSelectors = [
 
 function isVisible(element: Element): boolean {
   for (let current: Element | null = element; current; current = current.parentElement) {
-    if (current.hasAttribute('hidden') || current.getAttribute('aria-hidden') === 'true') return false
+    if (current.hasAttribute('hidden') || current.getAttribute('aria-hidden') === 'true')
+      return false
     const style = current.ownerDocument.defaultView?.getComputedStyle(current)
     const inlineStyle = (current as HTMLElement).style
-    if ((style?.display ?? inlineStyle?.display) === 'none' || (style?.visibility ?? inlineStyle?.visibility) === 'hidden') return false
+    if (
+      (style?.display ?? inlineStyle?.display) === 'none' ||
+      (style?.visibility ?? inlineStyle?.visibility) === 'hidden'
+    )
+      return false
   }
   return true
 }
@@ -62,7 +68,10 @@ function pageUrl(url: URL): string {
   return `${url.origin}${url.pathname}`
 }
 
-function pageUnknown(message: string, warnings: SourceWarning[] = []): SourceResult<DynamicCardCandidate[]> {
+function pageUnknown(
+  message: string,
+  warnings: SourceWarning[] = [],
+): SourceResult<DynamicCardCandidate[]> {
   return {
     status: 'unknown',
     data: null,
@@ -76,13 +85,16 @@ function isGenericOrPlaceholder(text: string): boolean {
 
 function cardText(content: Element, hasReference: boolean): string | null {
   if (hasReference) {
-    const forwardingDescriptions = visibleMatches(content, forwardingSelector)
-      .filter((element) => !element.closest(referenceSelector))
+    const forwardingDescriptions = visibleMatches(content, forwardingSelector).filter(
+      (element) => !element.closest(referenceSelector),
+    )
     return visibleText(forwardingDescriptions.length === 1 ? forwardingDescriptions[0] : null)
   }
 
   for (const selector of originalTextSelectors) {
-    const candidate = visibleMatches(content, selector).find((element) => !element.closest(referenceSelector))
+    const candidate = visibleMatches(content, selector).find(
+      (element) => !element.closest(referenceSelector),
+    )
     const text = visibleText(candidate ?? null)
     if (text) return text
   }
@@ -113,7 +125,10 @@ function rejectedCard(
   }
 }
 
-export function readDynamicCards(document: Document, url: URL): SourceResult<DynamicCardCandidate[]> {
+export function readDynamicCards(
+  document: Document,
+  url: URL,
+): SourceResult<DynamicCardCandidate[]> {
   if (!/^\/[1-9]\d*\/dynamic\/?$/.test(url.pathname)) {
     return pageUnknown('Current URL is not a Bilibili dynamic route')
   }
@@ -137,10 +152,17 @@ export function readDynamicCards(document: Document, url: URL): SourceResult<Dyn
     }
     const emptyContainer = onlyVisible(dynamicList, ':scope > .bili-dyn-list-empty')
     const emptyText = emptyContainer
-      ? visibleText(onlyVisible(emptyContainer, '.bili-dyn-list-empty__inner > .bili-dyn-list-empty__text > span'))
+      ? visibleText(
+          onlyVisible(
+            emptyContainer,
+            '.bili-dyn-list-empty__inner > .bili-dyn-list-empty__text > span',
+          ),
+        )
       : null
     if (emptyText === '好像没有东西诶') {
-      return pageUnknown('Visible empty state is only a single-snapshot candidate; stability proof is unavailable')
+      return pageUnknown(
+        'Visible empty state is only a single-snapshot candidate; stability proof is unavailable',
+      )
     }
     return pageUnknown('Zero dynamic cards has no confirmed visible empty state')
   }
@@ -154,20 +176,62 @@ export function readDynamicCards(document: Document, url: URL): SourceResult<Dyn
     const content = onlyVisible(card, contentSelector)
     const hasReference = content ? visibleMatches(content, referenceSelector).length > 0 : false
     if (!cardAuthorDisplayName) {
-      candidates.push(rejectedCard(profile.data.userId, profile.data.displayName, null, dateLabel, sourceUrl, hasReference, 'missing', 'identity_mismatch'))
-      warnings.push({ code: 'identity_mismatch', message: 'A dynamic card has no visible top-level author' })
+      candidates.push(
+        rejectedCard(
+          profile.data.userId,
+          profile.data.displayName,
+          null,
+          dateLabel,
+          sourceUrl,
+          hasReference,
+          'missing',
+          'identity_mismatch',
+        ),
+      )
+      warnings.push({
+        code: 'identity_mismatch',
+        message: 'A dynamic card has no visible top-level author',
+      })
       continue
     }
     if (cardAuthorDisplayName !== profile.data.displayName) {
-      candidates.push(rejectedCard(profile.data.userId, profile.data.displayName, cardAuthorDisplayName, dateLabel, sourceUrl, hasReference, 'mismatch', 'identity_mismatch'))
-      warnings.push({ code: 'identity_mismatch', message: 'A dynamic card author differs from the visible page header' })
+      candidates.push(
+        rejectedCard(
+          profile.data.userId,
+          profile.data.displayName,
+          cardAuthorDisplayName,
+          dateLabel,
+          sourceUrl,
+          hasReference,
+          'mismatch',
+          'identity_mismatch',
+        ),
+      )
+      warnings.push({
+        code: 'identity_mismatch',
+        message: 'A dynamic card author differs from the visible page header',
+      })
       continue
     }
 
     const text = content ? cardText(content, hasReference) : null
     if (!text || isGenericOrPlaceholder(text)) {
-      candidates.push(rejectedCard(profile.data.userId, profile.data.displayName, cardAuthorDisplayName, dateLabel, sourceUrl, hasReference, 'confirmed', 'content_unusable'))
-      warnings.push({ code: 'content_unusable', message: 'A dynamic card has no usable current-user text' })
+      candidates.push(
+        rejectedCard(
+          profile.data.userId,
+          profile.data.displayName,
+          cardAuthorDisplayName,
+          dateLabel,
+          sourceUrl,
+          hasReference,
+          'confirmed',
+          'content_unusable',
+        ),
+      )
+      warnings.push({
+        code: 'content_unusable',
+        message: 'A dynamic card has no usable current-user text',
+      })
       continue
     }
     candidates.push({

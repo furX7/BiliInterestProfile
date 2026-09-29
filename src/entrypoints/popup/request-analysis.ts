@@ -10,9 +10,7 @@ export interface ActiveTabMessenger {
   sendMessage(tabId: number, request: AnalyzeInterestRequest): Promise<unknown>
 }
 
-export type PopupAnalysisResponse =
-  | AnalyzeInterestResponse
-  | { kind: 'connection-unavailable' }
+export type PopupAnalysisResponse = AnalyzeInterestResponse | { kind: 'connection-unavailable' }
 
 const analysisRequest: AnalyzeInterestRequest = { type: 'analyze-interest' }
 
@@ -26,9 +24,11 @@ export async function requestAnalysis(
     }
 
     const response = await messenger.sendMessage(activeTab.id, analysisRequest)
-    return parseAnalyzeInterestResponse(response) ?? {
-      kind: runtimeErrorKinds.RUNTIME_RESPONSE_UNAVAILABLE,
-    }
+    return (
+      parseAnalyzeInterestResponse(response) ?? {
+        kind: runtimeErrorKinds.RUNTIME_RESPONSE_UNAVAILABLE,
+      }
+    )
   } catch {
     return { kind: runtimeErrorKinds.RUNTIME_RESPONSE_UNAVAILABLE }
   }

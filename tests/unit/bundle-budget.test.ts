@@ -56,9 +56,24 @@ describe('read-only production bundle budget', () => {
 
   it('rejects missing budgets, invalid bytes and a non-frozen formula', () => {
     expect(() => assertBundleBudget(null, { chrome: 1, edge: 1 })).toThrow()
-    expect(() => assertBundleBudget({ ...validBudget(), chrome: { baselineBytes: 0, maxBytes: 0 } }, { chrome: 1, edge: 1 })).toThrow()
-    expect(() => assertBundleBudget({ ...validBudget(), chrome: { baselineBytes: -1, maxBytes: 1 } }, { chrome: 1, edge: 1 })).toThrow()
-    expect(() => assertBundleBudget({ ...validBudget(), chrome: { baselineBytes: 100, maxBytes: 126 } }, { chrome: 1, edge: 1 })).toThrow()
+    expect(() =>
+      assertBundleBudget(
+        { ...validBudget(), chrome: { baselineBytes: 0, maxBytes: 0 } },
+        { chrome: 1, edge: 1 },
+      ),
+    ).toThrow()
+    expect(() =>
+      assertBundleBudget(
+        { ...validBudget(), chrome: { baselineBytes: -1, maxBytes: 1 } },
+        { chrome: 1, edge: 1 },
+      ),
+    ).toThrow()
+    expect(() =>
+      assertBundleBudget(
+        { ...validBudget(), chrome: { baselineBytes: 100, maxBytes: 126 } },
+        { chrome: 1, edge: 1 },
+      ),
+    ).toThrow()
   })
 
   it('rejects a Chrome or Edge overrun independently', () => {

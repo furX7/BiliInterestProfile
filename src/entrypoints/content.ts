@@ -8,8 +8,8 @@ export default defineContentScript({
   main() {
     const handleAnalysisMessage = createAnalysisHandler(collectApprovedSources)
 
-    browser.runtime.onMessage.addListener((message) => (
-      handleAnalysisMessage(message, document, new URL(location.href))
-    ))
+    browser.runtime.onMessage.addListener((message) =>
+      handleAnalysisMessage(message, document, new URL(location.href)),
+    )
   },
 })

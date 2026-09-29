@@ -179,9 +179,12 @@ describe('popup analysis boundary', () => {
     let resolveResponse: ((value: unknown) => void) | undefined
     const messenger: ActiveTabMessenger = {
       query: vi.fn().mockResolvedValue([{ id: 42 }]),
-      sendMessage: vi.fn().mockImplementationOnce(() => new Promise((resolve) => {
-        resolveResponse = resolve
-      })),
+      sendMessage: vi.fn().mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            resolveResponse = resolve
+          }),
+      ),
     }
     const { container } = await renderPopup(messenger)
     const button = container.querySelector('button')

@@ -18,13 +18,12 @@ export type AnalysisMessageHandler = (
 ) => Promise<AnalyzeInterestResponse | undefined>
 
 export function isSupportedDynamicUrl(url: URL): boolean {
-  return url.origin === 'https://space.bilibili.com'
-    && /^\/[1-9]\d*\/dynamic\/?$/.test(url.pathname)
+  return (
+    url.origin === 'https://space.bilibili.com' && /^\/[1-9]\d*\/dynamic\/?$/.test(url.pathname)
+  )
 }
 
-export function createAnalysisHandler(
-  collect: ApprovedSourceCollector,
-): AnalysisMessageHandler {
+export function createAnalysisHandler(collect: ApprovedSourceCollector): AnalysisMessageHandler {
   let collectionInProgress = false
 
   return async (message, document, url) => {

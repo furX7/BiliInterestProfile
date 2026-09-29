@@ -17,7 +17,10 @@ const parse = (html = profileHtml) => new DOMParser().parseFromString(html, 'tex
 
 describe('profile context reader (deidentified DOM fixtures)', () => {
   it('accepts matching positive route UID and visible profile UID', () => {
-    const result = readProfileContext(parse(), new URL('https://space.bilibili.com/123/dynamic?source=test'))
+    const result = readProfileContext(
+      parse(),
+      new URL('https://space.bilibili.com/123/dynamic?source=test'),
+    )
     expect(result).toEqual({
       status: 'available',
       data: {
@@ -31,7 +34,11 @@ describe('profile context reader (deidentified DOM fixtures)', () => {
   })
 
   it('rejects a non-positive or non-space route instead of guessing a profile', () => {
-    for (const url of ['https://space.bilibili.com/0', 'https://space.bilibili.com/name', 'https://www.bilibili.com/123']) {
+    for (const url of [
+      'https://space.bilibili.com/0',
+      'https://space.bilibili.com/name',
+      'https://www.bilibili.com/123',
+    ]) {
       const result = readProfileContext(parse(), new URL(url))
       expect(result.data).toBeNull()
       expect(result.status).not.toBe('available')
@@ -48,7 +55,10 @@ describe('profile context reader (deidentified DOM fixtures)', () => {
 
   it('does not accept a missing or hidden identity as a valid profile', () => {
     const missingName = profileHtml.replace('class="nickname"', 'class="other"')
-    const hiddenUid = profileHtml.replace('class="sic-fsp-uid_line"', 'class="sic-fsp-uid_line" hidden')
+    const hiddenUid = profileHtml.replace(
+      'class="sic-fsp-uid_line"',
+      'class="sic-fsp-uid_line" hidden',
+    )
     for (const html of [missingName, hiddenUid]) {
       const result = readProfileContext(parse(html), new URL('https://space.bilibili.com/123'))
       expect(result.status).toBe('unknown')
@@ -57,10 +67,16 @@ describe('profile context reader (deidentified DOM fixtures)', () => {
   })
 
   it('rejects profile identity text that exists only in hidden descendants', () => {
-    const hiddenName = profileHtml.replace('>Example User</div>', '><span hidden>Example User</span></div>')
+    const hiddenName = profileHtml.replace(
+      '>Example User</div>',
+      '><span hidden>Example User</span></div>',
+    )
     const hiddenUid = profileHtml.replace('>UID: 123</div>', '><span hidden>UID: 123</span></div>')
     for (const html of [hiddenName, hiddenUid]) {
-      const result = readProfileContext(parse(html), new URL('https://space.bilibili.com/123/dynamic'))
+      const result = readProfileContext(
+        parse(html),
+        new URL('https://space.bilibili.com/123/dynamic'),
+      )
       expect(result.status).toBe('unknown')
       expect(result.data).toBeNull()
     }
@@ -77,28 +93,32 @@ describe('profile context reader (deidentified DOM fixtures)', () => {
 describe('dynamic card reader (deidentified DOM fixtures)', () => {
   const dynamicUrl = new URL('https://space.bilibili.com/123/dynamic?source=test')
   const parseDynamic = (html = dynamicHtml) => new DOMParser().parseFromString(html, 'text/html')
-  const statePage = (listContents: string) => dynamicHtml.replace(
-    /<main[\s\S]*<\/main>/,
-    `<main class="space-main route_dynamic"><div class="bili-dyn-list">${listContents}</div></main>`,
-  )
-  const emptyState = '<div class="bili-dyn-list-empty"><div class="bili-dyn-list-empty__inner"><div class="bili-dyn-list-empty__text"><span>好像没有东西诶</span></div></div></div>'
+  const statePage = (listContents: string) =>
+    dynamicHtml.replace(
+      /<main[\s\S]*<\/main>/,
+      `<main class="space-main route_dynamic"><div class="bili-dyn-list">${listContents}</div></main>`,
+    )
+  const emptyState =
+    '<div class="bili-dyn-list-empty"><div class="bili-dyn-list-empty__inner"><div class="bili-dyn-list-empty__text"><span>好像没有东西诶</span></div></div></div>'
   const hiddenLoading = '<div class="bili-dyn-list-loading" hidden>正在玩命加载…</div>'
 
   it('reads a visible card only when login and page identity are confirmed', () => {
     expect(readDynamicCards(parseDynamic(), dynamicUrl)).toEqual({
       status: 'available',
-      data: [{
-        routeUserId: '123',
-        headerDisplayName: 'Example User',
-        cardAuthorDisplayName: 'Example User',
-        text: 'Original synthetic post',
-        title: null,
-        dateLabel: '3 days ago · Posted a video',
-        sourceUrl: 'https://space.bilibili.com/123/dynamic',
-        hasReference: false,
-        identity: 'confirmed',
-        rejectionReason: null,
-      }],
+      data: [
+        {
+          routeUserId: '123',
+          headerDisplayName: 'Example User',
+          cardAuthorDisplayName: 'Example User',
+          text: 'Original synthetic post',
+          title: null,
+          dateLabel: '3 days ago · Posted a video',
+          sourceUrl: 'https://space.bilibili.com/123/dynamic',
+          hasReference: false,
+          identity: 'confirmed',
+          rejectionReason: null,
+        },
+      ],
       warnings: [],
     })
   })
@@ -139,7 +159,11 @@ describe('dynamic card reader (deidentified DOM fixtures)', () => {
     const result = readDynamicCards(parseDynamic(html), dynamicUrl)
 
     expect(result.status).toBe('available')
-    expect(result.data?.[0]).toMatchObject({ cardAuthorDisplayName: 'Example User', identity: 'confirmed', rejectionReason: null })
+    expect(result.data?.[0]).toMatchObject({
+      cardAuthorDisplayName: 'Example User',
+      identity: 'confirmed',
+      rejectionReason: null,
+    })
   })
 
   it('excludes hidden descendant text from the current-user post', () => {
@@ -151,7 +175,10 @@ describe('dynamic card reader (deidentified DOM fixtures)', () => {
     const result = readDynamicCards(parseDynamic(html), dynamicUrl)
 
     expect(result.status).toBe('available')
-    expect(result.data?.[0]).toMatchObject({ text: 'Original synthetic post', rejectionReason: null })
+    expect(result.data?.[0]).toMatchObject({
+      text: 'Original synthetic post',
+      rejectionReason: null,
+    })
   })
 
   it('rejects a post whose only text is hidden in a descendant', () => {
@@ -168,7 +195,11 @@ describe('dynamic card reader (deidentified DOM fixtures)', () => {
 
   it('uses the forwarding description and never falls back to content inside the reference subtree', () => {
     const result = readDynamicCards(parseDynamic(referenceHtml), dynamicUrl)
-    expect(result.data?.[0]).toMatchObject({ text: 'Deidentified forwarding comment', hasReference: true, rejectionReason: null })
+    expect(result.data?.[0]).toMatchObject({
+      text: 'Deidentified forwarding comment',
+      hasReference: true,
+      rejectionReason: null,
+    })
   })
 
   it('rejects a generic share label and a reference without a forwarding description', () => {
@@ -193,13 +224,19 @@ describe('dynamic card reader (deidentified DOM fixtures)', () => {
     const result = readDynamicCards(parseDynamic(html), dynamicUrl)
 
     expect(result.status).toBe('partial')
-    expect(result.data?.[0]).toMatchObject({ text: null, hasReference: true, rejectionReason: 'content_unusable' })
+    expect(result.data?.[0]).toMatchObject({
+      text: null,
+      hasReference: true,
+      rejectionReason: 'content_unusable',
+    })
   })
 
   it('does not treat a hidden empty state as empty when rendered cards exist', () => {
     const card = dynamicHtml.match(/<article[\s\S]*?<\/article>/)?.[0]
     expect(card).toBeDefined()
-    const html = statePage(`<div class="bili-dyn-list__items">${card}</div>${hiddenLoading}<div class="bili-dyn-list-empty" hidden><div class="bili-dyn-list-empty__inner"><div class="bili-dyn-list-empty__text"><span>好像没有东西诶</span></div></div></div>`)
+    const html = statePage(
+      `<div class="bili-dyn-list__items">${card}</div>${hiddenLoading}<div class="bili-dyn-list-empty" hidden><div class="bili-dyn-list-empty__inner"><div class="bili-dyn-list-empty__text"><span>好像没有东西诶</span></div></div></div>`,
+    )
     expect(readDynamicCards(parseDynamic(html), dynamicUrl).status).toBe('available')
   })
 
@@ -213,8 +250,8 @@ describe('dynamic card reader (deidentified DOM fixtures)', () => {
   })
 
   it('does not treat matching text outside the dynamic list as a confirmed empty state', () => {
-    const html = statePage('<div class="bili-dyn-list__items"></div>')
-      + '<aside><p>好像没有东西诶</p></aside>'
+    const html =
+      statePage('<div class="bili-dyn-list__items"></div>') + '<aside><p>好像没有东西诶</p></aside>'
 
     const result = readDynamicCards(parseDynamic(html), dynamicUrl)
 
@@ -223,7 +260,10 @@ describe('dynamic card reader (deidentified DOM fixtures)', () => {
   })
 
   it('keeps a zero-card page unknown while its dynamic loading node is visible', () => {
-    const html = statePage('<div class="bili-dyn-list__items"></div><div class="bili-dyn-list-loading"></div>' + emptyState)
+    const html = statePage(
+      '<div class="bili-dyn-list__items"></div><div class="bili-dyn-list-loading"></div>' +
+        emptyState,
+    )
 
     const result = readDynamicCards(parseDynamic(html), dynamicUrl)
 
@@ -232,7 +272,10 @@ describe('dynamic card reader (deidentified DOM fixtures)', () => {
   })
 
   it('returns unknown for a zero-card page with a loading or unconfirmed login state', () => {
-    const zeroCards = dynamicHtml.replace(/<main[\s\S]*<\/main>/, '<main class="bili-dyn-list"><p>正在玩命加载…</p></main>')
+    const zeroCards = dynamicHtml.replace(
+      /<main[\s\S]*<\/main>/,
+      '<main class="bili-dyn-list"><p>正在玩命加载…</p></main>',
+    )
     const signedOut = dynamicHtml.replace(/<section class="message-entry">[\s\S]*?<\/section>/, '')
     for (const html of [zeroCards, signedOut]) {
       const result = readDynamicCards(parseDynamic(html), dynamicUrl)

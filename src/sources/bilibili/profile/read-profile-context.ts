@@ -2,7 +2,8 @@ import type { ProfileContext, SourceResult } from '../../../core/contracts/sourc
 
 function isVisible(element: Element): boolean {
   for (let current: Element | null = element; current; current = current.parentElement) {
-    if (current.hasAttribute('hidden') || current.getAttribute('aria-hidden') === 'true') return false
+    if (current.hasAttribute('hidden') || current.getAttribute('aria-hidden') === 'true')
+      return false
     const style = current.ownerDocument.defaultView?.getComputedStyle(current)
     if (style?.display === 'none' || style?.visibility === 'hidden') return false
   }
@@ -42,7 +43,9 @@ export function readProfileContext(document: Document, url: URL): SourceResult<P
     return {
       status: 'unknown',
       data: null,
-      warnings: [{ code: 'identity_mismatch', message: 'Visible profile UID differs from route UID' }],
+      warnings: [
+        { code: 'identity_mismatch', message: 'Visible profile UID differs from route UID' },
+      ],
     }
   }
 

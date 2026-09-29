@@ -30,9 +30,13 @@ describe('source contract', () => {
 
   it('accepts dynamic evidence with page-level trace and missing exact time', () => {
     expect(evidenceItemSchema.parse(evidence)).toEqual(evidence)
-    expect(sourceResultSchema(evidenceItemSchema).parse({
-      status: 'partial', data: evidence, warnings: [],
-    }).data).toEqual(evidence)
+    expect(
+      sourceResultSchema(evidenceItemSchema).parse({
+        status: 'partial',
+        data: evidence,
+        warnings: [],
+      }).data,
+    ).toEqual(evidence)
   })
 
   it('rejects other evidence sources, missing identity and empty text', () => {
@@ -49,7 +53,11 @@ describe('source contract', () => {
     }
     expect(listSchema.safeParse({ status: 'empty', data: [], warnings: [] }).success).toBe(true)
     expect(listSchema.safeParse({ status: 'empty', data: null, warnings: [] }).success).toBe(false)
-    expect(listSchema.safeParse({ status: 'empty', data: [evidence], warnings: [] }).success).toBe(false)
-    expect(listSchema.safeParse({ status: 'available', data: null, warnings: [] }).success).toBe(false)
+    expect(listSchema.safeParse({ status: 'empty', data: [evidence], warnings: [] }).success).toBe(
+      false,
+    )
+    expect(listSchema.safeParse({ status: 'available', data: null, warnings: [] }).success).toBe(
+      false,
+    )
   })
 })

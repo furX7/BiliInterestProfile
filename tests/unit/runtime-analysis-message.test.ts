@@ -105,7 +105,9 @@ describe('runtime analysis message contract', () => {
   })
 
   it('rejects malformed responses instead of inventing a source result', () => {
-    expect(parseAnalyzeInterestResponse({ kind: 'collection', summary: { evidenceCount: 0 } })).toBeNull()
+    expect(
+      parseAnalyzeInterestResponse({ kind: 'collection', summary: { evidenceCount: 0 } }),
+    ).toBeNull()
     expect(parseAnalyzeInterestResponse({ kind: 'unknown', error: 'Sensitive error' })).toBeNull()
     expect(parseAnalyzeInterestResponse(null)).toBeNull()
   })

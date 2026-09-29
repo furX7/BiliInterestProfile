@@ -33,12 +33,12 @@ export function measureJsCssBytes(outputDir) {
 
 export function assertBundleBudget(budget, actualByBrowser) {
   if (
-    budget === null
-    || typeof budget !== 'object'
-    || budget.schemaVersion !== 1
-    || budget.meter !== 'js-css-bytes'
-    || typeof budget.baselineCommit !== 'string'
-    || !/^[0-9a-f]{40}$/.test(budget.baselineCommit)
+    budget === null ||
+    typeof budget !== 'object' ||
+    budget.schemaVersion !== 1 ||
+    budget.meter !== 'js-css-bytes' ||
+    typeof budget.baselineCommit !== 'string' ||
+    !/^[0-9a-f]{40}$/.test(budget.baselineCommit)
   ) {
     throw new Error('Invalid frozen bundle budget metadata')
   }
@@ -47,12 +47,12 @@ export function assertBundleBudget(budget, actualByBrowser) {
     const limit = budget[browser]
     const actual = actualByBrowser?.[browser]
     if (
-      limit === null
-      || typeof limit !== 'object'
-      || !positiveBytes(limit.baselineBytes)
-      || !positiveBytes(limit.maxBytes)
-      || limit.maxBytes !== Math.ceil(limit.baselineBytes * 1.25)
-      || !positiveBytes(actual)
+      limit === null ||
+      typeof limit !== 'object' ||
+      !positiveBytes(limit.baselineBytes) ||
+      !positiveBytes(limit.maxBytes) ||
+      limit.maxBytes !== Math.ceil(limit.baselineBytes * 1.25) ||
+      !positiveBytes(actual)
     ) {
       throw new Error(`Invalid ${browser} bundle budget or measured size`)
     }
@@ -65,13 +65,17 @@ export function assertBundleBudget(budget, actualByBrowser) {
 function runCli() {
   const root = process.cwd()
   const budget = JSON.parse(readFileSync(resolve(root, 'config/bundle-budget.json'), 'utf8'))
-  const actualByBrowser = Object.fromEntries(browsers.map((browser) => [
-    browser,
-    measureJsCssBytes(resolve(root, `.output/${browser}-mv3`)),
-  ]))
+  const actualByBrowser = Object.fromEntries(
+    browsers.map((browser) => [
+      browser,
+      measureJsCssBytes(resolve(root, `.output/${browser}-mv3`)),
+    ]),
+  )
   assertBundleBudget(budget, actualByBrowser)
   for (const browser of browsers) {
-    process.stdout.write(`${browser}: ${actualByBrowser[browser]} / ${budget[browser].maxBytes} bytes\n`)
+    process.stdout.write(
+      `${browser}: ${actualByBrowser[browser]} / ${budget[browser].maxBytes} bytes\n`,
+    )
   }
 }
 
@@ -79,7 +83,9 @@ if (basename(process.argv[1] ?? '') === 'check-bundle-budget.mjs') {
   try {
     runCli()
   } catch (error) {
-    process.stderr.write(`${error instanceof Error ? error.message : 'Bundle budget check failed'}\n`)
+    process.stderr.write(
+      `${error instanceof Error ? error.message : 'Bundle budget check failed'}\n`,
+    )
     process.exitCode = 1
   }
 }

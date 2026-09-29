@@ -1,0 +1,7 @@
+node_modules/
+.output/
+.wxt/
+.superpowers/
+pnpm-lock.yaml
+tests/fixtures/
+tests/golden/*.json

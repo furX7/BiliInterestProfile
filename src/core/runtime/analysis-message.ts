@@ -39,13 +39,14 @@ function isSourceStatus(value: unknown): value is SourceStatus {
   return typeof value === 'string' && sourceStatuses.has(value as SourceStatus)
 }
 
-function collectWarningCodes(
-  warnings: ReadonlyArray<{ code: unknown }>,
-): SourceWarning['code'][] {
+function collectWarningCodes(warnings: ReadonlyArray<{ code: unknown }>): SourceWarning['code'][] {
   const uniqueCodes = new Set<SourceWarning['code']>()
 
   for (const warning of warnings) {
-    if (typeof warning.code === 'string' && warningCodes.has(warning.code as SourceWarning['code'])) {
+    if (
+      typeof warning.code === 'string' &&
+      warningCodes.has(warning.code as SourceWarning['code'])
+    ) {
       uniqueCodes.add(warning.code as SourceWarning['code'])
     }
   }
@@ -63,9 +64,7 @@ function confirmedEvidenceCount(collection: ApprovedSourceCollection): number | 
 }
 
 export function isAnalyzeInterestRequest(value: unknown): value is AnalyzeInterestRequest {
-  return isRecord(value)
-    && Object.keys(value).length === 1
-    && value.type === 'analyze-interest'
+  return isRecord(value) && Object.keys(value).length === 1 && value.type === 'analyze-interest'
 }
 
 export function summarizeCollection(collection: ApprovedSourceCollection): CollectionSummary {
@@ -93,23 +92,27 @@ export function parseAnalyzeInterestResponse(value: unknown): AnalyzeInterestRes
     return null
   }
 
-  const { contextStatus, dynamicStatus, evidenceCount, warningCodes: responseWarningCodes } = value.summary
+  const {
+    contextStatus,
+    dynamicStatus,
+    evidenceCount,
+    warningCodes: responseWarningCodes,
+  } = value.summary
   if (
-    !isSourceStatus(contextStatus)
-    || !isSourceStatus(dynamicStatus)
-    || !(evidenceCount === null || (
-      typeof evidenceCount === 'number'
-      && Number.isSafeInteger(evidenceCount)
-      && evidenceCount >= 0
-    ))
-    || !Array.isArray(responseWarningCodes)
+    !isSourceStatus(contextStatus) ||
+    !isSourceStatus(dynamicStatus) ||
+    !(
+      evidenceCount === null ||
+      (typeof evidenceCount === 'number' &&
+        Number.isSafeInteger(evidenceCount) &&
+        evidenceCount >= 0)
+    ) ||
+    !Array.isArray(responseWarningCodes)
   ) {
     return null
   }
 
-  const parsedWarningCodes = collectWarningCodes(
-    responseWarningCodes.map((code) => ({ code })),
-  )
+  const parsedWarningCodes = collectWarningCodes(responseWarningCodes.map((code) => ({ code })))
   if (parsedWarningCodes.length !== responseWarningCodes.length) {
     return null
   }

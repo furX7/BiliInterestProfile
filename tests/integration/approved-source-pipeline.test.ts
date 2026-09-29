@@ -24,15 +24,17 @@ describe('approved Bilibili source pipeline (synthetic DOM only)', () => {
     expect(result.context.data).toMatchObject({ userId: '123', displayName: 'Example User' })
     expect(result.dynamic).toEqual({
       status: 'partial',
-      data: [{
-        source: 'dynamic',
-        userId: '123',
-        title: null,
-        text: 'Original synthetic post',
-        timestamp: null,
-        sourceUrl: 'https://space.bilibili.com/123/dynamic',
-        traceGranularity: 'page',
-      }],
+      data: [
+        {
+          source: 'dynamic',
+          userId: '123',
+          title: null,
+          text: 'Original synthetic post',
+          timestamp: null,
+          sourceUrl: 'https://space.bilibili.com/123/dynamic',
+          traceGranularity: 'page',
+        },
+      ],
       warnings: [],
     })
     expect(result.behaviorEvidenceSources).toEqual(['dynamic'])
@@ -67,6 +69,8 @@ describe('approved Bilibili source pipeline (synthetic DOM only)', () => {
     const result = collectApprovedSources(parse(mismatchedAuthor), url)
     expect(result.dynamic.status).toBe('unknown')
     expect(result.dynamic.data).toBeNull()
-    expect(result.dynamic.warnings.some((warning) => warning.code === 'identity_mismatch')).toBe(true)
+    expect(result.dynamic.warnings.some((warning) => warning.code === 'identity_mismatch')).toBe(
+      true,
+    )
   })
 })

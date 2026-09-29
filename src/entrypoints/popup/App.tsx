@@ -6,10 +6,7 @@ import {
   type PopupAnalysisResponse,
 } from './request-analysis'
 
-type PopupState =
-  | { kind: 'idle' }
-  | { kind: 'sending' }
-  | PopupAnalysisResponse
+type PopupState = { kind: 'idle' } | { kind: 'sending' } | PopupAnalysisResponse
 
 export interface AnalysisPopupProps {
   messenger: ActiveTabMessenger
@@ -43,7 +40,8 @@ function statusContent(state: PopupState): ReactElement | null {
   if (state.kind === 'connection-unavailable') {
     return (
       <p role="status">
-        无法连接当前页面。请确认这是 B 站空间动态页、扩展已获该站点访问权限，并在授权后重新加载页面。
+        无法连接当前页面。请确认这是 B
+        站空间动态页、扩展已获该站点访问权限，并在授权后重新加载页面。
       </p>
     )
   }

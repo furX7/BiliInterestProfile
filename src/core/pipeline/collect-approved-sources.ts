@@ -11,9 +11,10 @@ function unknownDynamic(warnings: SourceWarning[]): SourceResult<EvidenceItem[]>
   return {
     status: 'unknown',
     data: null,
-    warnings: warnings.length > 0
-      ? warnings
-      : [{ code: 'page_state_uncertain', message: 'Dynamic evidence cannot be confirmed' }],
+    warnings:
+      warnings.length > 0
+        ? warnings
+        : [{ code: 'page_state_uncertain', message: 'Dynamic evidence cannot be confirmed' }],
   }
 }
 
@@ -24,7 +25,11 @@ export function collectApprovedSources(document: Document, url: URL): ApprovedSo
   if (dynamicCandidates.status === 'unknown' || dynamicCandidates.status === 'unavailable') {
     return {
       context,
-      dynamic: { status: dynamicCandidates.status, data: null, warnings: dynamicCandidates.warnings },
+      dynamic: {
+        status: dynamicCandidates.status,
+        data: null,
+        warnings: dynamicCandidates.warnings,
+      },
       behaviorEvidenceSources: ['dynamic'],
     }
   }
@@ -46,16 +51,20 @@ export function collectApprovedSources(document: Document, url: URL): ApprovedSo
   }
 
   const profileContext = context.data
-  const normalized = dynamicCandidates.data.map((candidate) => (
-    approvedSourceRegistry.dynamicCandidateNormalizer(candidate, profileContext)
-  ))
-  const evidence = normalized.flatMap((result) => result.data ? [result.data] : [])
-  const warnings = [...dynamicCandidates.warnings, ...normalized.flatMap((result) => result.warnings)]
+  const normalized = dynamicCandidates.data.map((candidate) =>
+    approvedSourceRegistry.dynamicCandidateNormalizer(candidate, profileContext),
+  )
+  const evidence = normalized.flatMap((result) => (result.data ? [result.data] : []))
+  const warnings = [
+    ...dynamicCandidates.warnings,
+    ...normalized.flatMap((result) => result.warnings),
+  ]
   return {
     context,
-    dynamic: evidence.length > 0
-      ? { status: 'partial', data: evidence, warnings }
-      : unknownDynamic(warnings),
+    dynamic:
+      evidence.length > 0
+        ? { status: 'partial', data: evidence, warnings }
+        : unknownDynamic(warnings),
     behaviorEvidenceSources: ['dynamic'],
   }
 }

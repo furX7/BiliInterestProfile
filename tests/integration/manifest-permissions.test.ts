@@ -73,39 +73,65 @@ describe('production manifest permissions', () => {
   })
 
   it('rejects a manifest with host permissions', () => {
-    expect(() => assertApprovedManifest(approvedManifestFixture({
-      host_permissions: ['https://other.example/*'],
-    }))).toThrow()
+    expect(() =>
+      assertApprovedManifest(
+        approvedManifestFixture({
+          host_permissions: ['https://other.example/*'],
+        }),
+      ),
+    ).toThrow()
   })
 
   it('rejects a manifest with optional host permissions', () => {
-    expect(() => assertApprovedManifest(approvedManifestFixture({
-      optional_host_permissions: ['https://other.example/*'],
-    }))).toThrow()
+    expect(() =>
+      assertApprovedManifest(
+        approvedManifestFixture({
+          optional_host_permissions: ['https://other.example/*'],
+        }),
+      ),
+    ).toThrow()
   })
 
   it('rejects a manifest with an expanded content-script match scope', () => {
-    expect(() => assertApprovedManifest(approvedManifestFixture({
-      content_scripts: [{ matches: ['https://space.bilibili.com/*', 'https://other.example/*'] }],
-    }))).toThrow()
+    expect(() =>
+      assertApprovedManifest(
+        approvedManifestFixture({
+          content_scripts: [
+            { matches: ['https://space.bilibili.com/*', 'https://other.example/*'] },
+          ],
+        }),
+      ),
+    ).toThrow()
   })
 
   it('rejects a missing background or options entry', () => {
-    expect(() => assertApprovedManifest(approvedManifestFixture({ background: undefined }))).toThrow()
-    expect(() => assertApprovedManifest(approvedManifestFixture({ options_ui: undefined }))).toThrow()
+    expect(() =>
+      assertApprovedManifest(approvedManifestFixture({ background: undefined })),
+    ).toThrow()
+    expect(() =>
+      assertApprovedManifest(approvedManifestFixture({ options_ui: undefined })),
+    ).toThrow()
   })
 
   it('rejects a manifest with a declared non-forbidden permission', () => {
-    expect(() => assertApprovedManifest(approvedManifestFixture({
-      permissions: ['storage'],
-    }))).toThrow()
+    expect(() =>
+      assertApprovedManifest(
+        approvedManifestFixture({
+          permissions: ['storage'],
+        }),
+      ),
+    ).toThrow()
   })
 
   it('rejects a manifest that declares empty permission fields', () => {
-    expect(() => assertApprovedManifest(approvedManifestFixture({
-      permissions: [],
-      host_permissions: [],
-      optional_host_permissions: [],
-    }))).toThrow()
+    expect(() =>
+      assertApprovedManifest(
+        approvedManifestFixture({
+          permissions: [],
+          host_permissions: [],
+          optional_host_permissions: [],
+        }),
+      ),
+    ).toThrow()
   })
 })

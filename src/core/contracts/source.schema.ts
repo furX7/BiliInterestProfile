@@ -26,22 +26,28 @@ export const sourceWarningSchema = z.strictObject({
 })
 
 export function sourceResultSchema<T extends z.ZodType>(dataSchema: T) {
-  return z.strictObject({
-    status: z.enum(['available', 'partial', 'empty', 'unavailable', 'unknown']),
-    data: z.unknown(),
-    warnings: z.array(sourceWarningSchema),
-  }).superRefine((result, context) => {
-    if (result.data !== null && !dataSchema.safeParse(result.data).success) {
-      context.addIssue({ code: 'custom', message: 'Source data does not match its contract' })
-    }
-    if (result.status === 'unknown' || result.status === 'unavailable') {
-      if (result.data !== null) context.addIssue({ code: 'custom', message: 'Unconfirmed source cannot contain data' })
-    } else if (result.status === 'empty') {
-      if (!Array.isArray(result.data) || result.data.length !== 0) {
-        context.addIssue({ code: 'custom', message: 'Empty requires a confirmed empty collection' })
+  return z
+    .strictObject({
+      status: z.enum(['available', 'partial', 'empty', 'unavailable', 'unknown']),
+      data: z.unknown(),
+      warnings: z.array(sourceWarningSchema),
+    })
+    .superRefine((result, context) => {
+      if (result.data !== null && !dataSchema.safeParse(result.data).success) {
+        context.addIssue({ code: 'custom', message: 'Source data does not match its contract' })
       }
-    } else if (result.data === null) {
-      context.addIssue({ code: 'custom', message: 'Available or partial source requires data' })
-    }
-  })
+      if (result.status === 'unknown' || result.status === 'unavailable') {
+        if (result.data !== null)
+          context.addIssue({ code: 'custom', message: 'Unconfirmed source cannot contain data' })
+      } else if (result.status === 'empty') {
+        if (!Array.isArray(result.data) || result.data.length !== 0) {
+          context.addIssue({
+            code: 'custom',
+            message: 'Empty requires a confirmed empty collection',
+          })
+        }
+      } else if (result.data === null) {
+        context.addIssue({ code: 'custom', message: 'Available or partial source requires data' })
+      }
+    })
 }
