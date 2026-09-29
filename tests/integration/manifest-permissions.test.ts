@@ -3,6 +3,9 @@ import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 type ProductionManifest = {
+  action?: {
+    default_popup?: string
+  }
   manifest_version?: number
   content_scripts?: Array<{ matches?: string[] }>
   host_permissions?: string[]
@@ -19,6 +22,7 @@ function readManifest(browser: 'chrome' | 'edge'): ProductionManifest {
 
 function assertApprovedManifest(manifest: ProductionManifest): void {
   expect(manifest.manifest_version).toBe(3)
+  expect(manifest.action?.default_popup).toBe('popup.html')
   const matches = manifest.content_scripts?.flatMap((script) => script.matches ?? []) ?? []
   expect(matches).toEqual(approvedMatches)
   expect(manifest.permissions).toBeUndefined()

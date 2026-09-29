@@ -115,7 +115,7 @@ IndexedDB 是 Web 平台存储，不要求同一扩展 storage 权限；扩展�
 
 实际注册 caller 是 `src/entrypoints/content.ts` 的静态 content script。该入口当前未调用 profile reader、dynamic reader 或 pipeline；本轮仅审计其生产注册范围，不把尚未接入入口的来源读取描述为已在页面运行。
 
-浏览器在新页面加载时未授予扩展此站点访问权时，静态 content script 不会注入，因此本轮不会产生 SourceResult，也不会把未读取页面改写为空数据。当前工程尚未实现可展示提示的 UI 或安装测试；后续接入分析入口时，调用方需要将这类情况明确呈现为“无法访问此页面内容，请允许扩展访问此站点”，并保持来源不可用状态。已打开页面的用户临时授权、撤销和重新授予行为尚未验证；该说明是待接入时的降级边界，不是已经完成的用户界面验证。
+浏览器在新页面加载时未授予扩展此站点访问权时，静态 content script 不会注入，因此不会产生 SourceResult，也不会把未读取页面改写为空数据。popup 对消息连接失败显示中性的 `connection-unavailable` 交互状态，提示用户确认当前为动态页、扩展已获站点访问并在授权后重新加载；该状态不宣称失败必为权限原因，也不伪造来源 unavailable、empty 或 unknown。popup UI 已接入实现，但真实 Chrome / Edge 安装态、用户临时授权、撤销和重新授予行为仍须分别实测；本段不是安装态 PASS。
 
 以下均尚未执行，**Phase 0 DONE 不等于 Phase 1 生产 Manifest 已验证**：
 
