@@ -18,6 +18,7 @@ const cardSelector = '.bili-dyn-item__main'
 const dynamicListSelector = 'main.route_dynamic .bili-dyn-list'
 const loggedInSelector = '.message-entry a.right-entry__item-trigger'
 const authorSelector = '.bili-dyn-item__header > .bili-dyn-title > span.bili-dyn-title__text'
+const dateSelector = '.bili-dyn-item__header > .bili-dyn-item__desc > .bili-dyn-time[data-module="time"]'
 const contentSelector = '.bili-dyn-content'
 const referenceSelector = '.bili-dyn-content__orig.reference'
 const forwardingSelector = '.bili-dyn-content__forw__desc'
@@ -92,6 +93,7 @@ function rejectedCard(
   routeUserId: string,
   headerDisplayName: string,
   cardAuthorDisplayName: string | null,
+  dateLabel: string | null,
   sourceUrl: string,
   hasReference: boolean,
   identity: DynamicCardCandidate['identity'],
@@ -103,7 +105,7 @@ function rejectedCard(
     cardAuthorDisplayName,
     text: null,
     title: null,
-    dateLabel: null,
+    dateLabel,
     sourceUrl,
     hasReference,
     identity,
@@ -112,6 +114,9 @@ function rejectedCard(
 }
 
 export function readDynamicCards(document: Document, url: URL): SourceResult<DynamicCardCandidate[]> {
+  if (!/^\/[1-9]\d*\/dynamic\/?$/.test(url.pathname)) {
+    return pageUnknown('Current URL is not a Bilibili dynamic route')
+  }
   if (!visibleMatches(document, loggedInSelector).length) {
     return pageUnknown('Visible logged-in navigation cannot be confirmed')
   }
@@ -121,10 +126,12 @@ export function readDynamicCards(document: Document, url: URL): SourceResult<Dyn
     return pageUnknown('Visible page identity cannot be confirmed', profile.warnings)
   }
 
-  const cards = visibleMatches(document, cardSelector)
+  const dynamicList = onlyVisible(document, dynamicListSelector)
+  if (!dynamicList) return pageUnknown('Visible dynamic list cannot be confirmed')
+  const items = onlyVisible(dynamicList, ':scope > .bili-dyn-list__items')
+  if (!items) return pageUnknown('Visible dynamic card container cannot be confirmed')
+  const cards = visibleMatches(items, cardSelector)
   if (cards.length === 0) {
-    const dynamicList = onlyVisible(document, dynamicListSelector)
-    if (!dynamicList) return pageUnknown('Zero dynamic cards has no confirmed dynamic list')
     if (visibleMatches(dynamicList, ':scope > .bili-dyn-list-loading').length > 0) {
       return pageUnknown('Dynamic page is still visibly loading')
     }
@@ -143,22 +150,23 @@ export function readDynamicCards(document: Document, url: URL): SourceResult<Dyn
   const sourceUrl = pageUrl(url)
   for (const card of cards) {
     const cardAuthorDisplayName = visibleText(onlyVisible(card, authorSelector))
+    const dateLabel = visibleText(onlyVisible(card, dateSelector))
     const content = onlyVisible(card, contentSelector)
     const hasReference = content ? visibleMatches(content, referenceSelector).length > 0 : false
     if (!cardAuthorDisplayName) {
-      candidates.push(rejectedCard(profile.data.userId, profile.data.displayName, null, sourceUrl, hasReference, 'missing', 'identity_mismatch'))
+      candidates.push(rejectedCard(profile.data.userId, profile.data.displayName, null, dateLabel, sourceUrl, hasReference, 'missing', 'identity_mismatch'))
       warnings.push({ code: 'identity_mismatch', message: 'A dynamic card has no visible top-level author' })
       continue
     }
     if (cardAuthorDisplayName !== profile.data.displayName) {
-      candidates.push(rejectedCard(profile.data.userId, profile.data.displayName, cardAuthorDisplayName, sourceUrl, hasReference, 'mismatch', 'identity_mismatch'))
+      candidates.push(rejectedCard(profile.data.userId, profile.data.displayName, cardAuthorDisplayName, dateLabel, sourceUrl, hasReference, 'mismatch', 'identity_mismatch'))
       warnings.push({ code: 'identity_mismatch', message: 'A dynamic card author differs from the visible page header' })
       continue
     }
 
     const text = content ? cardText(content, hasReference) : null
     if (!text || isGenericOrPlaceholder(text)) {
-      candidates.push(rejectedCard(profile.data.userId, profile.data.displayName, cardAuthorDisplayName, sourceUrl, hasReference, 'confirmed', 'content_unusable'))
+      candidates.push(rejectedCard(profile.data.userId, profile.data.displayName, cardAuthorDisplayName, dateLabel, sourceUrl, hasReference, 'confirmed', 'content_unusable'))
       warnings.push({ code: 'content_unusable', message: 'A dynamic card has no usable current-user text' })
       continue
     }
@@ -168,7 +176,7 @@ export function readDynamicCards(document: Document, url: URL): SourceResult<Dyn
       cardAuthorDisplayName,
       text,
       title: null,
-      dateLabel: null,
+      dateLabel,
       sourceUrl,
       hasReference,
       identity: 'confirmed',

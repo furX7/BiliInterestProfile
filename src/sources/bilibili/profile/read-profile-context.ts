@@ -14,6 +14,16 @@ function onlyVisible(document: Document, selector: string): Element | null {
   return matches.length === 1 ? matches[0] : null
 }
 
+function visibleText(element: Element | null): string | null {
+  if (!element) return null
+  function read(node: Node): string {
+    if (node.nodeType === Node.TEXT_NODE) return node.textContent ?? ''
+    if (node.nodeType === Node.ELEMENT_NODE && !isVisible(node as Element)) return ''
+    return Array.from(node.childNodes, read).join('')
+  }
+  return read(element).trim() || null
+}
+
 function uncertain(message: string): SourceResult<ProfileContext> {
   return { status: 'unknown', data: null, warnings: [{ code: 'page_state_uncertain', message }] }
 }
@@ -24,8 +34,8 @@ export function readProfileContext(document: Document, url: URL): SourceResult<P
     return uncertain('Current URL is not a valid Bilibili space route')
   }
 
-  const nickname = onlyVisible(document, '.nickname')?.textContent?.trim()
-  const uidText = onlyVisible(document, '.sic-fsp-uid_line')?.textContent?.trim()
+  const nickname = visibleText(onlyVisible(document, '.nickname'))
+  const uidText = visibleText(onlyVisible(document, '.sic-fsp-uid_line'))
   const visibleUid = uidText ? /\bUID\s*[:：]?\s*([1-9]\d*)\b/i.exec(uidText)?.[1] : undefined
   if (!nickname || !visibleUid) return uncertain('Visible profile identity cannot be confirmed')
   if (visibleUid !== route[1]) {
@@ -36,7 +46,7 @@ export function readProfileContext(document: Document, url: URL): SourceResult<P
     }
   }
 
-  const description = onlyVisible(document, '.sign.header-sign .pure-text')?.textContent?.trim() || null
+  const description = visibleText(onlyVisible(document, '.sign.header-sign .pure-text'))
   return {
     status: 'available',
     data: {

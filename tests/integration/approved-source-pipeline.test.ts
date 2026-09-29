@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { collectApprovedSources } from '../../src/core/pipeline/collect-approved-sources'
 import { approvedSourceRegistry } from '../../src/sources/bilibili/registry'
 
-const fixturePath = resolve('tests/fixtures/synthetic/dynamic-valid.html')
+const fixturePath = resolve('tests/fixtures/phase0/dynamic-valid.html')
 const syntheticHtml = readFileSync(fixturePath, 'utf8')
 const url = new URL('https://space.bilibili.com/123/dynamic?source=test')
 const parse = (html = syntheticHtml) => new DOMParser().parseFromString(html, 'text/html')

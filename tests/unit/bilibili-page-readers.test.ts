@@ -56,6 +56,16 @@ describe('profile context reader (deidentified DOM fixtures)', () => {
     }
   })
 
+  it('rejects profile identity text that exists only in hidden descendants', () => {
+    const hiddenName = profileHtml.replace('>Example User</div>', '><span hidden>Example User</span></div>')
+    const hiddenUid = profileHtml.replace('>UID: 123</div>', '><span hidden>UID: 123</span></div>')
+    for (const html of [hiddenName, hiddenUid]) {
+      const result = readProfileContext(parse(html), new URL('https://space.bilibili.com/123/dynamic'))
+      expect(result.status).toBe('unknown')
+      expect(result.data).toBeNull()
+    }
+  })
+
   it('does not use an ambiguous duplicate nickname', () => {
     const html = profileHtml + '<div class="nickname">Other User</div>'
     const result = readProfileContext(parse(html), new URL('https://space.bilibili.com/123'))
@@ -83,7 +93,7 @@ describe('dynamic card reader (deidentified DOM fixtures)', () => {
         cardAuthorDisplayName: 'Example User',
         text: 'Original synthetic post',
         title: null,
-        dateLabel: null,
+        dateLabel: '3 days ago · Posted a video',
         sourceUrl: 'https://space.bilibili.com/123/dynamic',
         hasReference: false,
         identity: 'confirmed',
@@ -91,6 +101,21 @@ describe('dynamic card reader (deidentified DOM fixtures)', () => {
       }],
       warnings: [],
     })
+  })
+
+  it('does not read dynamic cards from a non-dynamic space route', () => {
+    const result = readDynamicCards(parseDynamic(), new URL('https://space.bilibili.com/123/video'))
+    expect(result.status).toBe('unknown')
+    expect(result.data).toBeNull()
+  })
+
+  it('does not read cards outside the visible dynamic list', () => {
+    const card = dynamicHtml.match(/<article[\s\S]*?<\/article>/)?.[0]
+    expect(card).toBeDefined()
+    const html = statePage('<div class="bili-dyn-list__items"></div>') + card
+    const result = readDynamicCards(parseDynamic(html), dynamicUrl)
+    expect(result.status).toBe('unknown')
+    expect(result.data).toBeNull()
   })
 
   it('marks missing or mismatched top-level authors unusable without using similar content as a substitute', () => {
