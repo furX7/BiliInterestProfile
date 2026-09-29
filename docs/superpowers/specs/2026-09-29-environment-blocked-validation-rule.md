@@ -20,13 +20,13 @@
 
 - **范围**：当前 Windows 主机上的 Playwright bundled Chromium extension smoke；影响 Phase 1 剩余工程骨架 Plan 的 Task 6、Task 8 独立 smoke workflow 与整份 Plan 的 full verification。十项 PR CI 是另一条验收链路，不以此债务豁免其中任何一项。
 - **根因证据**：`browserType.launchPersistentContext: spawn UNKNOWN` 发生于扩展断言前；原缓存 Chromium 的直接启动报 SideBySide，Windows 事件记录缺少 `153.0.8010.12` assembly；同版本干净安装核心文件哈希一致，直接启动转为 Chromium 的 `Sandbox cannot access executable / Access denied (0x5)`。这些证据指向当前主机的可执行文件访问限制；具体主机策略尚未定位，不声称已证明唯一系统根因。
-- **证据完整性**：上述是本会话与忽略的 SDD ledger 中的诊断摘要，并非已归档的完整原始记录。单笔债务正式处置前，至少须可定位归档：原始错误文本/stack、实际 Chromium 启动命令及 executable 路径、Node/pnpm/Playwright/bundled Chromium 版本、SideBySide 与 Sandbox access denied 事件或日志、已执行的最小复现步骤、观测时间、当前根因判断及尚未确认部分。缺少这些材料时，不得认定本笔债务已满足证据门槛。
+- **证据完整性**：上述既有诊断摘要不能替代原始记录。本轮可审阅归档见 [Phase 1 Chromium 阻断证据](../../validation/2026-09-30-playwright-chromium-blocked-env.md)：包含受控复现的原始错误/stack、实际启动命令、版本/路径、同秒 SideBySide Event 33、步骤、根因候选与未确认部分；历史 Sandbox `0x5` 原始流未留存，归档明确写出无法取得及已尝试的获取方式。是否足以单独申请阶段推进，仍须按本规则完成其余 fresh 验证与独立审阅；归档不等于 smoke PASS。
 - **未验证能力**：bundled Chromium 持久上下文加载生产 unpacked extension、MV3 worker 可发现、popup idle 与 options 页面断言、测试结束 profile 清理，以及独立 smoke workflow 的真实通过。已实现的 harness 和可运行的 unit/static 检查不等于这些运行时断言通过。
 - **现状与风险**：Task 6、Task 8 smoke 部分和整份 Plan 保持 partial / `BLOCKED_ENV`，不标 complete；合成 extension smoke 尚无 E2E PASS。此前真实 Chrome / Edge 安装态证据与十项 CI 的本地验证各自保留，互不替代；其 fresh 状态须在实际阶段处置时重新核验。
 - **重验**：第一个可稳定启动 Playwright bundled Chromium 的受支持环境出现时立即补跑；若此前拟合并 main，合并前必须先补跑并 PASS。失败后按真实结果处理，不自动延续例外。
 
 ## 与既有文档的关系
 
-本规则已获批准并同步 Notion，但不改变 Definition of Done 的测试通过标准、Spec / Plan 原验收、Task 6 / Task 8 未完成状态或任何 Phase Gate。当前具名债务尚缺原始证据归档，不具备正式处置或申请 P1 带债进入 P2 的条件；文本批准也不等于 Phase progression、merge main 或 Release 授权。不得以本文件替代环境恢复后的 smoke 运行证据。
+本规则已获批准并同步 Notion，但不改变 Definition of Done 的测试通过标准、Spec / Plan 原验收、Task 6 / Task 8 未完成状态或任何 Phase Gate。具名债务的本轮原始证据已按可取得范围归档，历史 Sandbox 原始流的缺失如实保留；阶段推进资格必须另按本规则审计并向用户单独申请。文本批准和证据归档均不等于 Phase progression、merge main 或 Release 授权，亦不替代环境恢复后的 smoke 运行证据。
 
 依据：[工程流程优化｜从 Issue 到 Release](https://app.notion.com/p/3e81d223bf638146b5eecae159ec60a7)、[详细制作流程｜稳定性与扩展性优先](https://app.notion.com/p/3e81d223bf638178bfe9ecd4ea75190f)、已批准的 Phase 1 剩余工程骨架 Spec / Plan 及用户对本 Design 的明确决定。

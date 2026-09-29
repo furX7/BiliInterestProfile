@@ -136,7 +136,7 @@
 
 ## 已批准修订：Task 6 / Task 8 的具名环境阻断债务
 
-本节、[工程规则修订文本](../specs/2026-09-29-environment-blocked-validation-rule.md)与对应 Spec 修订已获批准，必要 Notion 规则已同步；本笔债务仍缺原始证据归档，不具备阶段处置条件。当前 Task 6 Step 3、Task 8 独立 smoke workflow 和 Final verification 的原验收继续有效；不得用本节提前标记 PASS 或 complete。
+本节、[工程规则修订文本](../specs/2026-09-29-environment-blocked-validation-rule.md)与对应 Spec 修订已获批准，必要 Notion 规则已同步；本笔债务的[受控复现与可取得原始证据](../../validation/2026-09-30-playwright-chromium-blocked-env.md)现已归档，历史 Sandbox `0x5` 原始流无法取得且已注明尝试方式。本轮其余可运行验收 fresh PASS、独立审阅无未解决代码 FAIL，故 **Eligible to request Phase progression with approved environment debt**；该资格仍须用户另行明确批准，不发生阶段转换。Task 6 Step 3、Task 8 独立 smoke workflow 和 Final verification 的原验收继续有效；Task 6、Task 8 smoke 部分及整份 Plan 仍 incomplete，债务仍 open，Phase 1 尚未全面验证通过。不得用归档提前标记 PASS 或 complete。
 
 - **Task 6 Step 3**：harness、配置、helper、profile 清理逻辑及可运行的 unit/static 检查仍须逐项验收。当前主机因 bundled Chromium 在产品断言前启动失败而无法运行 smoke 时，记录原始错误、独立诊断、未验证断言和重验条件为 `BLOCKED_ENV`；不得将静态检查、合成 fixture 或真实品牌浏览器观察改写成 Playwright smoke PASS，也不得标 Task 6 complete。
 - **Task 8 独立 smoke 入口**：工作流定义与可运行的解析/静态检查仍须验证；没有真实 bundled Chromium smoke PASS 时，独立 smoke workflow 保持 `NOT_VERIFIED / BLOCKED_ENV`，Task 8 的 smoke 部分和整体 Task 状态不得标 complete。已通过的十项 PR CI 仍须独立 fresh PASS，不因本债务增加第十一项通用 PR Gate 或豁免原十项。

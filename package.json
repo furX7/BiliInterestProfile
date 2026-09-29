@@ -6,6 +6,7 @@
   "scripts": {
     "bundle:check": "node scripts/check-bundle-budget.mjs",
     "format:check": "node scripts/check-format.mjs",
+    "test:e2e:smoke": "playwright test tests/e2e/extension-smoke.spec.ts",
     "test": "vitest run",
     "test:unit": "vitest run tests/unit",
     "test:golden": "vitest run tests/golden",

@@ -1,0 +1,40 @@
+name: Bundled Chromium extension smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: '11.19.0'
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Frozen install
+        run: pnpm install --frozen-lockfile
+
+      - name: Install bundled Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Chrome production build
+        run: pnpm exec wxt build -b chrome
+
+      - name: Extension smoke
+        run: pnpm test:e2e:smoke
