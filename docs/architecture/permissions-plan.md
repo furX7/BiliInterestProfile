@@ -109,11 +109,17 @@ IndexedDB 是 Web 平台存储，不要求同一扩展 storage 权限；扩展�
 
 ## Phase 1 production verification
 
+### 2026-09-29 Task 6 production Manifest audit
+
+本轮分别执行 `pnpm exec wxt build -b chrome --mv3` 与 `pnpm exec wxt build -b edge --mv3`。两份生成的生产 Manifest 均为 Manifest V3，只注册 `content-scripts/content.js`，其 `matches` 仅为 `https://space.bilibili.com/*`；未生成 `permissions`、`host_permissions` 或 `optional_host_permissions` 字段。`tests/integration/manifest-permissions.test.ts` 同时审计两份产物，并以禁用 permission、host permission 和 optional host permission 的合成 Manifest 验证拒绝路径。
+
+实际注册 caller 是 `src/entrypoints/content.ts` 的静态 content script。该入口当前未调用 profile reader、dynamic reader 或 pipeline；本轮仅审计其生产注册范围，不把尚未接入入口的来源读取描述为已在页面运行。
+
+浏览器在新页面加载时未授予扩展此站点访问权时，静态 content script 不会注入，因此本轮不会产生 SourceResult，也不会把未读取页面改写为空数据。当前工程尚未实现可展示提示的 UI 或安装测试；后续接入分析入口时，调用方需要将这类情况明确呈现为“无法访问此页面内容，请允许扩展访问此站点”，并保持来源不可用状态。已打开页面的用户临时授权、撤销和重新授予行为尚未验证；该说明是待接入时的降级边界，不是已经完成的用户界面验证。
+
 以下均尚未执行，**Phase 0 DONE 不等于 Phase 1 生产 Manifest 已验证**：
 
-- 获准实现后审实际 WXT 配置、注册方式与 Source caller，按真实调用需要决定权限。
-- 分别审 Chrome / Edge production build 的 generated manifest，与源码和 dev 产物比较 permissions / host_permissions / optional_host_permissions / content_scripts；检查模块/hooks 未扩大权限。
-- 安装核对权限提示及用户限制站点访问时的降级，不把 matches 称为无站点授权。
+- 安装核对权限提示及用户限制站点访问时的实际用户界面降级，不把 matches 称为无站点授权。
 - 验证设置 storage API 权限与 Evidence / Profile 的扩展 origin IndexedDB，审可信消息边界。
 - 新增 Source / 主动请求先记录功能、精确 origin、DOM 不足证据、caller、optional 及更小方案，更新 Issue / 权限计划再决定；不为假设性 API、全站或全部网站预授权限。
 
