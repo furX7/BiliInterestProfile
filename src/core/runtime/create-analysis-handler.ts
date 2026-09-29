@@ -4,6 +4,7 @@ import {
   summarizeCollection,
   type AnalyzeInterestResponse,
 } from './analysis-message'
+import { runtimeErrorKinds } from './error-code'
 
 export type ApprovedSourceCollector = (
   document: Document,
@@ -36,7 +37,7 @@ export function createAnalysisHandler(
     }
 
     if (collectionInProgress) {
-      return { kind: 'execution-error' }
+      return { kind: runtimeErrorKinds.RUNTIME_EXECUTION_FAILED }
     }
 
     collectionInProgress = true
@@ -46,7 +47,7 @@ export function createAnalysisHandler(
         summary: summarizeCollection(await collect(document, url)),
       }
     } catch {
-      return { kind: 'execution-error' }
+      return { kind: runtimeErrorKinds.RUNTIME_EXECUTION_FAILED }
     } finally {
       collectionInProgress = false
     }
