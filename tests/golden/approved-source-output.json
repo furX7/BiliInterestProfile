@@ -1,0 +1,35 @@
+{
+  "visibleCard": {
+    "contextStatus": "available",
+    "dynamic": {
+      "status": "partial",
+      "data": [
+        {
+          "source": "dynamic",
+          "userId": "123",
+          "title": null,
+          "text": "Original synthetic post",
+          "timestamp": null,
+          "sourceUrl": "https://space.bilibili.com/123/dynamic",
+          "traceGranularity": "page"
+        }
+      ],
+      "warnings": []
+    },
+    "behaviorEvidenceSources": ["dynamic"]
+  },
+  "singleSnapshotEmptyCandidate": {
+    "contextStatus": "available",
+    "dynamic": {
+      "status": "unknown",
+      "data": null,
+      "warnings": [
+        {
+          "code": "page_state_uncertain",
+          "message": "Visible empty state is only a single-snapshot candidate; stability proof is unavailable"
+        }
+      ]
+    },
+    "behaviorEvidenceSources": ["dynamic"]
+  }
+}
