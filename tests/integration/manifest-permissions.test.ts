@@ -20,6 +20,15 @@ function readManifest(browser: 'chrome' | 'edge'): ProductionManifest {
   return JSON.parse(readFileSync(path, 'utf8')) as ProductionManifest
 }
 
+function approvedManifestFixture(overrides: Partial<ProductionManifest> = {}): ProductionManifest {
+  return {
+    manifest_version: 3,
+    action: { default_popup: 'popup.html' },
+    content_scripts: [{ matches: approvedMatches }],
+    ...overrides,
+  }
+}
+
 function assertApprovedManifest(manifest: ProductionManifest): void {
   expect(manifest.manifest_version).toBe(3)
   expect(manifest.action?.default_popup).toBe('popup.html')
@@ -31,6 +40,10 @@ function assertApprovedManifest(manifest: ProductionManifest): void {
 }
 
 describe('production manifest permissions', () => {
+  it('accepts the baseline fixture used by negative cases', () => {
+    expect(() => assertApprovedManifest(approvedManifestFixture())).not.toThrow()
+  })
+
   for (const browser of ['chrome', 'edge'] as const) {
     it(`accepts the approved ${browser} production manifest`, () => {
       assertApprovedManifest(readManifest(browser))
@@ -38,51 +51,41 @@ describe('production manifest permissions', () => {
   }
 
   it('rejects a manifest with a forbidden permission', () => {
-    expect(() => assertApprovedManifest({
-      manifest_version: 3,
-      content_scripts: [{ matches: ['https://space.bilibili.com/*'] }],
+    const manifest = approvedManifestFixture({
       permissions: ['tabs'],
-    })).toThrow()
+    })
+    expect(() => assertApprovedManifest(manifest)).toThrow()
   })
 
   it('rejects a manifest with host permissions', () => {
-    expect(() => assertApprovedManifest({
-      manifest_version: 3,
-      content_scripts: [{ matches: ['https://space.bilibili.com/*'] }],
+    expect(() => assertApprovedManifest(approvedManifestFixture({
       host_permissions: ['https://other.example/*'],
-    })).toThrow()
+    }))).toThrow()
   })
 
   it('rejects a manifest with optional host permissions', () => {
-    expect(() => assertApprovedManifest({
-      manifest_version: 3,
-      content_scripts: [{ matches: ['https://space.bilibili.com/*'] }],
+    expect(() => assertApprovedManifest(approvedManifestFixture({
       optional_host_permissions: ['https://other.example/*'],
-    } as ProductionManifest)).toThrow()
+    }))).toThrow()
   })
 
   it('rejects a manifest with an expanded content-script match scope', () => {
-    expect(() => assertApprovedManifest({
-      manifest_version: 3,
+    expect(() => assertApprovedManifest(approvedManifestFixture({
       content_scripts: [{ matches: ['https://space.bilibili.com/*', 'https://other.example/*'] }],
-    })).toThrow()
+    }))).toThrow()
   })
 
   it('rejects a manifest with a declared non-forbidden permission', () => {
-    expect(() => assertApprovedManifest({
-      manifest_version: 3,
-      content_scripts: [{ matches: ['https://space.bilibili.com/*'] }],
+    expect(() => assertApprovedManifest(approvedManifestFixture({
       permissions: ['storage'],
-    })).toThrow()
+    }))).toThrow()
   })
 
   it('rejects a manifest that declares empty permission fields', () => {
-    expect(() => assertApprovedManifest({
-      manifest_version: 3,
-      content_scripts: [{ matches: ['https://space.bilibili.com/*'] }],
+    expect(() => assertApprovedManifest(approvedManifestFixture({
       permissions: [],
       host_permissions: [],
       optional_host_permissions: [],
-    })).toThrow()
+    }))).toThrow()
   })
 })

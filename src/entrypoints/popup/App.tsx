@@ -54,6 +54,8 @@ function statusContent(state: PopupState): ReactElement | null {
 
   return (
     <section aria-live="polite">
+      <p>基础资料来源状态：{state.summary.contextStatus}</p>
+      <p>公开动态来源状态：{state.summary.dynamicStatus}</p>
       <p>{collectionMessage(state.summary)}</p>
       {state.summary.warningCodes.length > 0 && (
         <p>提示代码：{state.summary.warningCodes.join('、')}</p>

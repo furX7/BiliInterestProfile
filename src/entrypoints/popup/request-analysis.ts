@@ -18,12 +18,12 @@ const analysisRequest: AnalyzeInterestRequest = { type: 'analyze-interest' }
 export async function requestAnalysis(
   messenger: ActiveTabMessenger,
 ): Promise<PopupAnalysisResponse> {
-  const [activeTab] = await messenger.query({ active: true, currentWindow: true })
-  if (typeof activeTab?.id !== 'number') {
-    return { kind: 'connection-unavailable' }
-  }
-
   try {
+    const [activeTab] = await messenger.query({ active: true, currentWindow: true })
+    if (typeof activeTab?.id !== 'number') {
+      return { kind: 'connection-unavailable' }
+    }
+
     const response = await messenger.sendMessage(activeTab.id, analysisRequest)
     return parseAnalyzeInterestResponse(response) ?? { kind: 'connection-unavailable' }
   } catch {

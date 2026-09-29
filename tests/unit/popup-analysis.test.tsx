@@ -92,6 +92,38 @@ describe('popup analysis boundary', () => {
     expect(messenger.sendMessage).not.toHaveBeenCalled()
   })
 
+  it('returns a neutral connection state when the active-tab query fails', async () => {
+    const messenger: ActiveTabMessenger = {
+      query: vi.fn().mockRejectedValue(new Error('Sensitive tab query failure')),
+      sendMessage: vi.fn(),
+    }
+
+    await expect(requestAnalysis(messenger)).resolves.toEqual({ kind: 'connection-unavailable' })
+    expect(messenger.sendMessage).not.toHaveBeenCalled()
+  })
+
+  it('shows the existing context and dynamic source statuses in a collection summary', async () => {
+    const messenger: ActiveTabMessenger = {
+      query: vi.fn().mockResolvedValue([{ id: 42 }]),
+      sendMessage: vi.fn().mockResolvedValue({
+        kind: 'collection',
+        summary: {
+          contextStatus: 'available',
+          dynamicStatus: 'partial',
+          evidenceCount: 2,
+          warningCodes: ['content_unusable'],
+        },
+      }),
+    }
+    const { container } = await renderPopup(messenger)
+
+    await clickAnalysis(container)
+
+    expect(container.textContent).toContain('基础资料来源状态：available')
+    expect(container.textContent).toContain('公开动态来源状态：partial')
+    expect(container.textContent).toContain('已确认动态证据：2')
+  })
+
   it('renders an unknown source result without a zero-count or raw content', async () => {
     const messenger: ActiveTabMessenger = {
       query: vi.fn().mockResolvedValue([{ id: 42 }]),
