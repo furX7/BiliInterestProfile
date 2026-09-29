@@ -15,6 +15,7 @@ export interface DynamicCardCandidate {
 }
 
 const cardSelector = '.bili-dyn-item__main'
+const dynamicListSelector = 'main.route_dynamic .bili-dyn-list'
 const loggedInSelector = '.message-entry a.right-entry__item-trigger'
 const authorSelector = '.bili-dyn-item__header > .bili-dyn-title > span.bili-dyn-title__text'
 const contentSelector = '.bili-dyn-content'
@@ -30,7 +31,8 @@ function isVisible(element: Element): boolean {
   for (let current: Element | null = element; current; current = current.parentElement) {
     if (current.hasAttribute('hidden') || current.getAttribute('aria-hidden') === 'true') return false
     const style = current.ownerDocument.defaultView?.getComputedStyle(current)
-    if (style?.display === 'none' || style?.visibility === 'hidden') return false
+    const inlineStyle = (current as HTMLElement).style
+    if ((style?.display ?? inlineStyle?.display) === 'none' || (style?.visibility ?? inlineStyle?.visibility) === 'hidden') return false
   }
   return true
 }
@@ -45,7 +47,13 @@ function onlyVisible(parent: ParentNode, selector: string): Element | null {
 }
 
 function visibleText(element: Element | null): string | null {
-  const text = element?.textContent?.trim()
+  if (!element) return null
+  function read(node: Node): string {
+    if (node.nodeType === Node.TEXT_NODE) return node.textContent ?? ''
+    if (node.nodeType === Node.ELEMENT_NODE && !isVisible(node as Element)) return ''
+    return Array.from(node.childNodes, read).join('')
+  }
+  const text = read(element).trim()
   return text || null
 }
 
@@ -61,16 +69,16 @@ function pageUnknown(message: string, warnings: SourceWarning[] = []): SourceRes
   }
 }
 
-function hasVisibleExactText(document: Document, text: string): boolean {
-  return Array.from(document.querySelectorAll('*')).some((element) => isVisible(element) && element.textContent?.trim() === text)
-}
-
 function isGenericOrPlaceholder(text: string): boolean {
   return text === '分享动态' || text === '-'
 }
 
 function cardText(content: Element, hasReference: boolean): string | null {
-  if (hasReference) return visibleText(onlyVisible(content, forwardingSelector))
+  if (hasReference) {
+    const forwardingDescriptions = visibleMatches(content, forwardingSelector)
+      .filter((element) => !element.closest(referenceSelector))
+    return visibleText(forwardingDescriptions.length === 1 ? forwardingDescriptions[0] : null)
+  }
 
   for (const selector of originalTextSelectors) {
     const candidate = visibleMatches(content, selector).find((element) => !element.closest(referenceSelector))
@@ -115,8 +123,18 @@ export function readDynamicCards(document: Document, url: URL): SourceResult<Dyn
 
   const cards = visibleMatches(document, cardSelector)
   if (cards.length === 0) {
-    if (hasVisibleExactText(document, '正在玩命加载…')) return pageUnknown('Dynamic page is still visibly loading')
-    if (hasVisibleExactText(document, '好像没有东西诶')) return { status: 'empty', data: [], warnings: [] }
+    const dynamicList = onlyVisible(document, dynamicListSelector)
+    if (!dynamicList) return pageUnknown('Zero dynamic cards has no confirmed dynamic list')
+    if (visibleMatches(dynamicList, ':scope > .bili-dyn-list-loading').length > 0) {
+      return pageUnknown('Dynamic page is still visibly loading')
+    }
+    const emptyContainer = onlyVisible(dynamicList, ':scope > .bili-dyn-list-empty')
+    const emptyText = emptyContainer
+      ? visibleText(onlyVisible(emptyContainer, '.bili-dyn-list-empty__inner > .bili-dyn-list-empty__text > span'))
+      : null
+    if (emptyText === '好像没有东西诶') {
+      return pageUnknown('Visible empty state is only a single-snapshot candidate; stability proof is unavailable')
+    }
     return pageUnknown('Zero dynamic cards has no confirmed visible empty state')
   }
 

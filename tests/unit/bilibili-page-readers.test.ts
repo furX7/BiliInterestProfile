@@ -62,6 +62,12 @@ describe('profile context reader (synthetic DOM only)', () => {
 describe('dynamic card reader (synthetic DOM only)', () => {
   const dynamicUrl = new URL('https://space.bilibili.com/123/dynamic?source=test')
   const parseDynamic = (html = dynamicSyntheticHtml) => new DOMParser().parseFromString(html, 'text/html')
+  const statePage = (listContents: string) => dynamicSyntheticHtml.replace(
+    /<main[\s\S]*<\/main>/,
+    `<main class="space-main route_dynamic"><div class="bili-dyn-list">${listContents}</div></main>`,
+  )
+  const emptyState = '<div class="bili-dyn-list-empty"><div class="bili-dyn-list-empty__inner"><div class="bili-dyn-list-empty__text"><span>好像没有东西诶</span></div></div></div>'
+  const hiddenLoading = '<div class="bili-dyn-list-loading" hidden>正在玩命加载…</div>'
 
   it('reads a visible card only when login and page identity are confirmed', () => {
     expect(readDynamicCards(parseDynamic(), dynamicUrl)).toEqual({
@@ -94,6 +100,42 @@ describe('dynamic card reader (synthetic DOM only)', () => {
     }
   })
 
+  it('ignores hidden descendants when comparing the visible top-level author', () => {
+    const html = dynamicSyntheticHtml.replace(
+      '<span class="bili-dyn-title__text">Example User</span>',
+      '<span class="bili-dyn-title__text">Example User<span hidden>Other User</span></span>',
+    )
+
+    const result = readDynamicCards(parseDynamic(html), dynamicUrl)
+
+    expect(result.status).toBe('available')
+    expect(result.data?.[0]).toMatchObject({ cardAuthorDisplayName: 'Example User', identity: 'confirmed', rejectionReason: null })
+  })
+
+  it('excludes hidden descendant text from the current-user post', () => {
+    const html = dynamicSyntheticHtml.replace(
+      'Original synthetic post',
+      'Original synthetic post<span aria-hidden="true">Referenced hidden text</span>',
+    )
+
+    const result = readDynamicCards(parseDynamic(html), dynamicUrl)
+
+    expect(result.status).toBe('available')
+    expect(result.data?.[0]).toMatchObject({ text: 'Original synthetic post', rejectionReason: null })
+  })
+
+  it('rejects a post whose only text is hidden in a descendant', () => {
+    const html = dynamicSyntheticHtml.replace(
+      'Original synthetic post',
+      '<span style="display:none">Hidden-only interest</span>',
+    )
+
+    const result = readDynamicCards(parseDynamic(html), dynamicUrl)
+
+    expect(result.data?.[0]).toMatchObject({ text: null, rejectionReason: 'content_unusable' })
+    expect(result.status).toBe('partial')
+  })
+
   it('uses the forwarding description and never falls back to content inside the reference subtree', () => {
     const html = dynamicSyntheticHtml.replace(
       '<p class="bili-dyn-content__orig__desc">Original synthetic post</p>',
@@ -116,14 +158,51 @@ describe('dynamic card reader (synthetic DOM only)', () => {
     }
   })
 
+  it('does not use a forwarding description nested inside a reference subtree', () => {
+    const html = dynamicSyntheticHtml.replace(
+      '<p class="bili-dyn-content__orig__desc">Original synthetic post</p>',
+      '<section class="bili-dyn-content__orig reference"><p class="bili-dyn-content__forw__desc">Referenced forwarding text</p></section>',
+    )
+
+    const result = readDynamicCards(parseDynamic(html), dynamicUrl)
+
+    expect(result.status).toBe('partial')
+    expect(result.data?.[0]).toMatchObject({ text: null, hasReference: true, rejectionReason: 'content_unusable' })
+  })
+
   it('does not treat a hidden empty state as empty when rendered cards exist', () => {
-    const html = dynamicSyntheticHtml + '<p hidden>好像没有东西诶</p>'
+    const card = dynamicSyntheticHtml.match(/<article[\s\S]*?<\/article>/)?.[0]
+    expect(card).toBeDefined()
+    const html = statePage(`<div class="bili-dyn-list__items">${card}</div>${hiddenLoading}<div class="bili-dyn-list-empty" hidden><div class="bili-dyn-list-empty__inner"><div class="bili-dyn-list-empty__text"><span>好像没有东西诶</span></div></div></div>`)
     expect(readDynamicCards(parseDynamic(html), dynamicUrl).status).toBe('available')
   })
 
-  it('returns empty only for a visible explicit empty state after login and identity checks', () => {
-    const html = dynamicSyntheticHtml.replace(/<main[\s\S]*<\/main>/, '<main class="bili-dyn-list"><p>好像没有东西诶</p></main>')
-    expect(readDynamicCards(parseDynamic(html), dynamicUrl)).toEqual({ status: 'empty', data: [], warnings: [] })
+  it('keeps a single-snapshot empty-state candidate unknown without stability proof', () => {
+    const html = statePage(`<div class="bili-dyn-list__items"></div>${hiddenLoading}${emptyState}`)
+    expect(readDynamicCards(parseDynamic(html), dynamicUrl)).toMatchObject({
+      status: 'unknown',
+      data: null,
+      warnings: [{ code: 'page_state_uncertain' }],
+    })
+  })
+
+  it('does not treat matching text outside the dynamic list as a confirmed empty state', () => {
+    const html = statePage('<div class="bili-dyn-list__items"></div>')
+      + '<aside><p>好像没有东西诶</p></aside>'
+
+    const result = readDynamicCards(parseDynamic(html), dynamicUrl)
+
+    expect(result.status).toBe('unknown')
+    expect(result.data).toBeNull()
+  })
+
+  it('keeps a zero-card page unknown while its dynamic loading node is visible', () => {
+    const html = statePage('<div class="bili-dyn-list__items"></div><div class="bili-dyn-list-loading"></div>' + emptyState)
+
+    const result = readDynamicCards(parseDynamic(html), dynamicUrl)
+
+    expect(result.status).toBe('unknown')
+    expect(result.data).toBeNull()
   })
 
   it('returns unknown for a zero-card page with a loading or unconfirmed login state', () => {

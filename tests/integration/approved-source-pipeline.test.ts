@@ -38,14 +38,24 @@ describe('approved Bilibili source pipeline (synthetic DOM only)', () => {
     expect(result.behaviorEvidenceSources).toEqual(['dynamic'])
   })
 
-  it('preserves a confirmed empty dynamic page as empty with an empty collection', () => {
-    const emptyHtml = syntheticHtml.replace(/<main[\s\S]*<\/main>/, '<main class="bili-dyn-list"><p>好像没有东西诶</p></main>')
+  it('preserves a single-snapshot empty-state candidate as unknown with null data', () => {
+    const emptyHtml = syntheticHtml.replace(
+      /<main[\s\S]*<\/main>/,
+      '<main class="space-main route_dynamic"><div class="bili-dyn-list"><div class="bili-dyn-list__items"></div><div class="bili-dyn-list-loading" hidden>正在玩命加载…</div><div class="bili-dyn-list-empty"><div class="bili-dyn-list-empty__inner"><div class="bili-dyn-list-empty__text"><span>好像没有东西诶</span></div></div></div></div></main>',
+    )
     const result = collectApprovedSources(parse(emptyHtml), url)
-    expect(result.dynamic).toEqual({ status: 'empty', data: [], warnings: [] })
+    expect(result.dynamic).toMatchObject({
+      status: 'unknown',
+      data: null,
+      warnings: [{ code: 'page_state_uncertain' }],
+    })
   })
 
   it('preserves an uncertain zero-card page as unknown with null data', () => {
-    const loadingHtml = syntheticHtml.replace(/<main[\s\S]*<\/main>/, '<main class="bili-dyn-list"><p>正在玩命加载…</p></main>')
+    const loadingHtml = syntheticHtml.replace(
+      /<main[\s\S]*<\/main>/,
+      '<main class="space-main route_dynamic"><div class="bili-dyn-list"><div class="bili-dyn-list__items"></div><div class="bili-dyn-list-loading">正在玩命加载…</div></div></main>',
+    )
     const result = collectApprovedSources(parse(loadingHtml), url)
     expect(result.dynamic.status).toBe('unknown')
     expect(result.dynamic.data).toBeNull()
