@@ -3,6 +3,7 @@ import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 type ProductionManifest = {
+  version?: string
   action?: {
     default_popup?: string
   }
@@ -47,6 +48,14 @@ describe('production manifest permissions', () => {
   for (const browser of ['chrome', 'edge'] as const) {
     it(`accepts the approved ${browser} production manifest`, () => {
       assertApprovedManifest(readManifest(browser))
+    })
+
+    it(`takes the ${browser} manifest version from package.json`, () => {
+      const packageJson = JSON.parse(readFileSync(resolve('package.json'), 'utf8')) as {
+        version?: string
+      }
+      expect(packageJson.version).toMatch(/^\d+(?:\.\d+){0,3}$/)
+      expect(readManifest(browser).version).toBe(packageJson.version)
     })
   }
 
