@@ -1,6 +1,6 @@
 # Phase 1 剩余工程骨架 Spec
 
-状态：**Draft / Pending Approval**。日期：2026-09-29。本文件记录已获批准的完整 Design 对应的待审批书面 Contract；Design approval 不等于本 Spec 或后续 Plan 获批。本轮不授权实施、修改 Gate、合并 main 或发布。
+状态：**Approved Spec / Implementation Plan Pending Approval**。日期：2026-09-29。本文件记录已获批准的完整 Design 对应的正式 Contract；用户随后明确批准本 Spec，仅授权调用 `superpowers:writing-plans` 编写完整待审批 Plan。Spec approval 不等于 Plan execution approval；Plan 获批前不实施产品代码、CI 或配置，不修改 Gate、合并 main 或发布。
 
 ## 1. 目标、依据与现状
 
@@ -49,7 +49,7 @@ Playwright smoke 提供本地及单独 CI 运行入口，但不被包装为 Noti
 
 ## 5. 生产包体预算
 
-**本 Spec 提议**采用设计阶段提出的 125% 规则，仍待用户对本书面 Spec 明确批准。为 Chrome、Edge 分别统计干净生产输出中实际打包的 JS 与 CSS 文件总字节数，排除 sourcemap、测试 profile、临时文件和文档；不可把两个浏览器的量相互抵消。
+用户已批准设计阶段提出的 **125% 规则**。为 Chrome、Edge 分别统计干净生产输出中实际打包的 JS 与 CSS 文件总字节数，排除 sourcemap、测试 profile、临时文件和文档；不可把两个浏览器的量相互抵消。
 
 先完成新增入口并将相关源码、配置与锁文件形成可重建的 feature-branch checkpoint；从该已提交 commit 的干净检出和空 `.output`，分别完成首次 Chrome/Edge production build，测得各自 `baselineBytes`。不得将含未提交入口改动的产物归因于旧 HEAD。将实际字节数、基线 commit SHA、计量口径与 `maxBytes = ceil(baselineBytes × 1.25)` 一并写入受版本控制的预算记录，作为人工审阅的冻结 checkpoint。首次冻结须复核该 commit 的产物与公式；CI 校验预算记录存在、公式成立，并在后续每次构建后要求各自 `actualBytes <= maxBytes`，超限返回非零。检查脚本只能读取预算，不得自动重算基线、写回或提高上限。预算变更需单独说明增长原因、受影响入口和新的可复现测量，经 PR review 才能更新；不得为过 CI 默默放宽。
 
@@ -81,4 +81,4 @@ Playwright smoke 提供本地及单独 CI 运行入口，但不被包装为 Noti
 
 残余风险：新增 worker 可能改变扩展生命周期；Playwright 自带 Chromium 不能证明真实 Chrome/Edge 安装或权限受限态；CI 的浏览器安装与构建缓存可能影响可复现性；125% 预算基线必须待新入口实测；Dependabot feature-branch 配置尚非定时运行证据；分支保护尚未配置。后续实施须逐项记录实际结果，不能将未运行或受限条件写成 PASS。
 
-本 Spec 为 **Draft / Pending Approval**。用户明确批准本书面文本后，才可调用 `superpowers:writing-plans` 产出另行审批的完整 Implementation Plan；Plan 获批前不得修改产品代码、CI、配置或权限。文档保存或 Git 同步均不代表 Spec/Plan 自动获批。
+用户已明确批准本 Spec 与 125% 包体规则，并授权产出另行审批的完整 Implementation Plan；这不授权提前实施。Plan 获批前不得修改产品代码、CI、配置或权限。文档保存或 Git 同步均不代表 Plan 自动获批。
