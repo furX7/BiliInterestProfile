@@ -28,6 +28,7 @@
 
 Source PASS 不代表 Phase 0 PASS；两个 Source PASS 也不能自动进入 Phase 1。Global Gate 必须独立完成，并由用户明确批准下一阶段。
 Phase 3 仍须完整实现错误处理。已收集真实异常证据继续有效，不删除；历史日志的时间、次数、OBSERVED/NOT_VALIDATED、旧 FAIL 保留，不重新解释为不存在的成功。
+当前 Phase 1 的 `RUNTIME_EXECUTION_FAILED` 与 `RUNTIME_RESPONSE_UNAVAILABLE` 仅用于既有 popup/content 工程失败分类；它们不替代本 ADR 第三层的 Phase 3 Source / Adapter formal ErrorCode 或网络异常矩阵，也不改变上述三层 Gate。
 当前来源判定及动态限定范围逐项证据见 [实验报告](../architecture/phase-0-risk-experiments.md)。未来 Agent 不得将全部异常重新塞回逐 Source Gate；规则变更须明确决策依据。
 
 ## 修订（2026-09-29，已获用户批准）：两项延期验证

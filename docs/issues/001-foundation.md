@@ -1,6 +1,6 @@
 # Issue 001：正式建立工程地基
 
-状态：Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 closure audit 已获批准，Global Gate 不再阻塞 Phase 1；pagination = NOT_VALIDATED、SPA UID switch = PARTIAL；Phase 1 已启动，已批准的来源组合与 Runtime Analysis Trigger 两份实施计划已完成，整个 Phase 1 尚未完成。
+状态：Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 closure audit 已获批准，Global Gate 不再阻塞 Phase 1；pagination = NOT_VALIDATED、SPA UID switch = PARTIAL；Phase 1 已启动，已批准的来源组合与 Runtime Analysis Trigger 两份实施计划已完成。剩余工程骨架 Plan 的 Task 1–5、7 与 PR CI 主链路已在功能分支完成本地验收；Playwright smoke 因 bundled Chromium 启动受限为 `BLOCKED_ENV`，独立 smoke 工作流尚未验收，整个 Phase 1 尚未完成。
 这是本地 Issue 草案；目标仓库为 [furX7/BiliInterestProfile](https://github.com/furX7/BiliInterestProfile)，尚未创建 GitHub Issue。
 用户已批准进入 Phase 1，并按 [ADR-007](../adr/ADR-007-phase0-gate-separation.md) 的延期风险边界执行现有计划。基础信息与动态限定 PASS，投稿归属 FAIL，收藏 NOT_VALIDATED。logged-out 在限定 Phase 0 范围内 DONE；历史 0/0、0/12 与零卡原因未知保留。
 
@@ -54,10 +54,11 @@ Source / Normalizer / Core Contracts / Storage / Analyzer Contracts / UI shell /
 ### 后续工程
 
 request-failed、403/429/unauthorized、timeout/retry/abort、schema validation、Source 独立状态、formal ErrorCode、controlled degradation 及缺字段/未知类型 mock/fixture 测试归 Phase 3。真实未观察状态继续 NOT_VALIDATED，不要求逐 Source 在线上撞见全部负例。
+当前 Phase 1 的 `RUNTIME_EXECUTION_FAILED`、`RUNTIME_RESPONSE_UNAVAILABLE` 只分类已存在的 popup/content 工程失败，不是上述 Phase 3 的 Source / Adapter 网络异常矩阵或 formal ErrorCode。
 
-- [ ] 工程骨架：依赖、strict TS、WXT MV3、content / popup 入口及 React popup 已实现；background / options 等后续入口未纳入已批准的两份实施计划，仍待独立安排。
+- [ ] 工程骨架：依赖、strict TS、WXT MV3、content / popup 与无副作用 background / options 入口、单一版本来源、Prettier、分层测试及双浏览器预算已在本功能分支实现。Playwright bundled Chromium smoke 仍为 `BLOCKED_ENV`；不得把已通过的合成测试或既有真实安装态观察替代该项。
 - [ ] Phase 1 权限实现验收：Chrome / Edge production Manifest 与 Source caller 已审计，已允许站点访问的安装态路径已验证；持续未允许为 `BLOCKED_ENV`，撤销后为 `NOT_VERIFIED`。设置 storage 与扩展 origin IndexedDB 尚未实现，不将其混入当前运行时验收。
-- [ ] lint、format、typecheck、unit、integration、golden、Chrome/Edge build、bundle budget。
+- [x] lint、format、typecheck、unit、integration、golden、Chrome/Edge build、bundle budget 已在本地逐项通过；PR CI 十项门槛已配置并本地按依赖顺序复演，尚无远端 PR 工作流运行证据或分支保护生效结论。
 - [ ] Phase 2 Contracts、Zod、Dexie v1、migration、Feature Flags。
 - [ ] 可选失败与 Evidence 引用有真实测试。
 - [ ] 无提前算法或 AI 等范围外实现。

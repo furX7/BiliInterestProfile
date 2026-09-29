@@ -21,6 +21,7 @@
 
 - 当前没有正式安装包，也没有已完成的兴趣分析功能。
 - 已初始化 WXT / TypeScript 工程，并实现用户从扩展 popup 显式触发当前公开动态页的采集链路；它只返回脱敏来源状态，不生成兴趣画像。
+- 当前功能分支已有无副作用 background/options、单一版本来源、Prettier、分层测试、Chrome/Edge 包体预算及十项 PR CI 配置；十项门槛已本地复演，尚不等于远端 GitHub 工作流通过。独立 Playwright bundled Chromium smoke 受本机进程启动限制，仍为 `BLOCKED_ENV`，不能替代真实安装态证据。
 - Chrome / Edge 生产扩展的已允许站点访问路径已取得真实安装态观察；持续未允许状态为 `BLOCKED_ENV`，撤销后即时及重载后的行为为 `NOT_VERIFIED`，均不是通过结论。
 - Source qualification（来源资格）：**PASS 2 / FAIL 1 / 未验证 1**。
 
@@ -125,7 +126,7 @@ UI
 
 **Phase 1 已启动；当前代码与后续计划应分开看：**
 
-当前已有 TypeScript strict、WXT、React、Manifest V3、Zod、Vitest 与 Chrome / Edge 生产构建；Playwright 依赖已列入工程，但不能据此宣称真实安装态自动化验收完成。IndexedDB / Dexie 等后续存储能力尚未实现。仓库已有 `package.json`，测试、lint、typecheck 分别使用 `pnpm test`、`pnpm lint`、`pnpm typecheck`。
+当前已有 TypeScript strict、WXT、React、Manifest V3、Zod、Vitest、Chrome / Edge 生产构建、无副作用 background/options 入口及内部 Phase 1 runtime ErrorCode。`package.json` 是版本唯一来源，变更记录见 [CHANGELOG](CHANGELOG.md)。Phase 1 错误码只覆盖既有 popup/content 工程失败，不提前实现 Phase 3 Source / Adapter 网络异常矩阵。依赖更新策略已写入功能分支的 Dependabot 配置：每周检查 npm 与 GitHub Actions，patch 可提 PR、minor 需人工审阅、major 先另开 Issue；无自动合并，配置进入默认分支并运行前不宣称已启用。Playwright smoke 当前未通过；IndexedDB / Dexie 等后续存储能力尚未实现。测试、lint、typecheck 分别使用 `pnpm test`、`pnpm lint`、`pnpm typecheck`。
 
 ## 成熟项目参考原则
 
