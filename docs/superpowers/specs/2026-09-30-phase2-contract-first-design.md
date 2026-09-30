@@ -1,6 +1,6 @@
 # Phase 2 Contract First Spec
 
-状态：**Approved Spec（2026-09-30）；Implementation Plan 尚待审批**。日期：2026-09-30。用户已批准分层 Contract 的 Design 与本正式 Spec；该批准只授权编写待审批 Plan，不授权实施、启动新 Spike、进入下一阶段或改变既有 Gate。
+状态：**Approved Spec / Implementation Plan（2026-09-30）**。日期：2026-09-30。用户已批准分层 Contract 的 Design、正式 Spec 与单份 Plan，授权在当前 feature branch 实施 P2 Task 1–7；不授权新 Spike、进入 P3、merge main 或改变既有 Gate。
 
 ## 1. 目标、权威与当前基线
 
@@ -84,4 +84,4 @@ Contract tests 使用明确标注的合成 fixtures，覆盖成功、失败、�
 
 主要残余风险：P2 只有身份与引用结构，没有 P4 稳定 EvidenceId producer，因此真实 P1 数据暂不能直接进入 Analyzer；只有 schema 的画像不能说明兴趣质量；未验证的分页、SPA 与 Playwright smoke 继续保持原债务。任何未来 Source/Analyzer/存储 producer 引入前，须在其获批阶段验证身份、版本与可恢复失败，不能用本 Spec 推定已经安全可用。
 
-本 Spec 不授权更改 P1 来源结果或 Pipeline、采集新 Source、网络请求或扩展权限、稳定 ID 生成/去重/持久化、Dexie migration、P3 Adapter 异常矩阵、评分/taxonomy/真实 Analyzer、兴趣画像生成或 UI、浏览器 Spike、Phase 0 Gate 修改、merge main、Release 或进入 P3。用户已明确批准本 Spec 并授权调用 `superpowers:writing-plans` 写待审批 Implementation Plan；Plan 再获批准前不实施。
+本 Spec 不授权更改 P1 来源结果或 Pipeline、采集新 Source、网络请求或扩展权限、稳定 ID 生成/去重/持久化、Dexie migration、P3 Adapter 异常矩阵、评分/taxonomy/真实 Analyzer、兴趣画像生成或 UI、浏览器 Spike、Phase 0 Gate 修改、merge main、Release 或进入 P3。用户已明确批准本 Spec 与 Implementation Plan，授权在上述边界内连续实施 Task 1–7。

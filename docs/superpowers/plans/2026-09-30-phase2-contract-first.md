@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** Draft / Pending User Approval。本文档的保存或推送不代表获批；用户批准本 Plan 前，不执行以下 Task、不修改产品代码。
+**Status:** Approved（2026-09-30）。用户已批准在当前 feature branch 连续实施 Task 1–7；文档保存或推送本身不代表审批，也不授权进入 P3、merge main 或 Release。
 
 **Goal:** 在不改写 P1 采集链路的前提下，为 P2 定义完整的分层 TypeScript / Zod 合同、版本化合成 fixtures、正反 contract tests、raw 隔离检查及必要阶段文档同步。
 
