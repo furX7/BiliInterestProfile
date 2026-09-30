@@ -55,5 +55,6 @@ complete / partial / empty 有明确语义，empty 不能掩盖验证失败。
 
 ## 当前阶段
 
-Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 Global Risk Gate 仍 BLOCKED，不允许进入 Phase 1。分层规则见 [ADR-007](docs/adr/ADR-007-phase0-gate-separation.md)，现有证据见 [真实风险实验](docs/architecture/phase-0-risk-experiments.md)。
-上述边界已冻结，但不声称已有完整采集、Pipeline、评分或 UI。
+用户已批准 Phase 0 closure，并批准 P1 携带已登记环境债务进入 P2 Contract First。Source Qualification 仍为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；历史 Global Gate BLOCKED 判定保留，pagination 仍 NOT_VALIDATED、SPA UID switch 仍 PARTIAL。分层规则见 [ADR-007](docs/adr/ADR-007-phase0-gate-separation.md)，历史证据见 [真实风险实验](docs/architecture/phase-0-risk-experiments.md)。
+P1 当前渲染卡片 Pipeline 与显式 runtime 触发已具备；单次空态候选保持 unknown/null。Playwright bundled Chromium smoke 仍 BLOCKED_ENV / NOT_VERIFIED，Engineering Foundation Task 6/8 与 Plan incomplete；债务 OPEN，环境首次恢复或 merge main 前（先到者）须补跑。P1 未全面验证完成。
+P2 新增分层合同、Zod 与合成 contract tests，保留 P1 合同。外层 Result 调用成败与内层 RawSourceResult.status 来源状态分别校验，两层 warning 独立；仅 Source/Normalizer 接合可见 raw，P1 Pipeline 唯一既有 registry 装配边除外。EvidenceId 的 ev_ 仅是 P2 v1 语法命名空间，无稳定 ID producer。Analyzer、Profile 与未来存储 envelope 只有数据合同，无算法、真实画像、Store 或 migration。见 [P2 Spec](docs/superpowers/specs/2026-09-30-phase2-contract-first-design.md)。

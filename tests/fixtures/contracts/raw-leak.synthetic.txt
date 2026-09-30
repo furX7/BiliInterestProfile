@@ -1,0 +1,4 @@
+// Deliberately invalid synthetic consumer imports, not executable product code.
+import type { RawSourceResult } from '../../sources/contracts/raw-source'
+export { sourceAdapterDescriptorSchema } from '../../sources/contracts/raw-source.schema'
+const raw = import('../../sources/contracts/raw-source')

@@ -2,6 +2,8 @@
 
 日期：2026-09-27。产品名：B站兴趣画像；工程名：BiliInterestProfile。
 
+当前状态补充（2026-09-30）：下文保留 Phase 0 冻结历史。来源组合与 Phase 0 closure 已获批准，用户已批准 P1 带 Playwright 环境债务进入 P2 Contract First；pagination NOT_VALIDATED、SPA PARTIAL 保留。P1 smoke BLOCKED_ENV / NOT_VERIFIED、Task 6/8 与 Engineering Foundation Plan incomplete、债务 OPEN；环境首次恢复或 merge main 前（先到者）必须补跑。
+
 ## 产品与平台
 
 - 首期 Chrome / Edge Chromium，Manifest V3；暂不为 Firefox 添加额外兼容分支。
@@ -13,7 +15,7 @@
 - 不推断医疗、精神健康、性取向等敏感属性或现实人格。
 - 后续相关产品用语统一为“公开表达特征 / 互动风格”。
 - 数据缺失、空样本及可选来源失败都不是整次分析异常终止条件。
-- v0.1 行为来源候选为投稿和动态，收藏作为候补；基础信息仅身份/自述上下文。基础信息与动态已达到限定 Source Qualification，投稿归属未通过；最终组合仍未冻结，Global Gate 仍 BLOCKED，见 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)。
+- Phase 0 历史冻结时的行为来源候选为投稿和动态，收藏作为候补；当时最终组合未冻结、Global Gate BLOCKED。现已批准 v0.1 仅公开动态当前渲染卡片为行为证据，基础资料只作身份/上下文，投稿排除、收藏暂不纳入；历史资格与风险见 [ADR-007](../adr/ADR-007-phase0-gate-separation.md)。
 
 ## 工程约束
 
@@ -34,8 +36,7 @@
 Phase 0 分别验收 Source Qualification 与 Global Risk Gate，见 [风险实验记录](phase-0-risk-experiments.md)；两来源资格达到不代表整体通过或允许进入 Phase 1。
 Phase 1 验收：依赖冻结安装、lint、format、typecheck、unit、integration、
 fixture/golden、Chrome / Edge MV3 build、bundle budget；E2E 环境允许时执行。
-Phase 2 验收：Contract Tests 拦截非法数据、Raw 不泄露、
-Evidence 追溯约束、部分失败与版本迁移测试。
+Phase 2 验收：TS/Zod 正反 Contract Tests、Raw 隔离、Evidence 身份/引用闭包、两层 Result/来源状态及 warning 独立、P1 compatibility、未来存储 envelope 的 schema 版本兼容。没有持久数据时不实现 migration 或伪称 migration tests；真实 Store、稳定 EvidenceId producer 与已有数据的破坏性变更迁移留给获批后续阶段。
 
 禁止范围：完整采集器、兴趣算法、完整时间趋势/多源融合、分享卡片、云 AI、
 本地大模型、ONNX、WebGPU、聚类、第三方代码执行、后端或账户系统。

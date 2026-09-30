@@ -17,13 +17,14 @@
 
 ## 🚧 当前状态
 
-**Phase 0 closure 已获批准；当前在 Phase 1 工程验证中，尚未完成整个 Phase 1。**
+**Phase 0 closure 已获批准；用户已批准 P1 携带登记的环境债务进入 P2 Contract First，P1 未全面完成。**
 
 - 当前没有正式安装包，也没有已完成的兴趣分析功能。
 - 已初始化 WXT / TypeScript 工程，并实现用户从扩展 popup 显式触发当前公开动态页的采集链路；它只返回脱敏来源状态，不生成兴趣画像。
 - 当前功能分支已有无副作用 background/options、单一版本来源、Prettier、分层测试、Chrome/Edge 包体预算及十项 PR CI 配置；十项门槛已本地复演，尚不等于远端 GitHub 工作流通过。独立 Playwright bundled Chromium smoke 受本机进程启动限制，仍为 `BLOCKED_ENV`，不能替代真实安装态证据。
 - Chrome / Edge 生产扩展的已允许站点访问路径已取得真实安装态观察；持续未允许状态为 `BLOCKED_ENV`，撤销后即时及重载后的行为为 `NOT_VERIFIED`，均不是通过结论。
 - Source qualification（来源资格）：**PASS 2 / FAIL 1 / 未验证 1**。
+- P2 已批准的实施范围为分层 TypeScript/Zod 合同、合成 fixtures 与 contract tests；不重写 P1 Pipeline，不生成真实 EvidenceId、Analyzer 或画像，不实现存储。Playwright 债务仍 OPEN / BLOCKED_ENV / NOT_VERIFIED，P1 Engineering Foundation Task 6/8 与 Plan incomplete；环境首次恢复或 merge main 前（先到者）必须补跑。
 
 **Phase 0 closure 已获用户批准，Global Gate 不再阻塞 Phase 1**：pagination 仍 NOT_VALIDATED、SPA UID switch 仍 PARTIAL，作为明确接受的延期风险保留，并须按既定条件重验。v0.1 仅以公开动态当前渲染卡片作为兴趣行为证据，基础资料只作身份与上下文，投稿排除、收藏暂不纳入；不宣称多源行为印证。logged-out 在限定最低证据路径内 DONE；历史零卡原因未知，不证明匿名访问普遍稳定或独立服务器响应稳定。
 通过项为公开基础信息快照，以及已登录公开动态页当前渲染内容的限定范围验证，不能代表兴趣分析已经可用。投稿仍有合作内容归属缺口，收藏尚未完成验证。
@@ -115,7 +116,8 @@ UI
 | 阶段 | 目标 |
 | --- | --- |
 | **Phase 0（已完成 closure）** | 来源资格与全局风险分别记录；pagination、SPA UID switch 保留已接受的延期风险 |
-| **Phase 1（进行中）** | 工程骨架、采集链路与安装态验收；不等于兴趣画像完成 |
+| **Phase 1（保留环境债务）** | 工程骨架、采集链路与安装态验收；Playwright smoke 未验证，Task 6/8 与 Plan incomplete |
+| **Phase 2（当前获批范围）** | Contract First、Zod、合成正反测试与依赖边界；不含真实算法或存储 |
 | **v0.1** | 稳定采集、基础兴趣画像、可解释证据 |
 | **v0.2** | 多来源融合、时间趋势、置信度 |
 | **v0.3** | 本地轻量语义能力、长尾兴趣发现、自动降级 |
@@ -124,7 +126,7 @@ UI
 
 ## 技术方向
 
-**Phase 1 已启动；当前代码与后续计划应分开看：**
+**已获准带债进入 Phase 2；当前代码与后续计划应分开看：**
 
 当前已有 TypeScript strict、WXT、React、Manifest V3、Zod、Vitest、Chrome / Edge 生产构建、无副作用 background/options 入口及内部 Phase 1 runtime ErrorCode。`package.json` 是版本唯一来源，变更记录见 [CHANGELOG](CHANGELOG.md)。Phase 1 错误码只覆盖既有 popup/content 工程失败，不提前实现 Phase 3 Source / Adapter 网络异常矩阵。依赖更新策略已写入功能分支的 Dependabot 配置：每周检查 npm 与 GitHub Actions，patch 可提 PR、minor 需人工审阅、major 先另开 Issue；无自动合并，配置进入默认分支并运行前不宣称已启用。Playwright smoke 当前未通过；IndexedDB / Dexie 等后续存储能力尚未实现。测试、lint、typecheck 分别使用 `pnpm test`、`pnpm lint`、`pnpm typecheck`。
 
@@ -150,6 +152,6 @@ UI
 
 ## 📌 项目状态
 
-**当前阶段：Phase 1 工程验证。**项目尚无正式可安装版本，也尚未生成兴趣画像。
+**当前阶段：Phase 2 Contract First。**P1 环境债务保留，项目尚无正式可安装版本，也尚未生成兴趣画像。
 
 如果你对这个方向感兴趣，可以关注项目后续更新。

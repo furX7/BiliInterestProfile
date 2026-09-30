@@ -1,6 +1,6 @@
 # Issue 001：正式建立工程地基
 
-状态：Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 closure audit 已获批准，Global Gate 不再阻塞 Phase 1；pagination = NOT_VALIDATED、SPA UID switch = PARTIAL；Phase 1 已启动，已批准的来源组合与 Runtime Analysis Trigger 两份实施计划已完成。剩余工程骨架 Plan 的 Task 1–5、7 与 PR CI 主链路已在功能分支完成本地验收；Playwright smoke 因 bundled Chromium 启动受限为 `BLOCKED_ENV`，独立 smoke 工作流尚未验收，整个 Phase 1 尚未完成。
+状态：Source Qualification 为 PASS 2 / FAIL 1 / NOT_VALIDATED 1；Phase 0 closure audit 已获批准；pagination = NOT_VALIDATED、SPA UID switch = PARTIAL；用户已批准 P1 带已登记环境债务进入 P2 Contract First，P1 未全面完成。来源组合与 Runtime Analysis Trigger 两份实施计划已完成；Engineering Foundation Task 6/8 与 Plan incomplete，Playwright smoke 仍 `BLOCKED_ENV / NOT_VERIFIED`、债务 OPEN，环境首次恢复或 merge main 前（先到者）必须补跑。
 这是本地 Issue 草案；目标仓库为 [furX7/BiliInterestProfile](https://github.com/furX7/BiliInterestProfile)，尚未创建 GitHub Issue。
 用户已批准进入 Phase 1，并按 [ADR-007](../adr/ADR-007-phase0-gate-separation.md) 的延期风险边界执行现有计划。基础信息与动态限定 PASS，投稿归属 FAIL，收藏 NOT_VALIDATED。logged-out 在限定 Phase 0 范围内 DONE；历史 0/0、0/12 与零卡原因未知保留。
 
@@ -19,8 +19,8 @@ Source / Normalizer / Core Contracts / Storage / Analyzer Contracts / UI shell /
 ## 影响判断
 
 - Contract：是，首次定义 v1。
-- 数据库 schema：是，首次定义本地数据库 v1 与迁移入口。
-- 权限：需逐条审查，初始内容脚本只匹配用户空间；设置按 Notion 使用 browser.storage.local。
+- 数据库 schema：P2 仅定义未来 PersistenceEnvelope 的字段/版本兼容 schema；无 Dexie、数据库、migration 或 storage producer。
+- 权限：保持当前已批准 Manifest；P2 不新增网络、浏览器权限或持久化设置。
 - 风险：Raw 泄漏、空态误判、无证据结论、迁移丢失、权限扩大、范围漂移。
 
 ## 验收标准
@@ -59,7 +59,7 @@ request-failed、403/429/unauthorized、timeout/retry/abort、schema validation�
 - [ ] 工程骨架：依赖、strict TS、WXT MV3、content / popup 与无副作用 background / options 入口、单一版本来源、Prettier、分层测试及双浏览器预算已在本功能分支实现。Playwright bundled Chromium smoke 仍为 `BLOCKED_ENV`；不得把已通过的合成测试或既有真实安装态观察替代该项。
 - [ ] Phase 1 权限实现验收：Chrome / Edge production Manifest 与 Source caller 已审计，已允许站点访问的安装态路径已验证；持续未允许为 `BLOCKED_ENV`，撤销后为 `NOT_VERIFIED`。设置 storage 与扩展 origin IndexedDB 尚未实现，不将其混入当前运行时验收。
 - [x] lint、format、typecheck、unit、integration、golden、Chrome/Edge build、bundle budget 已在本地逐项通过；PR CI 十项门槛已配置并本地按依赖顺序复演，尚无远端 PR 工作流运行证据或分支保护生效结论。
-- [ ] Phase 2 Contracts、Zod、Dexie v1、migration、Feature Flags。
+- [ ] Phase 2 Contract First：Result/App issues、EvidenceId 引用、Source 边界 raw/Adapter、Analyzer/Profile、未来 envelope 的 TS/Zod/合成正反 tests，P1 兼容与 raw 隔离；不含 Dexie/migration/Feature Flags。
 - [ ] 可选失败与 Evidence 引用有真实测试。
 - [ ] 无提前算法或 AI 等范围外实现。
 
@@ -69,10 +69,7 @@ request-failed、403/429/unauthorized、timeout/retry/abort、schema validation�
 
 ## 测试计划
 
-匿名固定样本，schema 的正反例、存储迁移、局部失败、空样本、
-Raw Fixture → Normalize → stub Analyzer → stub Scoring → Profile 的接口集成、
-构建后 Playwright 基础入口验证。
-stub 仅放在测试，不能作为实际产品分析。
+P2 使用明确标注的合成 fixtures 做合同正反例、版本兼容、Evidence 上下文/引用闭包与 raw 导入边界测试，并运行既有 P1 reader/Pipeline/golden 回归。未来持久化 envelope 的 schema compatibility test 不等于 migration test；真实迁移与算法集成留给对应后续阶段。stub 仅放在测试，不能作为实际产品分析。Playwright 启动债务仍未验证，保留原始证据与强制重验条件。
 
 ## 回滚
 
