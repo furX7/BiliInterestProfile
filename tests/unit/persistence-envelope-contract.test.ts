@@ -6,6 +6,20 @@ import { syntheticEnvelope } from '../fixtures/contracts/persistence-v1.syntheti
 
 describe('future persistence envelope schema compatibility', () => {
   const schema = persistenceEnvelopeSchema(z.strictObject({ value: z.string() }))
+  it('requires an explicit payload instead of accepting absence or fabricating a default', () => {
+    const metadata = { ...syntheticEnvelope } as Record<string, unknown>
+    delete metadata.data
+    expect(persistenceEnvelopeSchema(z.string().optional()).safeParse(metadata).success).toBe(false)
+    expect(
+      persistenceEnvelopeSchema(z.string().default('synthetic')).safeParse(metadata).success,
+    ).toBe(false)
+    const output = persistenceEnvelopeSchema(z.string().optional()).parse({
+      ...metadata,
+      data: undefined,
+    })
+    expect(Object.hasOwn(output, 'data')).toBe(true)
+    expectTypeOf(output).toEqualTypeOf<PersistenceEnvelope<string | undefined>>()
+  })
   it('accepts a synthetic v1 envelope with its actual payload type', () => {
     const output = schema.parse(syntheticEnvelope)
     expect(output).toEqual(syntheticEnvelope)

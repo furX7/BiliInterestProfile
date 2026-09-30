@@ -14,6 +14,15 @@ describe('Source boundary v1 and two result layers', () => {
   const payload = z.strictObject({ token: z.literal('synthetic') }).array()
   const inner = rawSourceResultSchema(payload)
   const outer = resultSchema(inner, appErrorSchema)
+  it('requires explicit source data before optional/default raw parsing', () => {
+    const metadata = { sourceId: 'synthetic_source', status: 'available', warnings: [] }
+    const optional = rawSourceResultSchema(z.string().optional())
+    expect(optional.safeParse(metadata).success).toBe(false)
+    expect(optional.safeParse({ ...metadata, data: undefined }).success).toBe(false)
+    const emptyDefault = rawSourceResultSchema(z.string().array().default([]))
+    expect(emptyDefault.safeParse({ ...metadata, status: 'empty' }).success).toBe(false)
+    expectTypeOf<z.infer<typeof optional>>().toEqualTypeOf<RawSourceResult<string | undefined>>()
+  })
   it('preserves outer success with inner unknown and both distinct warning lists', () => {
     const value = { ok: true, data: syntheticRawUnknown, warnings: [syntheticAppWarning] }
     expect(outer.parse(value)).toEqual(value)

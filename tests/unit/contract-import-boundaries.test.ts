@@ -67,6 +67,24 @@ describe('raw module import boundaries', () => {
       ),
     ).toEqual([])
   })
+  it('prevents the sole assembly binding or direct aliases from becoming a local raw export', () => {
+    const pipeline = 'src/core/pipeline/collect-approved-sources.ts'
+    const approved = "import { approvedSourceRegistry } from '../../sources/bilibili/registry'"
+    for (const exported of [
+      'export { approvedSourceRegistry }',
+      'const alias = approvedSourceRegistry; export { alias }',
+      'export const rawReader = approvedSourceRegistry.dynamicCardReader',
+      'const { dynamicCardReader } = approvedSourceRegistry; export { dynamicCardReader }',
+      'export default approvedSourceRegistry',
+    ]) {
+      expect(findForbiddenRawImports(`${approved}\n${exported}`, pipeline)).not.toHaveLength(0)
+    }
+    const actual = readFileSync(pipeline, 'utf8')
+    expect(
+      findForbiddenRawImports(`${actual}\nexport { approvedSourceRegistry }`, pipeline),
+    ).not.toHaveLength(0)
+    expect(findForbiddenRawImports(actual, pipeline)).toEqual([])
+  })
   it('resolves normalized relative and source alias paths', () => {
     expect(
       findForbiddenRawImports("import raw from '../contracts/../../sources/raw'", owner),

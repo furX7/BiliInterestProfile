@@ -45,6 +45,77 @@ export function findForbiddenRawImports(sourceText: string, ownerPath: string): 
     ts.ScriptKind.TSX,
   )
   const violations: string[] = []
+  const rawBindings = new Set<string>()
+  function addBinding(name: ts.BindingName) {
+    if (ts.isIdentifier(name)) rawBindings.add(name.text)
+    else
+      for (const element of name.elements)
+        if (ts.isBindingElement(element)) addBinding(element.name)
+  }
+  for (const statement of source.statements) {
+    if (!ts.isImportDeclaration(statement) || !ts.isStringLiteralLike(statement.moduleSpecifier))
+      continue
+    const target = modulePath(statement.moduleSpecifier.text, owner)
+    const clause = statement.importClause
+    const fromRawLayer = /^src\/(sources|normalize)(\/|$)/.test(target)
+    if (fromRawLayer && clause?.name) rawBindings.add(clause.name.text)
+    const bindings = clause?.namedBindings
+    if (bindings && ts.isNamespaceImport(bindings) && fromRawLayer)
+      rawBindings.add(bindings.name.text)
+    if (bindings && ts.isNamedImports(bindings)) {
+      for (const binding of bindings.elements) {
+        if (fromRawLayer || rawNames.has((binding.propertyName ?? binding.name).text))
+          rawBindings.add(binding.name.text)
+      }
+    }
+  }
+  function referencesRaw(expression: ts.Node): boolean {
+    if (ts.isIdentifier(expression)) return rawBindings.has(expression.text)
+    // Normalized functions may use raw owners internally; do not taint their public result.
+    if (ts.isFunctionExpression(expression) || ts.isArrowFunction(expression)) return false
+    if (ts.isPropertyAccessExpression(expression)) return referencesRaw(expression.expression)
+    if (ts.isPropertyAssignment(expression)) return referencesRaw(expression.initializer)
+    let found = false
+    ts.forEachChild(expression, (child) => {
+      if (referencesRaw(child)) found = true
+    })
+    return found
+  }
+  // Track top-level direct aliases, properties and destructuring until the binding set stabilizes.
+  let previousSize = -1
+  while (previousSize !== rawBindings.size) {
+    previousSize = rawBindings.size
+    for (const statement of source.statements) {
+      if (!ts.isVariableStatement(statement)) continue
+      for (const declaration of statement.declarationList.declarations) {
+        if (declaration.initializer && referencesRaw(declaration.initializer))
+          addBinding(declaration.name)
+      }
+    }
+  }
+  for (const statement of source.statements) {
+    if (
+      ts.isExportDeclaration(statement) &&
+      !statement.moduleSpecifier &&
+      statement.exportClause &&
+      ts.isNamedExports(statement.exportClause)
+    ) {
+      for (const binding of statement.exportClause.elements) {
+        if (rawBindings.has((binding.propertyName ?? binding.name).text))
+          violations.push(`local export: ${binding.name.text}`)
+      }
+    } else if (ts.isExportAssignment(statement) && referencesRaw(statement.expression)) {
+      violations.push('local export: default/raw expression')
+    } else if (
+      ts.isVariableStatement(statement) &&
+      statement.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)
+    ) {
+      for (const declaration of statement.declarationList.declarations) {
+        if (declaration.initializer && referencesRaw(declaration.initializer))
+          violations.push(`local export: ${declaration.name.getText(source)}`)
+      }
+    }
+  }
   function check(node: ts.Node, specifier: string) {
     const target = modulePath(specifier, owner)
     let rawSymbol = false

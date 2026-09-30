@@ -59,7 +59,7 @@ request-failed、403/429/unauthorized、timeout/retry/abort、schema validation�
 - [ ] 工程骨架：依赖、strict TS、WXT MV3、content / popup 与无副作用 background / options 入口、单一版本来源、Prettier、分层测试及双浏览器预算已在本功能分支实现。Playwright bundled Chromium smoke 仍为 `BLOCKED_ENV`；不得把已通过的合成测试或既有真实安装态观察替代该项。
 - [ ] Phase 1 权限实现验收：Chrome / Edge production Manifest 与 Source caller 已审计，已允许站点访问的安装态路径已验证；持续未允许为 `BLOCKED_ENV`，撤销后为 `NOT_VERIFIED`。设置 storage 与扩展 origin IndexedDB 尚未实现，不将其混入当前运行时验收。
 - [x] lint、format、typecheck、unit、integration、golden、Chrome/Edge build、bundle budget 已在本地逐项通过；PR CI 十项门槛已配置并本地按依赖顺序复演，尚无远端 PR 工作流运行证据或分支保护生效结论。
-- [ ] Phase 2 Contract First：Result/App issues、EvidenceId 引用、Source 边界 raw/Adapter、Analyzer/Profile、未来 envelope 的 TS/Zod/合成正反 tests，P1 兼容与 raw 隔离；不含 Dexie/migration/Feature Flags。
+- [x] Phase 2 Contract First：Result/App issues、EvidenceId 引用、Source 边界 raw/Adapter、Analyzer/Profile、未来 envelope 的 TS/Zod/合成正反 tests，P1 兼容与 raw 隔离；不含 Dexie/migration/Feature Flags。Task 1–7 与独立 review 修复已验证，完整 Vitest 217/217；见 [Plan 执行与最终验收记录](../superpowers/plans/2026-09-30-phase2-contract-first.md#执行与最终验收记录2026-09-30)。P1 Playwright 债务仍 OPEN，未进入 P3。
 - [ ] 可选失败与 Evidence 引用有真实测试。
 - [ ] 无提前算法或 AI 等范围外实现。
 

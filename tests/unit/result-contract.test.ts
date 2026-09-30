@@ -12,6 +12,17 @@ import {
 
 describe('Result v1 contract', () => {
   const schema = resultSchema(z.number(), appErrorSchema)
+  it('requires explicit branch payloads even when their schemas accept absence or supply defaults', () => {
+    const optional = resultSchema(z.string().optional(), z.string().optional())
+    expect(optional.safeParse({ ok: true, warnings: [] }).success).toBe(false)
+    expect(optional.safeParse({ ok: false, recoverable: true }).success).toBe(false)
+    const defaulted = resultSchema(z.string().default('synthetic'), z.string().default('synthetic'))
+    expect(defaulted.safeParse({ ok: true, warnings: [] }).success).toBe(false)
+    expect(defaulted.safeParse({ ok: false, recoverable: true }).success).toBe(false)
+    const present = optional.parse({ ok: true, data: undefined, warnings: [] })
+    expect(Object.hasOwn(present, 'data')).toBe(true)
+    expectTypeOf(present).toEqualTypeOf<Result<string | undefined, string | undefined>>()
+  })
   it('preserves success data and independent AppWarnings', () => {
     const value = { ...syntheticSuccess, warnings: [syntheticAppWarning] }
     expect(schema.parse(value)).toEqual(value)
