@@ -51,13 +51,13 @@ Core port 只有 `prepare`、`readContext`、`readDynamic`、`verifyIdentity`、
 
 `prepare` 的正式返回值是 Core-owned strict `PrepareOutcome`：`{kind:'ready'}` 或 `{kind:'dynamic-terminal',result:Result<SourceResult<DynamicDelivery>,AppError>}`，后者只允许 unknown/null 或 outer failure；prepare 不直接产生可用 evidence。零卡固定集合属于 ready，不是 empty。固定卡引用、私有 token 与 DOM/raw 保存在 Source 内部，不出现在返回 DTO。Core 必须校验 PrepareOutcome，再调度未终止的 job；envelope 自身非法时将 dynamic 置 outer schema_invalid，不阻止独立 profile。
 
-Core 提供 Source job lease（signal、单调 now、source/whole deadline、只含计数的预算接口）与纯控制策略；Source 内部为每个 Adapter/chunk/validation operation 创建更短的子 lease、执行 retry 和 late-result 拒绝。Source-owned operation executor 可以接触 raw，Core 调度器只接触 normalized job promise 与计数/终止 code，不通过泛型 callback 接收 RawSourceResult。prepare 与最终 verifyIdentity 各自有 1 秒 operation lease；prepare 同计 dynamic Source budget，最终复核使用 whole/operation deadline，不重新开启已结束 Source 的时钟。
+Core 在来源依赖满足、正式 admission 进入 Source scheduler 时创建 Source job lease（signal、单调 now、source/whole deadline、只含计数的预算接口）与纯控制策略；Source 内部为每个 Adapter/chunk/validation operation 创建更短的子 lease、执行 retry 和 late-result 拒绝。Source-owned operation executor 可以接触 raw，Core 调度器只接触 normalized job promise 与计数/终止 code，不通过泛型 callback 接收 RawSourceResult。prepare 与最终 verifyIdentity 各自有至多 1 秒 operation lease，裁剪到 whole deadline；prepare 不开启或消耗 dynamic Source 时钟，最终复核也不重新开启已结束 Source 的时钟。fixed snapshot 完成不代表 dynamic 已 admission。
 
 prepare 的动态容器缺失/不唯一只令 dynamic 预置 unknown/null；prepare 的 Source-local execution/schema error 只令 dynamic outer failure。profile 仍可独立读取，不能因为动态区不可读就制造 profile failure。只有整 run cancellation/deadline/身份发布失败才影响全局；固定零卡集合仍是有效 snapshot，不构成 empty proof。
 
 `ContextDelivery = { context: ProfileContext }`；`DynamicDelivery = { items: CollectedEvidence[] }`，其中 items 必须为 1..200 条，`CollectedEvidence = { evidence: EvidenceItem, quality: EvidenceQuality }`。quality 与具体 Evidence 同对象绑定，不用易错配的平行数组/下标，也不把运行内 token 冒充 EvidenceId。unknown/unavailable 的 delivery 为 null；生产 dynamic 有可用 items 时仍为 partial（当前 Normalizer 缺精确时间与单条回溯），不是 available。新 delivery 联合 schema 必须显式拒绝 partial/{items:[]}，不能只依赖 P1 泛型 SourceResult schema 的 non-null 检查。不得仅因质量数字高而升级来源状态。
 
-每个来源 outcome 是互斥 union：`{kind:'result',result:Result<SourceResult<TDelivery>,AppError>}` 或 `{kind:'not-started',reason:'dependency_failed'|'run_stopped'}`。not-started 没有 SourceStatus/data；Result 失败没有伪造的 SourceResult。prepare 已终止的 dynamic outcome 原样保留，每个 Source outcome 至多终止一次；只有 dynamic 尚未终止且 read 未启动时，profile outer failure 才令它 dependency_failed。profile inner unknown/unavailable 时，未终止的 dynamic 做保守身份 preflight 并返回 unknown/null，不将 profile 错误改名为动态错误。profile 的可选 description 被丢弃仍可 available，保留已确认身份，不阻断 dynamic。
+每个来源 outcome 是互斥 union：`{kind:'result',result:Result<SourceResult<TDelivery>,AppError>}` 或 `{kind:'not-started',reason:'dependency_failed'|'run_stopped'}`。not-started 没有 SourceStatus/data；Result 失败没有伪造的 SourceResult。prepare 已终止的 dynamic outcome 原样保留，每个 Source outcome 至多终止一次；只有 dynamic 尚未终止且 read 未启动时，profile outer failure 才令它 dependency_failed。profile inner unknown/unavailable 时，未终止的 dynamic 依据该身份结果在 run 级依赖 preflight 返回 unknown/null，不 admission、不启动 readDynamic 或 Source 时钟，不将 profile 错误改名为动态错误。profile 的可选 description 被丢弃仍可 available，保留已确认身份，不阻断 dynamic。
 
 `ControlledCollectionReport` 固定包含 context/dynamic outcome、`behaviorEvidenceSources: ['dynamic']`、runStatus（completed/cancelled/deadline/identity-rejected/contract-error）、按 context/dynamic 分开的诊断 warning roll-up（各自 AppWarning[] 与 SourceWarning[]）、run 级 AppWarning[] 以及执行统计。roll-up 保留已发生但因 outer failure 无法放入成功 Result 的 warning；不改变 P2 Result 的失败分支。诊断统计只含 admitted/started/attempts、scanned/rejected/duplicate/admittedItems、extractedBytes/nodeVisits、elapsedMs；不得包含身份、正文或 raw。Source 级普通失败不自动令其他独立 outcome 失效；身份安全失败是整次发布拒绝，见第 7 节。对旧 SourceResult 的兼容投影只提取已验证 delivery，不能把 not-started/outer failure 伪装为 unknown、unavailable 或 []。
 
@@ -67,20 +67,24 @@ runStatus 优先保留已 settlement 的全局终止原因：caller/pagehide Abo
 
 时间用单调时钟，所有 `now >= deadline` 均视为过期（恰等边界不得接纳结果）。下表是待本 Spec 审批的具体冻结值，production 不允许 popup/页面消息覆盖。
 
-operation 的 1 秒是一次 attempt 的执行预算：同一逻辑批次如确属可重试类别，每次 attempt 重新取得至多 1 秒的子 lease，并裁剪到原 Source/whole deadline。backoff 不算下一 attempt 的执行时间，但始终计入 Source/whole；不得通过 retry 重置这两层时钟。无 retry 的 DOM 批次只有一个 attempt。
+operation 的 1 秒是一次 attempt 的执行预算：同一逻辑批次如确属可重试类别，每次 attempt 重新取得至多 1 秒的子 lease，并裁剪到原 Source/whole deadline。backoff 不算下一 attempt 的执行时间，但始终计入 admission 后的 Source/whole；不得通过 retry 重置这两层时钟。无 retry 的 DOM 批次只有一个 attempt。
 
-| 项目              | 值                                                                          | 起算与包含范围                                                                                                                                                            |
-| ----------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| operation         | 1,000 ms                                                                    | 每个 prepare/read 批次、validation/normalization 批次、identity recheck 实际进入执行前；包括同步部分、yield 和该次结果校验                                                |
-| Source            | 5,000 ms                                                                    | t0 时两来源 admission；包含 prepare、依赖等待、queue、throttle、全部 attempts/backoff、来源内 validation/normalization/dedupe/quality；最终 run 发布复核属于 whole budget |
-| whole collection  | 10,000 ms                                                                   | 有效支持路由请求取得 run-lock 的 t0；包含所有准备、来源工作、最终身份复核、摘要校验与终止清理                                                                             |
-| 并发/启动间隔     | 1 个 operation；不同 Source 首次 read 的实际 start 间隔至少 250 ms          | profile 先读，dynamic 等身份；等待占 Source/whole 预算，不额外延长 deadline                                                                                               |
-| retry             | 每 operation 最多 2 次重试，即总 attempts ≤ 3                               | 只适用于第 8 节明确可重试错误；退避 250 ms、500 ms；全部占 Source/whole 预算                                                                                              |
-| snapshot/page cap | 1；auto-pagination = 0                                                      | 每 run 只固定一个当前 document 的 card set，不滚动、reload、加载下一页或追新卡                                                                                            |
-| card scan cap     | 200                                                                         | 初始集合中的前 200 个可见主卡 occurrence，DOM 顺序；不因 rejected/duplicate 而补扫描更多卡                                                                                |
-| 单文本字段        | 10,000 UTF-16 code units                                                    | 即 JS string.length；所有实际读取的身份、正文、标题、简介、日期标签字段均适用，trim 前计量；不拆 surrogate pair                                                           |
-| 总提取文本        | 1,048,576 UTF-8 bytes（1 MiB）/run                                          | 所有 DOM 文本读取，包括再次身份复核、被拒/重复项与可选字段；计 trim 前文本，不是 JSON 大小或 UTF-16 内存                                                                  |
-| DOM visit / yield | 每 Source 至多 10,000 次 node visit；每 100 visits 或每处理完一张卡即 yield | 防止无正文的大树无限遍历；prepare 固定集合阶段不 yield，但仍受 visit/time 限制；Source 的 prepare visits 计入 dynamic                                                     |
+| 项目              | 值                                                                          | 起算与包含范围                                                                                                                                                                                      |
+| ----------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| operation         | 1,000 ms                                                                    | 每个 prepare/read 批次、validation/normalization 批次、identity recheck 实际进入执行前；包括同步部分、yield 和该次结果校验                                                                          |
+| Source            | 5,000 ms                                                                    | 各 Source 依赖已满足、正式 admission 进入 Source scheduler 时；包含 admission 后的 queue、throttle、全部 attempts/backoff、validation/normalization/dedupe/quality；依赖未满足的等待不计 Source     |
+| whole collection  | 10,000 ms                                                                   | 有效支持路由请求取得 run-lock 的 t0；包含 prepare、dependency wait、queue、throttle、attempt、backoff、validation、normalization、identity recheck、summary 和 cleanup；整个 run 的不可延长绝对上限 |
+| 并发/启动间隔     | 1 个 operation；不同 Source 首次 read 的实际 start 间隔至少 250 ms          | profile 先读；dynamic 等身份确认后才 admission；此前 dependency wait 只占 whole，admission 后的 queue/throttle 同占 Source/whole，不延长 deadline                                                   |
+| retry             | 每 operation 最多 2 次重试，即总 attempts ≤ 3                               | 只适用于第 8 节明确可重试错误；退避 250 ms、500 ms；全部占 Source/whole 预算                                                                                                                        |
+| snapshot/page cap | 1；auto-pagination = 0                                                      | 每 run 只固定一个当前 document 的 card set，不滚动、reload、加载下一页或追新卡                                                                                                                      |
+| card scan cap     | 200                                                                         | 初始集合中的前 200 个可见主卡 occurrence，DOM 顺序；不因 rejected/duplicate 而补扫描更多卡                                                                                                          |
+| 单文本字段        | 10,000 UTF-16 code units                                                    | 即 JS string.length；所有实际读取的身份、正文、标题、简介、日期标签字段均适用，trim 前计量；不拆 surrogate pair                                                                                     |
+| 总提取文本        | 1,048,576 UTF-8 bytes（1 MiB）/run                                          | 所有 DOM 文本读取，包括再次身份复核、被拒/重复项与可选字段；计 trim 前文本，不是 JSON 大小或 UTF-16 内存                                                                                            |
+| DOM visit / yield | 每 Source 至多 10,000 次 node visit；每 100 visits 或每处理完一张卡即 yield | 防止无正文的大树无限遍历；prepare 固定集合阶段不 yield，但仍受 visit/time 限制；Source 的 prepare visits 计入 dynamic                                                                               |
+
+令 whole deadline `D_W = t0 + 10,000 ms`；每个 Source 仅在依赖满足并正式 admission 时记录一次 `t_A`，创建 `D_S = t_A + 5,000 ms`，不能在 t0 预先启动两个 Source 时钟。Source 内每次 attempt 的 deadline 为 `min(attemptStart + 1,000 ms, D_S, D_W)`；prepare/最终身份复核没有活跃 Source 时钟，使用 `min(operationStart + 1,000 ms, D_W)`。prepare 仅占 operation/whole 时间，其 visits 仍按原 cap 计入 dynamic，不把资源计数归属误作时间预算归属。
+
+dynamic 必须等待同一次 profile 身份达到允许继续的状态，并已有 ready fixed snapshot，才能正式 admission；依赖等待期间 whole timer 始终运行。profile 耗时过长时，dynamic 即使随后取得执行资格，也可能因 whole 剩余窗口不足而无法启动或完成；这是预期行为，不补发额外时间。admission 后即便仍排队或等待 throttle，Source 时钟也持续运行。剩余窗口为正时 operation lease 可短于 1 秒；达到任一适用 deadline 后不得 admission、启动对应工作或接纳迟到结果。retry 的额外启动条件仍见第 8 节。
 
 DOM visit 指显式算法访问一个 Element/Text/其他 node 来检查、遍历、读取或验证；隐藏 Element 本身计数，但跳过的子树不计。重复访问同一 node 再计一次；可见性检查的 ancestor 每次也计。querySelector/getComputedStyle 等原生函数内部走过的节点无法审计，不算可宣称有硬上界的算法 visits；对此限制如实记录。文本必须逐 node 有界读取与增量计量，不能先递归拼完整 textContent 或取无限 NodeList 再 slice。用于判断 cap 溢出的下一张卡只检查存在，不抽取其字段、不输出；该检查的显式 node visits 仍计预算。
 
@@ -92,11 +96,11 @@ UTF-8 bytes 按 TextEncoder 对有界片段的标准编码计算；跨片段 sur
 
 ## 6. 固定快照、chunk 与取消
 
-接受请求后 t0 创建 run lease、controller、独立计数器和两个 Source deadline；prepare 在首个异步 yield 前，仅用既有真实 DOM selector 定位唯一动态容器、固定至多 200 个可见 card Element 引用及当前 document/route。它不预读全部正文，不纳入之后新增卡片；容器不唯一或 prepare 超预算即保守拒绝。引用集合固定不等于 DOM 不变：读取时 node 已脱离初始容器、引用/作者边界改变或身份不符则拒绝该项，不从新 DOM 补位。
+接受请求并取得 run-lock 的 t0 只创建 run lease、controller、独立计数器与 whole deadline；各 Source deadline 到该来源依赖满足并正式 admission 时才创建。prepare 受 operation/whole 时间预算，在首个异步 yield 前，仅用既有真实 DOM selector 定位唯一动态容器、固定至多 200 个可见 card Element 引用及当前 document/route。它不预读全部正文，不纳入之后新增卡片；容器不唯一或 prepare 超预算即保守拒绝。snapshot 不因等待身份、后续 admission 或 retry 重新固定；引用集合固定不等于 DOM 不变：读取时 node 已脱离初始容器、引用/作者边界改变或身份不符则拒绝该项，不从新 DOM 补位。
 
 在已获准的节点边界复用 P1 判据：可见 `.message-entry a.right-entry__item-trigger`；唯一资料昵称与可见 UID 必须匹配 route；主卡位于 `main.route_dynamic .bili-dyn-list > .bili-dyn-list__items`；顶层作者使用 `.bili-dyn-item__header > .bili-dyn-title > span.bili-dyn-title__text`；引用区是 `.bili-dyn-content__orig.reference`，转发描述 `.bili-dyn-content__forw__desc` 必须在引用子树之外。缺失/矛盾仍拒绝，不以引用作者、引用正文、DOM 位置或昵称相同替代更强 UID 保证。
 
-正文抽取、raw 校验、规范化、dedupe、quality 采用 chunk；每 100 visits 或每一张卡完成后让出一次宏任务，不能用仅 Promise.resolve 的微任务链冒充 timer/Abort 有机会运行。每个 operation 开始/结束、每 node/字段片段、每 chunk、queue/start、backoff 前后、schema/Normalizer 前后、写入本运行 draft 前与最终 commit 前，检查 signal、active run lease、whole 与 operation deadline；正在执行 Source job 时再检查该 Source deadline。已完成 Source 的时钟不重新用于最终 run 身份复核。过期/取消后结果不得写入 report 或 memo；不执行后续 chunk。
+正文抽取、raw 校验、规范化、dedupe、quality 采用 chunk；每 100 visits 或每一张卡完成后让出一次宏任务，不能用仅 Promise.resolve 的微任务链冒充 timer/Abort 有机会运行。每个 operation 开始/结束、每 node/字段片段、每 chunk、dependency/admission、queue/start、backoff 前后、schema/Normalizer 前后、写入本运行 draft 前与最终 commit 前，检查 signal、active run lease、whole 与适用的 operation deadline；Source admission 后再检查该 Source deadline，包括尚未开始 attempt 的 queue/throttle。prepare 与 admission 前的 dependency wait 不检查尚不存在的 Source deadline；已完成 Source 的时钟不重新用于最终 run 身份复核。过期/取消后结果不得写入 report 或 memo；不执行后续 chunk。
 
 timeout 可以用 timer 与终止 promise 让不合作的异步 operation 的调用方及时结束，但必须 abort 对应 lease、拒收 late result，并处理后续 rejection；这不证明底层异步工作已被杀死。生产 DOM driver 必须合作检查、yield，不用 Promise.race 包整段同步 reader 冒充可取消。
 
@@ -104,7 +108,7 @@ timeout 可以用 timer 与终止 promise 让不合作的异步 operation 的调
 
 ## 7. 生命周期、身份复核与来源隔离
 
-run 状态只单向经过 admitted → preparing → running → verifying → terminal；operation settlement/terminal transition 均至多一次。所有有界结果先存运行内 draft，不交给 popup。单 Source timeout/error 只终止该 Source，其他独立且仍可在 whole deadline 内执行的项可继续；整 run caller Abort/whole timeout 则不开始任何新工作。动态必须依赖同一次已确认 profile identity，不能把资料当行为证据。
+run 状态只单向经过 admitted → preparing → running → verifying → terminal；run 的 admitted 不等于任何 Source 已 admission，Source scheduler 必须按各自依赖单独 admission。operation settlement/terminal transition 均至多一次。所有有界结果先存运行内 draft，不交给 popup。单 Source timeout/error 只终止该 Source，其他独立且仍可在 whole deadline 内执行的项可继续；整 run caller Abort/whole timeout 则不开始任何新工作。动态必须依赖同一次已确认 profile identity，不能把资料当行为证据。
 
 outer failure 的 Source 丢弃其全部数据 draft，不在失败结果旁偷留可供消费的数据；警告仅留诊断 roll-up。其他已完整成功的 Source 可以在最终身份确认后保留。cap/坏候选导致的有界 partial 是内层数据状态，不是把 timeout/error 改写成 partial；它仅保留已完成批次，未完成批次丢弃。此前完成的批次不能在失败 Source 中伪装为调用成功。
 
@@ -183,17 +187,24 @@ UID、昵称、简介、正文、raw message、stack、run 私有 token 不出 c
 
 所有 fixture 明标 synthetic/controlled，不代表真实 HTTP/权限/DOM 稳定性。每个 TypeScript DTO 对应 strict Zod、正反 fixtures 与 contract tests；Adapter/port 的行为测试与接口结构测试分开。fake clock/Abort/yield driver 需要证明控制顺序，不以 import error、空测试集或启动失败充当 RED。
 
-| 必须覆盖            | 行为断言                                                                                                                                                                                 |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| P1/P2 兼容          | 旧 registry keys、旧 Pipeline/Normalizer/reader 回归；unknown/null、empty proof 边界、引用归属和两层 Result/warning 不回退                                                               |
-| schema              | 两层状态混用、成功失败混字段、私有 raw 错字段、单坏项隔离、输出/quality 错配、版本不符拒绝；PrepareOutcome 不含 raw；partial 空 delivery 拒绝；raw 不漏出 port                           |
-| 资源预算            | 恰等/超时边界；队列/backoff 计时；200/201 卡；10,000/10,001 units；UTF-8 中英文、surrogate/空白；1 MiB 总量；mandatory/optional、rejected/duplicate 同计 cap；大无文本树 visits 与 yield |
-| cancellation        | 预先 Abort、queue/backoff/chunk 中 Abort；原生调用迟到、永不 settle、late resolve/reject；清理幂等、旧 continuation 不写新 run、run-lock 可重新使用                                      |
-| snapshot/identity   | yield 后新增卡不采；脱离容器拒绝；commit 前 missing/mismatch 丢全数据；保留 Source 独立失败但不为身份不安全发布旧成功                                                                    |
-| 调度/错误           | concurrency=1、跨 Source start gap、retry 0/1/2 与不足预算；403/429/unauthorized/timeout/cancel/network 分码；unknown/empty candidate 不重试                                             |
-| dedupe/memo/quality | 同 occurrence 不重复、相同正文不同卡不合并；同版本不可变输入仅 run 内命中；未知/失败不命中；finally 释放；quality 不成为兴趣分数或 ID                                                    |
-| runtime             | 点击前无 DOM/采集、有效一次点击一个 run、busy 无第二调用；summary 脱敏；legacy/new 组合与歧义 no-resend；failure 不变 empty 或 fake SourceStatus                                         |
-| 静态边界            | 新旧各一条 exact binding 正例；alias、额外 binding、raw 类型、局部 re-export、require/dynamic import、其他 pipeline/source 导入反例                                                      |
+| 必须覆盖            | 行为断言                                                                                                                                                                                                                                                                                       |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P1/P2 兼容          | 旧 registry keys、旧 Pipeline/Normalizer/reader 回归；unknown/null、empty proof 边界、引用归属和两层 Result/warning 不回退                                                                                                                                                                     |
+| schema              | 两层状态混用、成功失败混字段、私有 raw 错字段、单坏项隔离、输出/quality 错配、版本不符拒绝；PrepareOutcome 不含 raw；partial 空 delivery 拒绝；raw 不漏出 port                                                                                                                                 |
+| 资源预算            | 恰等/超时边界；prepare/dependency/admission 起算区分；admission 后 queue/throttle/backoff 计时；attempt lease 裁剪且父 deadline 不重置；200/201 卡；10,000/10,001 units；UTF-8 中英文、surrogate/空白；1 MiB 总量；mandatory/optional、rejected/duplicate 同计 cap；大无文本树 visits 与 yield |
+| cancellation        | 预先 Abort、queue/backoff/chunk 中 Abort；原生调用迟到、永不 settle、late resolve/reject；清理幂等、旧 continuation 不写新 run、run-lock 可重新使用                                                                                                                                            |
+| snapshot/identity   | yield 后新增卡不采；脱离容器拒绝；commit 前 missing/mismatch 丢全数据；保留 Source 独立失败但不为身份不安全发布旧成功                                                                                                                                                                          |
+| 调度/错误           | concurrency=1、跨 Source start gap、retry 0/1/2 与不足预算；403/429/unauthorized/timeout/cancel/network 分码；unknown/empty candidate 不重试                                                                                                                                                   |
+| dedupe/memo/quality | 同 occurrence 不重复、相同正文不同卡不合并；同版本不可变输入仅 run 内命中；未知/失败不命中；finally 释放；quality 不成为兴趣分数或 ID                                                                                                                                                          |
+| runtime             | 点击前无 DOM/采集、有效一次点击一个 run、busy 无第二调用；summary 脱敏；legacy/new 组合与歧义 no-resend；failure 不变 empty 或 fake SourceStatus                                                                                                                                               |
+| 静态边界            | 新旧各一条 exact binding 正例；alias、额外 binding、raw 类型、局部 re-export、require/dynamic import、其他 pipeline/source 导入反例                                                                                                                                                            |
+
+timeout fixtures / boundary tests 必须以 controlled fake clock 明确证明以下语义（不是已取得的生产证据）：
+
+- `t0=0`、prepare 在 800 ms 完成、profile 随后 admission、身份在 4,000 ms 确认时，dynamic 在 4,000 ms admission，`D_S=9,000 ms`，不是 5,000 ms；prepare 只占 operation/whole，dynamic admission 前的依赖等待不消耗 dynamic Source 预算，profile 自己 admission 后的工作仍计其 Source 预算；fixed snapshot 不重建。
+- prepare 在 900 ms 完成且 profile 随后 admission，身份在 5,800 ms 确认时，dynamic `D_S=10,800 ms`，但 `D_W=10,000 ms` 不变；9,500 ms 才开始的 attempt lease 最迟 10,000 ms 到期，不能得到完整额外 1 秒。若 whole 已到期，dynamic admission/attempt 均为零。
+- 依赖未满足时 dynamic admission/Source timer 为零；profile unknown/unavailable 的依赖 preflight 仍保留 unknown/null，profile outer failure 仍按既有 dependency_failed 规则处理，不启动 dynamic job。
+- admission 后 queue/throttle/backoff 均消耗 Source 预算，`D_S` 不变；`now==D_S` 或 `now==D_W` 不得启动/接纳对应结果。每次 retry 可新建 operation lease，但两个父 deadline 不变；迟到 resolve/reject 与 finally 清理规则不变。
 
 实施验收在干净可重建状态执行 frozen install、lint、Prettier、typecheck、unit/golden/integration/full Vitest、P1 compatibility、AST/raw leakage、Chrome/Edge production build、bundle budget、Manifest/版本/权限和 diff 检查，记录 fresh exit code、实际计数/FAIL，不引用 P2 的历史 217/217 当 P3 完成证据。重要 Task review 与独立总 review 发现当前 scope 内成立问题须修复重验；不得放宽断言、预算或权限换取绿灯。
 
