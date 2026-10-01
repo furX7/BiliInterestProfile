@@ -1,6 +1,6 @@
 # Phase 3 Data Collection v1 Spec
 
-状态：**Draft / Pending Spec Approval**。日期：2026-10-01。用户已批准 P2 → P3 及完整 P3 Design；本文件是待审批的正式 Spec，不是 Implementation Plan 或实施授权。下列预算在本 Spec 获批后冻结，不能由实现或脚本自行提高。
+状态：**Approved**。日期：2026-10-01。用户已明确批准本正式 Spec（含依赖满足后 Source admission 的 timeout 修订）；合同、预算与范围自此冻结。本次批准只授权 writing-plans，不是 Implementation Plan 审批或产品实施授权，不能由实现或脚本自行提高预算。
 
 ## 1. 权威、目标与基线
 
@@ -65,7 +65,7 @@ runStatus 优先保留已 settlement 的全局终止原因：caller/pagehide Abo
 
 ## 5. 冻结预算与计量
 
-时间用单调时钟，所有 `now >= deadline` 均视为过期（恰等边界不得接纳结果）。下表是待本 Spec 审批的具体冻结值，production 不允许 popup/页面消息覆盖。
+时间用单调时钟，所有 `now >= deadline` 均视为过期（恰等边界不得接纳结果）。下表是本 Spec 已获批准的冻结值，production 不允许 popup/页面消息覆盖。
 
 operation 的 1 秒是一次 attempt 的执行预算：同一逻辑批次如确属可重试类别，每次 attempt 重新取得至多 1 秒的子 lease，并裁剪到原 Source/whole deadline。backoff 不算下一 attempt 的执行时间，但始终计入 admission 后的 Source/whole；不得通过 retry 重置这两层时钟。无 retry 的 DOM 批次只有一个 attempt。
 
